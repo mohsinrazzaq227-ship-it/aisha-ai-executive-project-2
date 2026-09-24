@@ -1,213 +1,76 @@
-import { EventEmitter } from "node:events";
-import { and, asc, gt, eq, sql } from "drizzle-orm";
+/**
+ * ONE authoritative event stream.
+ *
+ * Every subsystem writes here and only here: the task engine, the tool layer,
+ * the approval gate, the resource governor and the 3D office all consume the
+ * same rows. There is no second event bus and no UI-only event simulation.
+ *
+ * Topics follow the merged Project 1 / Project 2 vocabulary:
+ *  task.*, step.*, agent.*, agent.walk.*, handoff.*, tool.*, approval.*,
+ *  verification.*, artifact.*, resource.*, security.*, system.*
+ */
+import { desc, gt, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { agentStates, events } from "@/db/schema";
-import { writeLogFile } from "@/lib/logging";
+import { events, type EventRow } from "@/db/schema";
+import { redactSecrets } from "@/lib/util";
 
-/** Authoritative event vocabulary. The 3D office, panels and log all consume this. */
-export const EVENT_TYPES = [
-  "TASK_CREATED",
-  "TASK_PLANNED",
-  "TASK_STATUS",
-  "APPROVAL_REQUESTED",
-  "APPROVAL_GRANTED",
-  "APPROVAL_DENIED",
-  "APPROVAL_INVALIDATED",
-  "AGENT_ASSIGNED",
-  "AGENT_STATE",
-  "AGENT_WALKING",
-  "AGENT_WORKING",
-  "AGENT_SPEAKING",
-  "AGENT_HANDOFF",
-  "AGENT_RECEIVING",
-  "AGENT_COMPLETED",
-  "AGENT_ERROR",
-  "TOOL_STARTED",
-  "TOOL_PROGRESS",
-  "TOOL_COMPLETED",
-  "TOOL_FAILED",
-  "ARTIFACT_CREATED",
-  "VIDEO_RENDER_PROGRESS",
-  "VIDEO_VALIDATED",
-  "USER_MESSAGE",
-  "SUPERVISOR_MESSAGE",
-  "SECURITY",
-  "SYSTEM",
-] as const;
-
-export type EventType = (typeof EVENT_TYPES)[number];
-
-export type AgentState =
-  | "IDLE"
-  | "LISTENING"
-  | "PLANNING"
-  | "WALKING"
-  | "WORKING"
-  | "WAITING_APPROVAL"
-  | "HANDOFF"
-  | "RECEIVING"
-  | "SPEAKING"
-  | "COMPLETED"
-  | "ERROR";
-
-export type ExecutiveEvent = {
-  id?: number;
-  ts: string;
-  taskId?: string | null;
-  runId?: string | null;
-  agentId?: string | null;
-  type: EventType;
+export type EmitInput = {
+  topic: string;
   message: string;
-  data?: Record<string, unknown>;
-  severity?: "info" | "warn" | "error" | "success";
+  taskId?: string | null;
+  stepId?: string | null;
+  agentId?: string | null;
+  level?: "info" | "warn" | "error" | "success";
+  payload?: Record<string, unknown>;
 };
 
-type Bus = { emitter: EventEmitter };
-const globalForBus = globalThis as typeof globalThis & { __aiExecBus?: Bus };
-const bus: Bus = globalForBus.__aiExecBus ?? { emitter: new EventEmitter() };
-bus.emitter.setMaxListeners(200);
-globalForBus.__aiExecBus = bus;
+const topicListeners = new Set<(row: EventRow) => void>();
 
-export function subscribe(listener: (event: ExecutiveEvent) => void): () => void {
-  bus.emitter.on("event", listener);
-  return () => bus.emitter.off("event", listener);
+export function subscribe(listener: (row: EventRow) => void): () => void {
+  topicListeners.add(listener);
+  return () => topicListeners.delete(listener);
 }
 
-function notify(event: ExecutiveEvent): void {
-  try {
-    bus.emitter.emit("event", event);
-  } catch {
-    /* never break a task because a subscriber failed */
-  }
-}
-
-export async function emit(event: ExecutiveEvent): Promise<ExecutiveEvent> {
-  const timestamp = event.ts ?? new Date().toISOString();
-  const record: ExecutiveEvent = { ...event, ts: timestamp };
-  try {
-    const [row] = await db
-      .insert(events)
-      .values({
-        ts: new Date(timestamp),
-        taskId: event.taskId ?? null,
-        runId: event.runId ?? null,
-        agentId: event.agentId ?? null,
-        type: event.type,
-        message: event.message,
-        data: (event.data ?? null) as Record<string, unknown> | null,
-        severity: event.severity ?? "info",
-      })
-      .returning({ id: events.id });
-    record.id = row?.id;
-  } catch (error) {
-    writeLogFile("errors", "error", `event persist failed: ${(error as Error).message}`, event);
-  }
-  writeLogFile(severityChannel(event), event.severity === "error" ? "error" : "info", `[${event.type}] ${event.message}`, {
-    taskId: event.taskId,
-    agentId: event.agentId,
-    data: event.data,
-  });
-  notify(record);
-  return record;
-}
-
-function severityChannel(event: ExecutiveEvent): "supervisor" | "agents" | "security" | "media" | "browser" | "computer" {
-  if (event.type.startsWith("APPROVAL") || event.type === "SECURITY") return "security";
-  if (event.type === "VIDEO_RENDER_PROGRESS" || event.type === "VIDEO_VALIDATED") return "media";
-  if (event.agentId?.includes("browser") || event.agentId?.includes("research")) return "browser";
-  if (event.agentId?.includes("computer")) return "computer";
-  if (event.type.startsWith("AGENT")) return "agents";
-  return "supervisor";
-}
-
-/** Update the durable agent state row and emit the matching event atomically-ish. */
-export async function setAgentState(
-  agentId: string,
-  state: AgentState,
-  options: {
-    taskId?: string | null;
-    stepId?: string | null;
-    stationId?: string;
-    message?: string;
-    mood?: string;
-    data?: Record<string, unknown>;
-    emitEvent?: boolean;
-  } = {},
-): Promise<void> {
-  const explicit: Partial<Record<AgentState, EventType>> = {
-    IDLE: "AGENT_STATE",
-    LISTENING: "AGENT_STATE",
-    PLANNING: "AGENT_STATE",
-    WALKING: "AGENT_WALKING",
-    WORKING: "AGENT_WORKING",
-    WAITING_APPROVAL: "AGENT_STATE",
-    HANDOFF: "AGENT_HANDOFF",
-    RECEIVING: "AGENT_RECEIVING",
-    SPEAKING: "AGENT_SPEAKING",
-    COMPLETED: "AGENT_COMPLETED",
-    ERROR: "AGENT_ERROR",
+export async function emit(input: EmitInput): Promise<EventRow> {
+  const row = {
+    topic: input.topic,
+    message: redactSecrets(input.message).slice(0, 4000),
+    taskId: input.taskId ?? null,
+    stepId: input.stepId ?? null,
+    agentId: input.agentId ?? null,
+    level: input.level ?? "info",
+    payload: (input.payload ?? {}) as Record<string, unknown>,
   };
-  try {
-    await db
-      .insert(agentStates)
-      .values({
-        agentId,
-        state,
-        taskId: options.taskId ?? null,
-        stepId: options.stepId ?? null,
-        stationId: options.stationId ?? "HOT_DESK",
-        lastMessage: options.message ?? null,
-        mood: options.mood ?? "CALM",
-        updatedAt: new Date(),
-      })
-      .onConflictDoUpdate({
-        target: agentStates.agentId,
-        set: {
-          state,
-          taskId: options.taskId ?? null,
-          stepId: options.stepId ?? null,
-          lastMessage: options.message ?? null,
-          mood: options.mood ?? "CALM",
-          updatedAt: new Date(),
-          ...(options.stationId ? { stationId: options.stationId } : {}),
-        },
-      });
-  } catch (error) {
-    writeLogFile("errors", "error", `agent state persist failed: ${(error as Error).message}`, { agentId, state });
+  const [inserted] = await db.insert(events).values(row).returning();
+  for (const listener of topicListeners) {
+    try {
+      listener(inserted);
+    } catch {
+      // a broken listener must never break the engine
+    }
   }
-  if (options.emitEvent === false) return;
-  await emit({
-    ts: new Date().toISOString(),
-    taskId: options.taskId ?? null,
-    agentId,
-    type: explicit[state] ?? "AGENT_STATE",
-    message: options.message ?? `${agentId} -> ${state}`,
-    severity: state === "ERROR" ? "error" : state === "COMPLETED" ? "success" : "info",
-    data: { state, stationId: options.stationId, mood: options.mood, ...(options.data ?? {}) },
-  });
+  return inserted;
 }
 
-export async function eventsSince(sinceId: number, limit = 200, taskId?: string): Promise<ExecutiveEvent[]> {
-  const rows = await db
+/** Fire-and-forget variant for hot paths that must not await the DB. */
+export function emitSoon(input: EmitInput): void {
+  void emit(input).catch(() => undefined);
+}
+
+export async function recentEvents(limit = 200): Promise<EventRow[]> {
+  return db.select().from(events).orderBy(desc(events.id)).limit(Math.min(1000, Math.max(1, limit)));
+}
+
+export async function eventsAfter(lastId: number, limit = 200): Promise<EventRow[]> {
+  return db
     .select()
     .from(events)
-    .where(taskId ? and(gt(events.id, sinceId), eq(events.taskId, taskId)) : gt(events.id, sinceId))
-    .orderBy(asc(events.id))
-    .limit(limit);
-  return rows.map((row) => ({
-    id: row.id,
-    ts: row.ts.toISOString(),
-    taskId: row.taskId,
-    runId: row.runId,
-    agentId: row.agentId,
-    type: row.type as EventType,
-    message: row.message,
-    data: (row.data ?? undefined) as Record<string, unknown> | undefined,
-    severity: row.severity as ExecutiveEvent["severity"],
-  }));
+    .where(gt(events.id, lastId))
+    .orderBy(events.id)
+    .limit(Math.min(500, Math.max(1, limit)));
 }
 
-export async function latestEventId(): Promise<number> {
-  const [row] = await db.select({ max: sql<number>`coalesce(max(${events.id}), 0)` }).from(events);
-  return Number(row?.max ?? 0);
+export async function eventCount(): Promise<number> {
+  const [row] = await db.select({ count: sql<number>`count(*)::int` }).from(events);
+  return row?.count ?? 0;
 }

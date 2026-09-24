@@ -1,11 +1,13 @@
-// Secure preload bridge. The renderer never receives Node.js access: only the
-// audited, explicitly listed channels below are exposed, and each argument is
-// validated again in the main process.
-const { contextBridge, ipcRenderer } = require('electron');
+/**
+ * Secure preload bridge. The renderer receives NO Node.js access: only the
+ * explicitly listed channels below are exposed, and every argument is validated
+ * again in the main process.
+ */
+const { contextBridge, ipcRenderer } = require("electron");
 
-const CHANNELS = ['app:info', 'doctor:run', 'open:external', 'window:minimize', 'window:maximize'];
+const CHANNELS = ["app:info", "doctor:run", "open:external", "window:minimize", "window:maximize"];
 
-contextBridge.exposeInMainWorld('aiExecutive', {
+contextBridge.exposeInMainWorld("aisha", {
   isDesktop: true,
   invoke: (channel, payload) => {
     if (!CHANNELS.includes(channel)) {
@@ -13,9 +15,9 @@ contextBridge.exposeInMainWorld('aiExecutive', {
     }
     return ipcRenderer.invoke(channel, payload);
   },
-  onSupervisorEvent: (listener) => {
+  onHostEvent: (listener) => {
     const handler = (_event, data) => listener(data);
-    ipcRenderer.on('supervisor:event', handler);
-    return () => ipcRenderer.removeListener('supervisor:event', handler);
+    ipcRenderer.on("aisha:event", handler);
+    return () => ipcRenderer.removeListener("aisha:event", handler);
   },
 });

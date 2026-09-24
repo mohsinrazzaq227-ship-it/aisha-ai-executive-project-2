@@ -1,0 +1,16 @@
+# AISHA sidecar dependencies.
+#
+# Nothing here is installed automatically: the Doctor probes each import and
+# reports MISSING with the exact command. On Windows these packages provide real
+# UI Automation, synthetic input, screen capture, OCR and local speech.
+#
+#   pip install -r python/requirements.txt
+#
+pywinauto>=0.6.8        # UI Automation tree discovery + semantic control actions (Windows)
+pyautogui>=0.9.54       # mouse/keyboard input fallback (Windows/macOS/X11)
+mss>=9.0.1              # fast screen capture with real pixel dimensions
+Pillow>=10.0.0          # image IO for capture/OCR
+pytesseract>=0.3.10     # OCR wrapper (also needs the tesseract binary)
+faster-whisper>=1.0.0   # local speech-to-text (CPU int8 is enough for the target box)
+pynput>=1.7.6           # global hotkeys / low-level key events
+numpy>=1.24.0           # required by faster-whisper

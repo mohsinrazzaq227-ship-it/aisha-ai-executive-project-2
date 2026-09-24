@@ -1,93 +1,50 @@
-import { eventsSince, latestEventId, subscribe, type ExecutiveEvent } from "@/lib/events";
+import { eventsAfter, recentEvents } from "@/lib/events";
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
 
 /**
- * Real-time event stream (Server-Sent Events). The 3D office, task panel and
- * activity feed all consume this exact stream — there is no second, decorative
- * source of truth.
+ * One authoritative event stream. `?stream=1` opens an SSE tail that polls the
+ * persisted event table, so the UI, the task panel and the 3D office all read
+ * exactly the same rows (no separate UI-only event simulation).
  */
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const taskFilter = url.searchParams.get("taskId") ?? undefined;
-  let lastId = Number(url.searchParams.get("since") ?? 0);
-  if (!Number.isFinite(lastId) || lastId <= 0) lastId = await latestEventId();
+  const limit = Number(url.searchParams.get("limit") ?? 200);
+  const after = Number(url.searchParams.get("after") ?? 0);
+  const stream = url.searchParams.get("stream") === "1";
+
+  if (!stream) {
+    const rows = after > 0 ? await eventsAfter(after, limit) : await recentEvents(limit);
+    return Response.json({ events: rows, lastId: rows.length ? rows[rows.length - 1].id : after });
+  }
 
   const encoder = new TextEncoder();
-  const pendingFromBus: ExecutiveEvent[] = [];
-  const unsubscribe = subscribe((event) => {
-    if (taskFilter && event.taskId !== taskFilter) return;
-    pendingFromBus.push(event);
-  });
-
-  const stream = new ReadableStream({
+  const latest = (await recentEvents(1)).at(0)?.id ?? 0;
+  let cursor = after > 0 ? after : latest;
+  const body = new ReadableStream<Uint8Array>({
     async start(controller) {
-      let closed = false;
-      const send = (payload: string) => {
-        if (closed) return;
+      const send = (data: unknown) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+      send({ type: "ready", cursor });
+      const timer = setInterval(async () => {
         try {
-          controller.enqueue(encoder.encode(payload));
-        } catch {
-          closed = true;
+          const rows = await eventsAfter(cursor, 200);
+          if (rows.length) {
+            cursor = rows[rows.length - 1].id;
+            send({ type: "events", events: rows, lastId: cursor });
+          } else {
+            send({ type: "heartbeat", cursor, at: new Date().toISOString() });
+          }
+        } catch (error) {
+          send({ type: "error", detail: String(error).slice(0, 200) });
         }
-      };
-      send(`retry: 2000\n\n`);
-      send(`event: ready\ndata: ${JSON.stringify({ since: lastId })}\n\n`);
-
-      const deliver = (event: ExecutiveEvent) => {
-        if (typeof event.id === "number") {
-          if (event.id <= lastId) return;
-          lastId = event.id;
-        }
-        send(`id: ${event.id ?? lastId}\nevent: executive\ndata: ${JSON.stringify(event)}\n\n`);
-      };
-
-      const poll = async () => {
-        try {
-          const rows = await eventsSince(lastId, 100, taskFilter);
-          for (const row of rows) deliver(row);
-        } catch {
-          /* database hiccup: try again on the next tick */
-        }
-      };
-
-      const interval = setInterval(() => {
-        if (closed) return;
-        while (pendingFromBus.length > 0) {
-          const event = pendingFromBus.shift();
-          if (event) deliver(event);
-        }
-        void poll();
-        send(`: heartbeat ${Date.now()}\n\n`);
       }, 1000);
-
-      await poll();
-
-      const abort = () => {
-        if (closed) return;
-        closed = true;
-        clearInterval(interval);
-        unsubscribe();
-        try {
-          controller.close();
-        } catch {
-          /* already closed */
-        }
-      };
-      request.signal.addEventListener("abort", abort);
-    },
-    cancel() {
-      unsubscribe();
+      request.signal.addEventListener("abort", () => {
+        clearInterval(timer);
+        controller.close();
+      });
     },
   });
-
-  return new Response(stream, {
-    headers: {
-      "content-type": "text/event-stream; charset=utf-8",
-      "cache-control": "no-cache, no-transform",
-      connection: "keep-alive",
-      "x-accel-buffering": "no",
-    },
+  return new Response(body, {
+    headers: { "content-type": "text/event-stream", "cache-control": "no-cache, no-transform", connection: "keep-alive" },
   });
 }

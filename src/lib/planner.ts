@@ -1,393 +1,568 @@
-import type { RiskLevel } from "@/db/schema";
-import { getTool } from "@/lib/tools/registry";
-import { THEMES } from "@/lib/textrender";
-
 /**
- * Planning engine. A deterministic, auditable intent parser builds the plan,
- * classifies risk and builds the task graph (dependencies + parallel batches +
- * resource classes). When a local model (Ollama) is configured it is used for
- * prose generation; the plan records which engine actually planned. The tool
- * registry is always the final authority on tools, risk and approval.
+ * Planner: intent → task DAG.
+ *
+ * Two engines, one output contract:
+ *   1. OLLAMA      — local LLM proposes the graph (strict JSON, validated against
+ *                    the real tool registry; hallucinated tools are dropped).
+ *   2. DETERMINISTIC — a real, runnable graph built from the request text.
+ * The engine that produced the plan is stored on the task, so the UI can never
+ * present a deterministic plan as LLM reasoning.
  */
-
-export type ResourceClass = "LIGHT" | "HEAVY";
+import { z } from "zod";
+import type { ResourceClass, RiskLevel } from "@/db/schema";
+import { DIRS } from "@/lib/config";
+import { listTools, getTool } from "@/lib/tools";
+import { AGENT_BY_ID } from "@/lib/agents";
+import { chat, probe } from "@/lib/ollama";
+import { classifyIncoming } from "@/lib/security";
+import { newId, slugify, truncate } from "@/lib/util";
 
 export type PlannedStep = {
+  id: string;
   title: string;
-  detail: string;
   agentId: string;
   toolId: string;
-  toolInput: Record<string, unknown>;
+  params: Record<string, unknown>;
+  dependsOn: string[];
+  parallel: boolean;
+  resourceClass: ResourceClass;
   risk: RiskLevel;
-  requiresApproval: boolean;
-  /** Zero-based indexes of steps that must complete before this one starts. */
-  dependsOn?: number[];
-  /** May run concurrently with other ready steps of the same resource class. */
-  parallel?: boolean;
-  /** HEAVY steps are serialised so the machine stays responsive. */
-  resourceClass?: ResourceClass;
+  rationale: string;
 };
 
 export type Plan = {
-  intent: IntentKind;
-  title: string;
+  intent: Intent;
+  engine: "OLLAMA" | "DETERMINISTIC";
+  summary: string;
   steps: PlannedStep[];
-  engine: "deterministic_local" | "ollama" | "cloud";
-  engineDetail: string;
   notes: string[];
-  topic: string;
-  destination?: string;
+  model: string | null;
 };
 
-export type IntentKind =
-  | "VIDEO_PRODUCTION"
-  | "RESEARCH_REPORT"
-  | "DOCUMENT_ANALYSIS"
-  | "SHELL_COMMAND"
-  | "FILE_OPERATION"
-  | "EMAIL"
-  | "DESKTOP_CONTROL"
-  | "BROWSER_AUTOMATION"
-  | "DIAGNOSTICS"
-  | "GENERAL";
+export const INTENTS = ["RESEARCH", "DOCUMENT", "MEDIA", "EMAIL", "DATA", "COMPUTER", "BROWSER", "SYSTEM", "GENERAL"] as const;
+export type Intent = (typeof INTENTS)[number];
 
-export type UploadHint = { id: string; originalName: string; mime: string };
-
-const COMMAND_STOPWORDS = [
-  "please", "can", "you", "aisha", "ai-executive", "executive", "make", "create", "produce", "generate", "render",
-  "research", "find", "search", "the", "latest", "news", "about", "for", "me", "my", "and", "then", "save", "write",
-  "report", "folder", "documents", "video", "clip", "second", "seconds", "minute", "minutes", "long", "professional",
-  "comparing", "compare", "options", "tools", "available", "today", "summarising", "summarizing", "findings", "detailed",
-  "on", "of", "a", "an", "to", "in", "with", "that", "explains", "explaining", "explainer",
-];
-
-function extractTopic(message: string): string {
-  const quoted = /"([^"]{4,120})"/.exec(message)?.[1];
-  if (quoted) return quoted.trim();
-  const cleaned = message
-    .replace(/[^A-Za-z0-9\s'-]/g, " ")
-    .split(/\s+/)
-    .filter((word) => word.length > 1 && !COMMAND_STOPWORDS.includes(word.toLowerCase()));
-  const topic = cleaned.slice(0, 8).join(" ").trim();
-  return topic.length >= 3 ? topic : message.slice(0, 80);
+export function classifyIntent(request: string): Intent {
+  const text = request.toLowerCase();
+  if (/(email|inbox|mail |smtp|imap)/.test(text)) return "EMAIL";
+  if (/(video|film|clip|storyboard|render|mp4|caption)/.test(text)) return "MEDIA";
+  if (/(image|png|poster|card|visual|logo)/.test(text)) return "MEDIA";
+  if (/(report|document|pdf|docx|xlsx|spreadsheet|write up|memo|markdown)/.test(text)) return "DOCUMENT";
+  if (/(research|find out|compare|market|supplier|sources|citations|analyse the market)/.test(text)) return "RESEARCH";
+  if (/(csv|json|dataset|statistics|sum|average|aggregate|numbers)/.test(text)) return "DATA";
+  if (/(click|type|window|screenshot|screen|desktop|notepad|excel|open the app|ui automation|mouse|keyboard)/.test(text)) return "COMPUTER";
+  if (/(website|browser|form|fill in|submit|webpage|login page|navigate)/.test(text)) return "BROWSER";
+  if (/(run|command|shell|script|powershell|bash|process|diagnose|host|resource)/.test(text)) return "SYSTEM";
+  return "GENERAL";
 }
 
-function extractDuration(message: string): number {
-  const explicit = /(\d{1,3})\s*(?:-|\s)?\s*(?:second|sec\b|s\b)/i.exec(message);
-  if (explicit) return Math.max(15, Math.min(600, Number(explicit[1])));
-  const minutes = /(\d{1,2})\s*(?:-|\s)?\s*(?:minute|min\b)/i.exec(message);
-  if (minutes) return Math.max(15, Math.min(600, Number(minutes[1]) * 60));
-  const words: Record<string, number> = { one: 60, two: 120, three: 180, four: 240, five: 300, half: 30, ninety: 90, forty: 40, thirty: 30, sixty: 60 };
-  const wordMatch = /(one|two|three|four|five|half|ninety|forty|thirty|sixty)[\s-]*(?:minute|second)/i.exec(message);
-  if (wordMatch) {
-    const base = words[wordMatch[1].toLowerCase()] ?? 60;
-    return /minute/i.test(wordMatch[0]) ? base : Math.max(15, base);
-  }
-  return 60;
+function extractTopic(request: string): string {
+  return truncate(
+    request
+      .replace(/^(please|can you|could you|i need you to|i want you to|aisha,?)\s*/i, "")
+      .replace(/\s+/g, " ")
+      .trim(),
+    220,
+  );
 }
 
-function extractCommand(message: string): string | null {
-  const fenced = /```(?:\w+)?\n?([\s\S]+?)```/.exec(message)?.[1];
-  if (fenced) return fenced.trim();
-  const quoted = /["'`]([^"'`]{3,400})["'`]/.exec(message)?.[1];
-  if (quoted && /[a-zA-Z]/.test(quoted)) return quoted.trim();
-  const afterColon = /:\s*(.+)$/m.exec(message)?.[1];
-  if (afterColon) return afterColon.trim();
-  return null;
+function parseUrls(request: string): string[] {
+  return [...request.matchAll(/https?:\/\/[^\s"')]+/g)].map((m) => m[0]).slice(0, 4);
 }
 
-function extractUrl(message: string): string | null {
-  const url = /https?:\/\/[^\s"'<>]+/i.exec(message)?.[0];
-  if (url) return url;
-  const bare = /\b((?:[a-z0-9-]+\.)+[a-z]{2,})(\/[^\s"'<>]*)?/i.exec(message.replace(/(?:research|search|about|find|look up|navigate to|go to|open)\s+/gi, ""))?.[0];
-  if (bare && !/\.(txt|md|csv|json|pdf|docx|xlsx|png|jpg|mp4|wav|mp3)$/i.test(bare)) return `https://${bare.replace(/\s.*$/, "")}`;
-  return null;
+function parseQuoted(request: string, keyword: string): string | null {
+  const pattern = new RegExp(`${keyword}[^"']*["']([^"']{3,200})["']`, "i");
+  return pattern.exec(request)?.[1] ?? null;
 }
 
-/**
- * Natural-language location hints resolve to named roots instead of being taken
- * as literal folder names. "list the files in my documents folder" must resolve
- * to the Documents root, not to a directory called "my documents folder".
- */
-export function normalizePathHint(raw: string): string {
-  const cleaned = raw
-    .trim()
-    .replace(/^["']+|["']+$/g, "")
-    .replace(/\s+/g, " ")
-    .replace(/^open\s+/i, "")
-    .replace(/^(the|my)\s+/i, "");
-  const lower = cleaned.toLowerCase();
-  if (/^(documents?|docs)( folder)?$/.test(lower)) return "documents";
-  if (/^(uploads?|attachments?)( folder)?$/.test(lower)) return "uploads";
-  if (/^(workspace|data|project)( folder)?$/.test(lower)) return "workspace";
-  if (/^(desktop|desk top)$/.test(lower)) return "desktop";
-  if (/^(downloads?)$/.test(lower)) return "downloads";
-  return cleaned;
+function extractDeliverables(request: string): { format: "pdf" | "docx" | "xlsx" | "md" | "csv" | "json" | "txt" } {
+  const text = request.toLowerCase();
+  if (/pdf/.test(text)) return { format: "pdf" };
+  if (/word|docx/.test(text)) return { format: "docx" };
+  if (/excel|xlsx|spreadsheet/.test(text)) return { format: "xlsx" };
+  if (/csv/.test(text)) return { format: "csv" };
+  if (/json/.test(text)) return { format: "json" };
+  if (/markdown|\.md/.test(text)) return { format: "md" };
+  return { format: "md" };
 }
 
-function extractPathHint(message: string): string {
-  const explicit = /([A-Za-z]:\\[^"'\n]+|\/(?:home|Users|tmp|var|app)[^"'\n]{0,120})/.exec(message)?.[0];
-  if (explicit) return explicit.trim();
-  const named = /(?:in|from|inside|at|into|to|open|find|read|list)\s+(?:the\s+|my\s+)?(documents?|docs|uploads?|attachments?|desktop|downloads?|workspace)(?:\s+folder)?/i.exec(message);
-  if (named) return normalizePathHint(named[1]);
-  const fileish = /([A-Za-z0-9._-]+\.(?:txt|md|csv|json|log|pdf|docx|xlsx|png|jpg|jpeg|mp4|wav|mp3))/.exec(message)?.[0];
-  if (fileish) return fileish;
-  return "documents";
-}
-
-type StepExtras = { dependsOn?: number[]; parallel?: boolean; resourceClass?: ResourceClass };
-
-function step(toolId: string, title: string, detail: string, toolInput: Record<string, unknown>, agentOverride?: string, extras: StepExtras = {}): PlannedStep {
-  const tool = getTool(toolId);
+function step(partial: Omit<PlannedStep, "id" | "parallel" | "resourceClass" | "risk"> & { id?: string; parallel?: boolean; resourceClass?: ResourceClass; risk?: RiskLevel }): PlannedStep {
+  const tool = getTool(partial.toolId);
   return {
-    title,
-    detail,
-    agentId: agentOverride ?? tool.defaultAgent,
-    toolId,
-    toolInput,
-    risk: tool.risk,
-    requiresApproval: tool.requiresApproval,
-    dependsOn: extras.dependsOn ?? [],
-    parallel: extras.parallel ?? false,
-    resourceClass: extras.resourceClass ?? (tool.risk === "MEDIUM" && /render|narrate|visuals/.test(toolId) ? "HEAVY" : "LIGHT"),
+    id: partial.id ?? newId("s"),
+    title: partial.title,
+    agentId: partial.agentId,
+    toolId: partial.toolId,
+    params: partial.params,
+    dependsOn: partial.dependsOn,
+    parallel: partial.parallel ?? false,
+    resourceClass: partial.resourceClass ?? tool?.resourceClass ?? "LIGHT",
+    risk: partial.risk ?? 0 > 1 ? "MEDIUM" : tool?.risk ?? "LOW",
+    rationale: partial.rationale,
   };
 }
 
-function wantsEmail(message: string): boolean {
-  return /(email|e-mail|mail me|send .*mail|inbox)/i.test(message);
+/** Deterministic planner: always produces a genuinely runnable graph. */
+/**
+ * Real capability detection from the request text. Sections accumulate instead
+ * of being mutually exclusive, so "research three suppliers, compare prices,
+ * write a report and email it to me" genuinely becomes three parallel research
+ * branches feeding an analyst, a document step and an approval-gated send.
+ */
+function requestedSections(request: string, intent: Intent) {
+  const text = request.toLowerCase();
+  return {
+    research: intent === "RESEARCH" || intent === "DOCUMENT" || intent === "GENERAL" || /(research|compare|supplier|market|find out|sources|citation)/.test(text),
+    document: intent === "DOCUMENT" || intent === "RESEARCH" || /(report|document|pdf|docx|xlsx|spreadsheet|memo|write[- ]up|markdown|briefing)/.test(text),
+    email: intent === "EMAIL" || /(email|e-mail|\bmail\b|send .* to )/.test(text),
+    media: intent === "MEDIA" || /(video|film|clip|storyboard|render|mp4|caption|poster|image|png|visual)/.test(text),
+    browser: intent === "BROWSER" || parseUrls(request).length > 0,
+    computer: intent === "COMPUTER" || /(click|type into|window|screenshot|desktop|notepad|ui automation|mouse|keyboard)/.test(text),
+    data: intent === "DATA" || /(csv|json|dataset|statistics|average|aggregate|numbers|analyse the)/.test(text),
+    system: intent === "SYSTEM" || /(diagnostic|host|process list|shell|command|script|powershell|resource)/.test(text),
+  };
 }
 
-function wantsReportFile(message: string): boolean {
-  return /(save|write|store|put).*(report|file|document)|report.*(documents|folder|file)/i.test(message);
-}
-
-export type PlanInput = {
-  message: string;
-  uploads: UploadHint[];
-  llmEngine: "deterministic_local" | "ollama" | "cloud";
-  llmDetail: string;
-};
-
-export function buildPlan(input: PlanInput): Plan {
-  const message = input.message.trim();
-  const lower = message.toLowerCase();
-  const topic = extractTopic(message);
-  const duration = extractDuration(message);
+export function deterministicPlan(request: string): Plan {
+  const intent = classifyIntent(request);
+  const topic = extractTopic(request);
+  const urls = parseUrls(request);
+  const wanted = requestedSections(request, intent);
   const notes: string[] = [];
-  const upload = input.uploads[0];
+  const steps: PlannedStep[] = [];
 
-  // The deliverable must be a video: the creation verb has to target it, so that
-  // "research local AI video generation and write a report" is NOT read as a video task.
-  const videoDeliverable = /(?:create|make|produce|generate|render|build|edit|assemble)[^.!?]{0,50}?\b(video|reel|shorts?|clip|mp4)\b/i.test(message);
-  const videoFollowUp = /\bvideo\b/i.test(lower) && /(summaris|summariz|report on|turn .* into)/i.test(lower);
-  const researchReportIntent = /(report|research|compare|document(s)? folder|save)/i.test(lower) && !videoDeliverable;
-  const isVideo = (videoDeliverable || videoFollowUp) && !researchReportIntent;
-  const isShell = /(powershell|run this command|run the command|execute (this|the)|terminal|command prompt|run a command|cmd\b|bash\b)/i.test(lower);
-  const isDiagnostics = /(doctor|diagnos|system check|health check|check (the )?system|what is wrong|status report|capabilit)/i.test(lower);
-  const wantsBrowserInteraction = /(click|log ?in|fill (in )?the form|type into|submit the form|scroll|interactive|javascript)/i.test(lower);
-  const wantsBrowser = /(browser|navigate to|open the (web ?site|page|url)|visit )/i.test(lower) || wantsBrowserInteraction;
-  const wantsDesktop = /(open (the )?(app|application|program|notepad|calculator|explorer)|take a screenshot|clipboard|window|type .* into|press .* hotkey|focus (the )?app|desktop)/i.test(lower);
-  const isEmailOnly = wantsEmail(message) && !isVideo && !/(report|research|video)/i.test(lower);
-  const isDocument = Boolean(upload) || /(pdf|docx|spreadsheet|xlsx|csv|analyse (this|the) (file|document)|analyz|summari[sz]e (this|the) (file|document|pdf))/.test(lower);
-  const isFile = /(list (the )?(files|folder|directory)|find (the )?file|read (the )?file|open (my )?documents|create (a )?file|copy |move |rename |delete )/.test(lower);
-  const isResearch = /(research|search|find|look up|compare|latest|news|what is|who is|explain|investigate|report)/.test(lower);
-
-  // ---------------- VIDEO PRODUCTION -------------------------------------------
-  if (isVideo) {
-    const steps: PlannedStep[] = [
-      step("research.search", "Research the topic on live sources", `Gather real sources and citable facts about "${topic}" for a ${duration}s video.`, { query: topic, limit: 8 }, undefined, { parallel: true }),
-      step("research.search", "Research a second angle", `Run a second, independent live query so the script is not built from a single source set.`, { query: `${topic} evidence data`, limit: 6 }, undefined, { parallel: true }),
-      step("research.verify", "Cross-check claims against sources", "Reject anything the sources do not support before it enters the script.", { claims: [], sources: [] }, undefined, { dependsOn: [0, 1] }),
-      step("director.brief", "Write the creative brief", `Define audience, platform, tone, visual style, scene count and pacing for a ${duration}s piece.`, { topic, durationSec: duration }, undefined, { dependsOn: [2] }),
-      step("script.generate", "Write the narration script", "Grounded, non-repetitive, adult narration sized to the requested duration.", { topic, durationSec: duration }, undefined, { dependsOn: [3] }),
-      step("storyboard.generate", "Storyboard the scenes", "One genuinely different visual representation per scene with camera moves and transitions.", { scriptId: "" }, undefined, { dependsOn: [4] }),
-      step("visuals.render", "Render the frames", "Offline vector frames at 1080x1920 with measured caption layout.", { storyboardId: "" }, undefined, { dependsOn: [5], resourceClass: "HEAVY" }),
-      step("audio.narrate", "Produce audio", "Narration when a local TTS provider is configured, otherwise a labelled score bed.", { storyboardId: "" }, undefined, { dependsOn: [5], resourceClass: "HEAVY" }),
-      step("audio.align", "Align timings", "Word-level timestamps if the local Whisper server is available; otherwise directed scene windows, labelled.", { storyboardId: "" }, undefined, { dependsOn: [6, 7] }),
-      step("captions.render", "Compose captions", "Two-line maximum inside safe areas using measured glyph widths.", { storyboardId: "" }, undefined, { dependsOn: [8] }),
-      step("media.render", "Render and validate the MP4", "FFmpeg H.264/AAC 1080x1920, motion, transitions, burned captions, atomic publish after ffprobe checks.", { storyboardId: "" }, undefined, { dependsOn: [9], resourceClass: "HEAVY" }),
-      step("validation.ffprobe", "Independent verification", "Read the published file back from disk and verify every claim.", { path: "" }, undefined, { dependsOn: [10] }),
-      step("artifact.register", "Register artifacts with the asset manifest", "Checksum every produced file and link it to this task.", { path: "", kind: "video" }, "asset_manager", { dependsOn: [11] }),
-    ];
-    notes.push("Heavy media stages are serialised by the scheduler; research fans out in parallel because it is network-bound and cheap.");
-    return { intent: "VIDEO_PRODUCTION", title: `Produce a ${duration}s video about ${topic}`, steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic };
-  }
-
-  // ---------------- DOCUMENT ANALYSIS ------------------------------------------
-  if (isDocument && (upload || /analyz|analys|summari|pdf|docx|xlsx|csv/.test(lower))) {
-    const steps: PlannedStep[] = [
-      step("doc.extract", "Extract the document", upload ? `Extract text from the uploaded ${upload.originalName}.` : "Locate and extract the referenced document.", upload ? { uploadId: upload.id } : { path: extractPathHint(message) }),
-      step("doc.analyse", "Analyse the content", "Structure, key phrases, statistics, references and repetition profile.", { question: message.slice(0, 300) }, undefined, { dependsOn: [0] }),
-      step("report.write", "Save the findings as a document", "Write a new Markdown report — the original upload is never modified.", { title: `Analysis — ${upload?.originalName ?? topic}`, sections: [] }, undefined, { dependsOn: [1] }),
-      step("validation.ffprobe", "Validate the written report file", "Read the produced file back from disk (size, readability, checksum) before reporting success.", { path: "" }, "validation_agent", { dependsOn: [2] }),
-    ];
-    return { intent: "DOCUMENT_ANALYSIS", title: `Analyse ${upload?.originalName ?? topic}`, steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic };
-  }
-
-  // ---------------- SHELL COMMAND ----------------------------------------------
-  if (isShell) {
-    const command = extractCommand(message);
-    if (!command) {
-      notes.push("No explicit command text was found in the request, so the plan stops at validation and asks for the exact command.");
-    }
-    const steps: PlannedStep[] = [
-      step("shell.preview", "Validate the command", "Run the command validator against the deny-list and allowlist before anything executes.", { command: command ?? "" }),
-    ];
-    if (command) {
-      steps.push(step("shell.execute", "Execute with approval", "HIGH risk: runs only after you approve these exact parameters. Timeout 45s, fully audited, cancellable.", { command }, undefined, { dependsOn: [0] }));
-    }
-    notes.push("PowerShell/exact-command execution is never hidden: the approval dialog shows the full command text and its hash.");
-    return { intent: "SHELL_COMMAND", title: command ? `Run command: ${command.slice(0, 60)}` : "Validate and run a shell command", steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic: command ?? topic };
-  }
-
-  // ---------------- DIAGNOSTICS -------------------------------------------------
-  if (isDiagnostics) {
-    const steps: PlannedStep[] = [
-      step("doctor.run", "Run the Doctor", "Functional probes of every capability: binaries encode/read-back tests, model round-trip, shell probe, UIA probe, sidecar, browser launch, permissions, disk.", { deep: true }),
-      step("host.inspect", "Inspect the host", "OS, CPU, memory, disk, workspace roots and process sample.", { detail: "processes" }, undefined, { parallel: true }),
-      step("capabilities.probe", "Probe the capability registry", "Every capability must pass a functional probe before it can report AVAILABLE.", {}, undefined, { parallel: true }),
-      step("artifact.register", "Write the diagnostics report", "Persist the report as a task artifact with a checksum.", { path: "", kind: "diagnostics" }, "asset_manager", { dependsOn: [0, 1, 2] }),
-    ];
-    return { intent: "DIAGNOSTICS", title: "System diagnostics", steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic: "system diagnostics" };
-  }
-
-  // ---------------- BROWSER AUTOMATION -----------------------------------------
-  if (wantsBrowser && !wantsDesktop) {
-    const url = extractUrl(message) ?? "https://en.wikipedia.org/wiki/Black_hole";
-    const targetText = /find (?:the )?(?:element|text) "([^"]{2,60})"/i.exec(message)?.[1] ?? /\bfor "([^"]{2,60})"/i.exec(message)?.[1] ?? null;
-    const steps: PlannedStep[] = [
-      step("browser.probe", "Verify the browser engine is really working", "Launch the automation engine and read a page back. If it is not installed, say so instead of pretending.", {}),
-      step("browser.navigate", "Navigate to the page", `Open ${url} in the automation engine and capture the rendered document.`, { url }, undefined, { dependsOn: [0] }),
-      step("browser.extract", "Extract the page structure", "Visible text, headings, links, buttons and inputs from the rendered DOM.", { url }, "browser_agent", { dependsOn: [1] }),
-      step("browser.screenshot", "Capture evidence", "PNG screenshot of the rendered page stored as a task artifact.", { url }, "vision_agent", { dependsOn: [1] }),
-    ];
-    if (targetText) {
-      steps.push(step("browser.verify", "Verify the requested element", `Confirm the page really contains "${targetText}" and report its surrounding content.`, { url, expectedText: targetText }, "validation_agent", { dependsOn: [2] }));
-    }
-    if (wantsBrowserInteraction) {
-      steps.push(
-        step("browser.interact", "Interact with the page", "Semantic interaction through the DOM (click/type/scroll) — never blind coordinates when the DOM is available.", { url, action: "click", selector: "a" }, "browser_agent", { dependsOn: [2] }),
-      );
-    }
-    notes.push("Browser automation is only used when the engine is installed and its launch probe succeeds; otherwise the HTTP research path is used and labelled.");
-    return { intent: "BROWSER_AUTOMATION", title: `Browser task on ${url.replace(/^https?:\/\//, "").slice(0, 50)}`, steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic };
-  }
-
-  // ---------------- DESKTOP / COMPUTER USE -------------------------------------
-  if (wantsDesktop) {
-    const appMatch = /open (?:the )?(notepad|calculator|explorer|cmd|terminal|chrome|edge|word|excel|paint|[A-Za-z0-9 ._-]{2,30})/i.exec(message)?.[1]?.trim();
-    const typeText = /type\s+["']([^"']{1,120})["']/i.exec(message)?.[1] ?? /type\s+(.{1,80})$/i.exec(message)?.[1]?.trim() ?? null;
-    const hotkey = /(?:press|hotkey)\s+([A-Za-z0-9+\- ]{2,30})/i.exec(message)?.[1]?.trim() ?? null;
-    const steps: PlannedStep[] = [
-      step("computer.state", "Capture the current computer state", "Active window, visible windows, screenshot path, clipboard, pointer and focused control — the evidence baseline for verification.", { purpose: message.slice(0, 200) }, "vision_agent"),
-    ];
-    let index = 0;
-    if (appMatch) {
-      steps.push(step("windows.open", "Open the application", `Launch "${appMatch}" and verify a real window appears.`, { target: appMatch }, "computer_agent", { dependsOn: [index] }));
-      index += 1;
-      steps.push(step("windows.list", "Enumerate windows and the UI Automation tree", "Semantic discovery first: window titles, automation ids, control types, bounding rectangles.", { purpose: message.slice(0, 200) }, "vision_agent", { dependsOn: [index] }));
-      index += 1;
-    }
-    if (typeText) {
-      steps.push(step("windows.type", "Type the requested text", `Type "${typeText}" into the focused application using real keyboard input.`, { text: typeText }, "computer_agent", { dependsOn: [index] }));
-      index += 1;
-    }
-    if (hotkey) {
-      steps.push(step("windows.hotkey", "Send the hotkey", `Send the "${hotkey}" combination as real keyboard input.`, { keys: hotkey }, "computer_agent", { dependsOn: [Math.max(0, index - 1)] }));
-      index += 1;
-    }
-    steps.push(step("windows.screenshot", "Capture the resulting screen", "Screenshot after the action, stored as a real artifact.", {}, "vision_agent", { dependsOn: [Math.max(0, index - 1)] }));
+  const research = (label: string, index: number, dependency: string | null = null) => {
+    const id = newId("s");
     steps.push(
-      step(
-        "computer.verify",
-        "Verify the resulting state",
-        "Re-inspect the window/control tree, typed text and file state. Success is claimed only when the evidence confirms it — never because an input command was sent.",
-        { expectation: typeText ?? appMatch ?? message.slice(0, 200), app: appMatch ?? null, typedText: typeText ?? null, saveAs: /save (?:it )?to ([^\s"']+)/i.exec(message)?.[1] ?? null },
-        "validation_agent",
-        { dependsOn: [index] },
-      ),
+      step({
+        id,
+        title: label,
+        agentId: "research",
+        toolId: "research.search",
+        params: { query: label, limit: 3, writeDossier: true },
+        dependsOn: dependency ? [dependency] : [],
+        parallel: dependency ? false : true,
+        rationale: `Real engine retrieval for "${label}" (${index === 0 ? "primary" : "parallel branch"})`,
+      }),
     );
-    notes.push("Coordinate clicking is a last resort: UI Automation semantics first, then rendered/image evidence, then coordinates — the engine used is recorded per action.");
-    return { intent: "DESKTOP_CONTROL", title: appMatch ? `Desktop control: ${appMatch}` : "Desktop control", steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic: appMatch ?? "desktop" };
-  }
+    return id;
+  };
 
-  // ---------------- EMAIL -------------------------------------------------------
-  if (isEmailOnly) {
-    const steps: PlannedStep[] = [
-      step("email.list", "Read the inbox", "Only works when an IMAP/Gmail/Graph connector is configured; otherwise it reports NOT_CONFIGURED.", { query: "", limit: 10 }),
-      step("artifact.register", "Record the mailbox summary", "Persist the real fetched message list as an artifact so it is auditable.", { path: "", kind: "email-summary" }, "asset_manager", { dependsOn: [0] }),
-    ];
-    return { intent: "EMAIL", title: "Inbox review", steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic: "inbox" };
-  }
+  let reportStepId: string | null = null;
 
-  // ---------------- FILE OPERATIONS --------------------------------------------
-  if (isFile && !isResearch) {
-    const target = extractPathHint(message);
-    if (/delete/i.test(lower)) {
-      const steps: PlannedStep[] = [
-        step("fs.list", "Confirm the targets exist", `List ${target} so the deletion targets are explicit.`, { path: target }),
-        step("fs.delete", "Delete with typed confirmation", "HIGH risk. Requires the confirmation phrase DELETE in addition to approval.", { paths: [target], confirmation: "DELETE", reason: message.slice(0, 200) }, undefined, { dependsOn: [0] }),
-      ];
-      return { intent: "FILE_OPERATION", title: `Delete under ${target}`, steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes: ["Deletion is irreversible and always shows the exact paths before running."], topic: target };
-    }
-    if (/create|write/i.test(lower) && /file/i.test(lower)) {
-      const content = extractCommand(message) ?? "";
-      const steps: PlannedStep[] = [
-        step("fs.write", "Create a new file", "Creates a NEW file with a unique name — nothing existing is overwritten.", { path: target.endsWith(".txt") || target.endsWith(".md") ? target : `${target}/note_${Date.now()}.md`, content }),
-        step("fs.read", "Read the file back", "Verification: the file must actually exist on disk with the expected content.", { path: target.endsWith(".txt") || target.endsWith(".md") ? target : "documents" }, "validation_agent", { dependsOn: [0] }),
-      ];
-      return { intent: "FILE_OPERATION", title: `Create ${target}`, steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic: target };
-    }
-    const steps: PlannedStep[] = [step("fs.list", "Inspect the location", `Real directory listing for ${target}.`, { path: target, limit: 100 })];
-    if (/read|open|analyse|analyz/i.test(lower)) {
+  if (wanted.research) {
+    const queries = splitQueries(topic);
+    const researchIds = queries.map((query, index) => research(query, index));
+    const analystId = newId("s");
+    steps.push(
+      step({
+        id: analystId,
+        title: "Synthesise findings into an executive report",
+        agentId: "docs",
+        toolId: "report.write",
+        params: {
+          title: `Executive briefing — ${truncate(topic, 80)}`,
+          sections: researchIds.map((_, index) => ({
+            heading: `Finding ${index + 1}: ${queries[index]}`,
+            body: `Evidence gathered from the research branch for "${queries[index]}". References are recorded in the research dossier artifact.`,
+          })),
+          alsoPdf: extractDeliverables(request).format === "pdf",
+        },
+        dependsOn: researchIds,
+        rationale: "Document agent composes the deliverable from real branch outputs",
+      }),
+    );
+    reportStepId = analystId;
+    if (wanted.document && extractDeliverables(request).format !== "md") {
       steps.push(
-        step("fs.read", "Read the file", `Read ${target} inside the permitted scope.`, { path: target }, undefined, { dependsOn: [0] }),
-        step("report.write", "Summarise what was found", "Write a short Markdown summary of the real directory/contents.", { title: `Filesystem report — ${target}`, sections: [] }, undefined, { dependsOn: [1] }),
-        step("validation.ffprobe", "Verify the written report", "Read the produced file back from disk before claiming success.", { path: "" }, "validation_agent", { dependsOn: [2] }),
+        step({
+          id: newId("s"),
+          title: "Produce the requested document format",
+          agentId: "docs",
+          toolId: "doc.generate",
+          params: {
+            title: `Executive briefing — ${truncate(topic, 80)}`,
+            format: extractDeliverables(request).format,
+            sections: [{ heading: "Summary", body: `Deliverable compiled from research branches for: ${topic}` }],
+          },
+          dependsOn: [analystId],
+          rationale: `User asked for ${extractDeliverables(request).format.toUpperCase()} output`,
+        }),
       );
     }
-    return { intent: "FILE_OPERATION", title: `Files at ${target}`, steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic: target };
   }
 
-  // ---------------- RESEARCH + REPORT (+ optional email) -----------------------
-  if (isResearch || wantsEmail(message)) {
-    const steps: PlannedStep[] = [
-      step("research.search", "Research live sources", `Query Wikipedia, OpenAlex and Hacker News for "${topic}" and keep real URLs.`, { query: topic, limit: 10 }, undefined, { parallel: true }),
-      step("research.search", "Research an independent second query", `Second live query ("${topic} evidence comparison") executed concurrently so both source sets can be cross-checked.`, { query: `${topic} evidence comparison`, limit: 8 }, undefined, { parallel: true }),
-      step("research.verify", "Cross-check the evidence", "Flag anything the sources do not support so it never enters the report unlabelled.", { claims: [], sources: [] }, undefined, { dependsOn: [0, 1] }),
-    ];
-    if (wantsReportFile(message) || /report|compare|summar/i.test(lower)) {
-      const wantsPdf = /(pdf|docx|word document)/i.test(lower);
-      const destination = /documents/i.test(lower) ? "documents" : undefined;
+  if (wanted.document && !wanted.research) {
+    const id = newId("s");
+    steps.push(
+      step({
+        id,
+        title: "Produce the requested document",
+        agentId: "docs",
+        toolId: "doc.generate",
+        params: {
+          title: truncate(topic, 80),
+          format: extractDeliverables(request).format,
+          sections: [{ heading: "Summary", body: `Deliverable compiled for: ${topic}` }],
+        },
+        dependsOn: [],
+        rationale: "Document agent generates and structurally validates the real file",
+      }),
+    );
+    reportStepId = id;
+  }
+
+  if (wanted.browser) {
+    const target = urls[0] ?? `https://en.wikipedia.org/wiki/${encodeURIComponent(topic)}`;
+    steps.push(
+      step({
+        id: newId("s"),
+        title: `Browse and inspect ${target}`,
+        agentId: "browser",
+        toolId: "browser.navigate",
+        params: { url: target, screenshot: true },
+        dependsOn: [],
+        rationale: "Playwright navigation with screenshot + DOM evidence",
+      }),
+    );
+    notes.push("Form filling requires an explicit URL and selectors; ask AISHA to fill a specific form if that is the goal.");
+  }
+
+  if (wanted.computer) {
+    steps.push(
+      step({
+        id: newId("s"),
+        title: "Enumerate visible windows",
+        agentId: "computer",
+        toolId: "computer.windows",
+        params: { action: "list" },
+        dependsOn: [],
+        rationale: "Computer agent reads the real window tree first",
+      }),
+    );
+    steps.push(
+      step({
+        id: newId("s"),
+        title: "Capture the screen",
+        agentId: "computer",
+        toolId: "computer.capture_screen",
+        params: { label: slugify(topic) },
+        dependsOn: [],
+        rationale: "Pre-action screenshot as evidence baseline",
+      }),
+    );
+    notes.push("UI Automation and synthetic input are exposed through computer.uia / computer.input and are only executable on a Windows host with the sidecar installed.");
+  }
+
+  if (wanted.data) {
+    steps.push(
+      step({
+        id: newId("s"),
+        title: "Analyse the dataset",
+        agentId: "data",
+        toolId: "data.analyze",
+        params: { path: "datasets/sample.csv", writeSummary: true },
+        dependsOn: [],
+        rationale: "Data agent parses and aggregates with an independent recount",
+      }),
+    );
+    notes.push("Point AISHA at a concrete dataset path (workspace-relative) for a real analysis run.");
+  }
+
+  if (wanted.media) {
+    const briefId = newId("s");
+    steps.push(
+      step({
+        id: briefId,
+        title: "Write the creative brief",
+        agentId: "media_director",
+        toolId: "media.brief",
+        params: { topic, durationSeconds: 30 },
+        dependsOn: [],
+        rationale: "Media director records the provider decision before rendering",
+      }),
+    );
+    const cardsId = newId("s");
+    steps.push(
+      step({
+        id: cardsId,
+        title: "Compose scene cards",
+        agentId: "image",
+        toolId: "media.cards",
+        params: {
+          title: truncate(topic, 60),
+          scenes: [
+            { heading: "Cold open", body: truncate(topic, 220) },
+            { heading: "Why it matters", body: "Deterministic scene cards produced locally with the native PNG composer." },
+            { heading: "Close", body: "Rendered by AISHA without any AI image provider." },
+          ],
+        },
+        dependsOn: [briefId],
+        rationale: "Image agent composes real PNG scenes (origin recorded as deterministic)",
+      }),
+    );
+    steps.push(
+      step({
+        id: newId("s"),
+        title: "Render the video and validate it",
+        agentId: "video",
+        toolId: "media.video",
+        params: {
+          title: truncate(topic, 60),
+          scenes: [
+            { heading: "Cold open", body: truncate(topic, 200), seconds: 4 },
+            { heading: "Why it matters", body: "Deterministic ffmpeg render, validated by ffprobe.", seconds: 4 },
+            { heading: "Close", body: "No AI video provider was used.", seconds: 4 },
+          ],
+        },
+        dependsOn: [cardsId],
+        rationale: "Video agent renders MP4 and proves it with ffprobe; reports UNAVAILABLE if ffmpeg is missing",
+      }),
+    );
+  }
+
+  if (wanted.email) {
+    steps.push(
+      step({
+        id: newId("s"),
+        title: "List recent inbox messages",
+        agentId: "email",
+        toolId: "email.inbox",
+        params: { limit: 5 },
+        dependsOn: [],
+        rationale: "Real IMAP read; reports MISCONFIGURED if IMAP_URL is unset",
+      }),
+    );
+    const recipient = parseQuoted(request, "to") ?? process.env.EMAIL_DEFAULT_TO ?? null;
+    if (recipient) {
+      const draftId = newId("s");
       steps.push(
-        step("report.write", "Write the report", `Compose a Markdown report${destination ? " in your Documents folder" : ""}. MEDIUM risk: creating a file on disk is always approved.`, { title: `Research — ${topic}`, sections: [], destination }, undefined, { dependsOn: [2] }),
+        step({
+          id: draftId,
+          title: `Draft the email to ${recipient}`,
+          agentId: "email",
+          toolId: "email.draft",
+          params: { to: recipient, subject: truncate(topic, 120), body: `AISHA drafted this message from your request:\n\n${topic}` },
+          dependsOn: [],
+          rationale: "Drafts are safe artifacts; sending is a separate approval-gated step",
+        }),
       );
-      if (wantsPdf) {
-        steps.push(
-          step("report.export", "Export a PDF/DOCX copy", "Convert the written report into a PDF or DOCX artifact in addition to Markdown.", { artifactPath: "", format: wantsPdf && /docx|word/i.test(lower) ? "docx" : "pdf" }, "document_agent", { dependsOn: [3] }),
-          step("artifact.register", "Register and checksum the exports", "Link every produced file to this task with a checksum.", { path: "", kind: "report" }, "asset_manager", { dependsOn: [4] }),
-        );
+      steps.push(
+        step({
+          id: newId("s"),
+          title: `Send the email to ${recipient} (requires approval)`,
+          agentId: "email",
+          toolId: "email.send",
+          params: { to: recipient, subject: truncate(topic, 120), body: `AISHA drafted this message from your request:\n\n${topic}` },
+          dependsOn: [...(reportStepId ? [reportStepId] : []), draftId],
+          risk: "HIGH",
+          rationale: "HIGH risk: the execution path blocks until a human approval token is granted",
+        }),
+      );
+    } else {
+      notes.push("No recipient found in the request (or EMAIL_DEFAULT_TO); AISHA will not invent an address. Phrase it as: send an email to \"someone@example.com\" saying …");
+    }
+  }
+
+  if (wanted.system) {
+    steps.push(
+      step({
+        id: newId("s"),
+        title: "Host diagnostics",
+        agentId: "ops",
+        toolId: "system.host",
+        params: {},
+        dependsOn: [],
+        rationale: "Ops agent establishes the real host baseline first",
+      }),
+    );
+    steps.push(
+      step({
+        id: newId("s"),
+        title: "Resource snapshot",
+        agentId: "ops",
+        toolId: "system.resources",
+        params: {},
+        dependsOn: [],
+        parallel: true,
+        rationale: "Resource pressure determines HEAVY-step admission",
+      }),
+    );
+    steps.push(
+      step({
+        id: newId("s"),
+        title: "Validated shell execution",
+        agentId: "code",
+        toolId: "system.shell",
+        params: { command: "echo AISHA shell check", timeoutMs: 10_000 },
+        dependsOn: [],
+        rationale: "Technical agent runs a validated command and reports the real exit code",
+      }),
+    );
+  }
+
+  if (!steps.length) {
+    steps.push(
+      step({
+        id: newId("s"),
+        title: "Host diagnostics (baseline)",
+        agentId: "ops",
+        toolId: "system.host",
+        params: {},
+        dependsOn: [],
+        rationale: "No executable capability matched the request; AISHA establishes a verified baseline and reports the limitation instead of pretending",
+      }),
+    );
+    notes.push("This request did not map to an execution plan; AISHA returns a grounded answer plus host evidence.");
+  }
+
+  const intentLabel: Record<Intent, string> = {
+    RESEARCH: "multi-branch research with synthesised report",
+    DOCUMENT: "research + document production",
+    MEDIA: "media planning and deterministic render",
+    EMAIL: "inbox review, draft and approval-gated send",
+    DATA: "dataset analysis",
+    COMPUTER: "computer observation and control",
+    BROWSER: "browser navigation and inspection",
+    SYSTEM: "host diagnostics and validated execution",
+    GENERAL: "grounded general assistance",
+  };
+
+  const sections = Object.entries(wanted)
+    .filter(([, enabled]) => enabled)
+    .map(([name]) => name);
+  return {
+    intent,
+    engine: "DETERMINISTIC",
+    summary: `${intentLabel[intent]}: ${steps.length} step(s), ${steps.filter((s) => s.dependsOn.length === 0).length} independent branch(es) [sections: ${sections.join("+")}]`,
+    steps,
+    notes,
+    model: null,
+  };
+}
+
+function splitQueries(topic: string): string[] {
+  const parts = topic
+    .split(/\s+and\s+|,\s*|;\s*/)
+    .map((part) => part.replace(/^(research|compare|find|analyse|analyze)\s+/i, "").trim())
+    .filter((part) => part.length > 3);
+  const cleaned = parts.length > 1 ? parts.slice(0, 3) : [topic];
+  return cleaned.map((part) => truncate(part, 120));
+}
+
+const LlmPlanSchema = z.object({
+  intent: z.string(),
+  steps: z
+    .array(
+      z.object({
+        title: z.string(),
+        agent: z.string(),
+        tool: z.string(),
+        params: z.record(z.string(), z.unknown()).default({}),
+        depends_on_titles: z.array(z.string()).default([]),
+        rationale: z.string().default(""),
+      }),
+    )
+    .min(1)
+    .max(10),
+  notes: z.array(z.string()).default([]),
+});
+
+export async function plan(request: string, opts: { signal?: AbortSignal } = {}): Promise<Plan> {
+  const fallback = deterministicPlan(request);
+  const status = await probe();
+  if (status.status !== "AVAILABLE" || !status.selectedModel) {
+    return { ...fallback, notes: [...fallback.notes, `Ollama unavailable (${status.detail}); deterministic planner used.`] };
+  }
+
+  const catalog = listTools().map((tool) => ({
+    id: tool.id,
+    group: tool.group,
+    risk: tool.risk,
+    resource: tool.resourceClass,
+    agents: tool.agents,
+    params: describeParams(tool.id),
+    description: tool.description,
+  }));
+
+  const systemPrompt = [
+    "You are the planning component of AISHA, a Windows AI executive.",
+    "Return ONLY JSON matching: {\"intent\":string,\"steps\":[{\"title\":string,\"agent\":string,\"tool\":string,\"params\":object,\"depends_on_titles\":string[],\"rationale\":string}],\"notes\":string[]}.",
+    "Rules: use ONLY tool ids from the catalog; only agents listed for that tool; keep params valid; independent steps must not depend on each other (they will run in parallel); never invent URLs or file paths; add a qa.verify step for anything that must be proven.",
+    `Tool catalog: ${JSON.stringify(catalog).slice(0, 14_000)}`,
+  ].join("\n");
+
+  const result = await chat(
+    [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: `Request: ${request}\nWorkspace root: ${DIRS.workspace}` },
+    ],
+    { json: true, signal: opts.signal, model: status.selectedModel, timeoutMs: 90_000 },
+  );
+
+  if (!result.ok) {
+    return { ...fallback, notes: [...fallback.notes, `Ollama plan call failed (${result.detail}); deterministic planner used.`] };
+  }
+
+  try {
+    const parsed = LlmPlanSchema.parse(JSON.parse(result.content));
+    const titleToId = new Map<string, string>();
+    const steps: PlannedStep[] = [];
+    const dropped: string[] = [];
+    for (const candidate of parsed.steps) {
+      const tool = getTool(candidate.tool);
+      if (!tool || !tool.agents.includes(candidate.agent) || !AGENT_BY_ID.has(candidate.agent)) {
+        dropped.push(`${candidate.tool} (agent ${candidate.agent})`);
+        continue;
       }
+      const id = newId("s");
+      titleToId.set(candidate.title, id);
+      steps.push({
+        id,
+        title: candidate.title.slice(0, 160),
+        agentId: candidate.agent,
+        toolId: tool.id,
+        params: candidate.params,
+        dependsOn: [],
+        parallel: false,
+        resourceClass: tool.resourceClass,
+        risk: tool.risk,
+        rationale: candidate.rationale || "planned by local model",
+      });
     }
-    if (wantsEmail(message)) {
-      const lastIndex = steps.length - 1;
-      steps.push(
-        step("email.draft", "Prepare the email", "Creates a real .eml draft artifact for review — nothing is transmitted.", { to: "me", subject: `Research: ${topic}`, body: "" }, "email_agent", { dependsOn: [lastIndex] }),
-        step("email.send", "Send the email", "HIGH risk: external communication. Only runs when SMTP is configured and you approve these exact parameters.", { to: "me", subject: `Research: ${topic}`, body: "" }, "email_agent", { dependsOn: [lastIndex + 1] }),
-      );
-      notes.push("Email sending stays disabled unless SMTP_URL is configured; the draft is still produced so nothing is lost.");
+    if (!steps.length) {
+      return { ...fallback, notes: [...fallback.notes, `LLM plans referenced unknown tools (${dropped.join(", ")}); deterministic planner used.`] };
     }
-    return { intent: "RESEARCH_REPORT", title: `Research ${topic}`, steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic };
+    for (const [index, candidate] of parsed.steps.entries()) {
+      const target = steps[index];
+      if (!target) continue;
+      target.dependsOn = candidate.depends_on_titles.map((title) => titleToId.get(title)).filter((v): v is string => Boolean(v));
+      target.parallel = target.dependsOn.length === 0 && steps.filter((s) => s.dependsOn.length === 0).length > 1;
+    }
+    const roots = steps.filter((s) => s.dependsOn.length === 0).length;
+    return {
+      intent: (INTENTS.includes(parsed.intent.toUpperCase() as Intent) ? (parsed.intent.toUpperCase() as Intent) : classifyIntent(request)),
+      engine: "OLLAMA",
+      summary: `local model ${result.model} planned ${steps.length} step(s) across ${roots} independent branch(es)`,
+      steps,
+      notes: [...parsed.notes, dropped.length ? `Dropped invalid tools: ${dropped.join(", ")}` : ""].filter(Boolean),
+      model: result.model,
+    };
+  } catch (error) {
+    return { ...fallback, notes: [...fallback.notes, `LLM plan was not valid JSON for the schema (${String(error).slice(0, 160)}); deterministic planner used.`] };
   }
-
-  // ---------------- GENERAL ----------------------------------------------------
-  const steps: PlannedStep[] = [
-    step("supervisor.answer", "Answer from what we actually know", "No side effects. Uses the configured local model when available, otherwise the deterministic engine that refuses to invent facts.", { question: message.slice(0, 900) }),
-    step("host.inspect", "Attach current system context", "Grounds the answer in real host and workspace state.", { detail: "summary" }, undefined, { parallel: true }),
-  ];
-  return { intent: "GENERAL", title: message.slice(0, 70) || "General request", steps, engine: input.llmEngine, engineDetail: input.llmDetail, notes, topic };
 }
 
-export function themesForUi() {
-  return THEMES.map((theme) => ({ id: theme.id, name: theme.name, accent: theme.accent }));
+function describeParams(toolId: string): string {
+  const tool = getTool(toolId);
+  if (!tool) return "{}";
+  try {
+    const shape = (tool.params as unknown as { _def?: { shape?: () => Record<string, unknown> } })._def?.shape?.();
+    if (!shape) return "{}";
+    return Object.keys(shape).join(", ");
+  } catch {
+    return "{}";
+  }
 }
+
+export { classifyIncoming };

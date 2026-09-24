@@ -1,59 +1,88 @@
-import type { WorkspaceRoots } from "@/lib/workspace";
-import type { ProviderReport } from "@/lib/providers";
-
-export type ArtifactSpec = {
-  kind: string;
-  name: string;
-  absPath: string;
-  mime?: string;
-  meta?: Record<string, unknown>;
-  validated?: boolean;
-};
-
-export type ToolProgress = (message: string, data?: Record<string, unknown>) => Promise<void>;
-
 /**
- * Runtime context handed to every tool handler. `handle`/`loadHandle` give tools
- * a durable, task-scoped way to pass structured intermediate state (script,
- * storyboard, alignment...) between agents inside the run directory.
+ * Tool contract shared by every capability in AISHA.
+ *
+ * A tool declares its risk, its resource class, the agents allowed to request
+ * it, a strict Zod parameter schema, an executor, and — critically — how its
+ * success is independently verified. Tools may not claim success on their own.
  */
-export type ToolContext = {
-  taskId: string;
-  runId: string;
-  stepId: string;
-  agentId: string;
-  runDir: string;
-  input: Record<string, unknown>;
-  signal: AbortSignal;
-  progress: ToolProgress;
-  handle: (handleId: string, value: unknown) => Promise<string>;
-  loadHandle: <T>(handleId: string) => Promise<T | null>;
-  findings: Record<string, unknown>;
-  providers: ProviderReport[];
-  workspace: WorkspaceRoots;
-  allowedCommands: string[];
-  tenant: { cloudLlmEnabled: boolean; ollamaUrl: string; ollamaModel: string; whisperUrl?: string; ttsUrl?: string };
+import type { z } from "zod";
+import type { RiskLevel, ResourceClass } from "@/db/schema";
+
+export type ToolStatus =
+  | "SUCCESS"
+  | "FAILED"
+  | "TIMEOUT"
+  | "CANCELLED"
+  | "BLOCKED"
+  | "UNAVAILABLE"
+  | "VERIFICATION_FAILED";
+
+export type ArtifactInput = {
+  name: string;
+  kind: string;
+  /** Absolute path to a real file on disk. Registration re-reads it and hashes it. */
+  filePath: string;
+  mimeType: string;
+  origin?: "deterministic" | "ai-generated" | "retrieved" | "user-upload";
+  validation?: { valid: boolean; method: string; detail: string };
 };
+
+export type Evidence = { kind: string; detail: string; ref?: string };
 
 export type ToolResult = {
-  ok: boolean;
+  status: ToolStatus;
   summary: string;
-  /** Concise operational summary the agent may speak aloud in the 3D office. */
-  agentMessage?: string;
-  output?: Record<string, unknown>;
-  artifacts?: ArtifactSpec[];
-  error?: string;
-  diagnostics?: Record<string, unknown>;
-  /** Marks a step that legitimately needs user input; the task pauses honestly. */
-  needsInput?: boolean;
+  data?: Record<string, unknown>;
+  artifacts?: ArtifactInput[];
+  evidence: Evidence[];
+  reason?: string;
+  /** Optional tool-local verification. The step still cannot pass without it. */
+  verification?: { verified: boolean; method: string; detail: string };
 };
 
-export type ToolHandler = (ctx: ToolContext) => Promise<ToolResult>;
+export type ToolContext = {
+  taskId: string;
+  stepId: string;
+  agentId: string;
+  signal: AbortSignal;
+  approval: { granted: boolean; token: string; actionHash: string } | null;
+  log: (message: string, payload?: Record<string, unknown>) => Promise<void>;
+};
 
-export function fail(summary: string, error: string, diagnostics?: Record<string, unknown>): ToolResult {
-  return { ok: false, summary, error, diagnostics };
+export type ToolDefinition<P = Record<string, unknown>> = {
+  id: string;
+  title: string;
+  group: "system" | "fs" | "docs" | "data" | "web" | "email" | "media" | "voice" | "computer" | "qa" | "security";
+  description: string;
+  risk: RiskLevel;
+  /** Parameter-dependent escalation, e.g. writing outside the workspace. */
+  riskFor?: (params: P) => RiskLevel;
+  resourceClass: ResourceClass;
+  /** Agents permitted to *request* this tool. The supervisor may not invent others. */
+  agents: string[];
+  params: z.ZodType<P>;
+  /** Human-readable statement of how this tool's output is verified. */
+  verificationNote: string;
+  availability: () => Promise<{ available: boolean; detail: string; fix?: string }>;
+  execute: (ctx: ToolContext, params: P) => Promise<ToolResult>;
+  verify?: (ctx: ToolContext, params: P, result: ToolResult) => Promise<{ verified: boolean; method: string; detail: string }>;
+};
+
+export function ok(summary: string, data?: Record<string, unknown>, evidence: Evidence[] = []): ToolResult {
+  return { status: "SUCCESS", summary, data, evidence, artifacts: [] };
 }
 
-export function ok(summary: string, output: Record<string, unknown> = {}, agentMessage?: string, artifacts?: ArtifactSpec[]): ToolResult {
-  return { ok: true, summary, output, agentMessage, artifacts };
+export function fail(status: Exclude<ToolStatus, "SUCCESS">, summary: string, evidence: Evidence[] = [], data?: Record<string, unknown>): ToolResult {
+  return { status, summary, data, evidence, artifacts: [], reason: summary };
+}
+
+export function unavailable(summary: string, fix: string, evidence: Evidence[] = []): ToolResult {
+  return {
+    status: "UNAVAILABLE",
+    summary,
+    evidence,
+    artifacts: [],
+    reason: summary,
+    data: { fix },
+  };
 }

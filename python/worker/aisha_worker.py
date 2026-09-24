@@ -1,458 +1,330 @@
 #!/usr/bin/env python3
 """
-AISHA AI-EXECUTIVE capability sidecar (optional, real).
+AISHA capability sidecar (optional, real) — Project 2 architecture preserved.
 
 Purpose
 -------
-Expose Windows automation capabilities that are genuinely better served by the
-mature Python libraries than by anything native Node can do:
+Expose Windows automation that Node cannot do properly, plus local speech:
 
-  * pywinauto      -> real UI Automation tree discovery + semantic control actions
-  * pyautogui      -> coordinate input, only used when semantics are unavailable
-  * pynput         -> global hotkeys / synthetic key presses
-  * mss / Pillow   -> screen capture
-  * pytesseract    -> OCR of captured images
-  * sounddevice    -> microphone enumeration and capture diagnostics
+  * pywinauto   -> real UI Automation tree discovery + semantic control actions
+  * pyautogui   -> coordinate input, used only when semantics are unavailable
+  * mss         -> screen capture with real pixel dimensions
+  * pytesseract -> OCR over captured images
+  * faster_whisper -> local speech recognition
 
-Contract
---------
-Reads newline-delimited JSON requests on stdin, writes newline-delimited JSON
-responses on stdout, one line per response:
+No-mock policy
+--------------
+  * A missing package returns ok=false with `unavailable` plus the exact install
+    command. Nothing is simulated and nothing is silently degraded.
+  * Every successful action returns verifiable evidence (file path + byte size,
+    element names read back, cursor position, OCR text) so the caller can verify.
+  * Exceptions are returned as ok=false with the exception text.
 
-    -> {"id":"<uuid>","action":"health","params":{},"timeoutMs":5000}
-    <- {"id":"<uuid>","ok":true,"result":{...},"ms":12}
-
-Rules that this worker obeys (no-mock policy):
-  * If a required package is missing, the response is ok=false with an explicit
-    `unavailable` reason and the exact install command. Nothing is simulated.
-  * If an action is performed, the response contains real, verifiable evidence
-    (captured file path + byte size, element names read back, cursor position,
-    OCR text) so the caller can verify rather than assume.
-  * Any exception is returned as ok=false with the exception text; the worker
-    never exits on a bad request, and never silently swallows an error.
+Wire protocol (one request per process with --one-shot, or NDJSON on stdin)
+    -> {"id":"...","action":"health","params":{},"timeoutMs":5000}
+    <- {"id":"...","ok":true,"result":{...},"ms":12}
 """
-
 from __future__ import annotations
 
+import base64
+import importlib
 import json
 import os
 import platform
 import sys
 import time
-import traceback
-from typing import Any, Callable, Dict, List
+from typing import Any, Dict
 
-WORKER_VERSION = "1.0.0"
-
-# ----------------------------------------------------------------------------
-# Optional dependency discovery (capability reporting only; nothing is faked)
-# ----------------------------------------------------------------------------
-
-def _try_import(module_name: str):
-    try:
-        return __import__(module_name)
-    except Exception:
-        return None
+IS_WINDOWS = sys.platform.startswith("win")
+PACKAGES = ["pywinauto", "pyautogui", "mss", "PIL", "pytesseract", "faster_whisper", "pynput"]
 
 
-MODULES = {
-    "pywinauto": _try_import("pywinauto"),
-    "pyautogui": _try_import("pyautogui"),
-    "pynput": _try_import("pynput"),
-    "PIL": _try_import("PIL"),
-    "mss": _try_import("mss"),
-    "pytesseract": _try_import("pytesseract"),
-    "cv2": _try_import("cv2"),
-    "numpy": _try_import("numpy"),
-    "sounddevice": _try_import("sounddevice"),
-    "faster_whisper": _try_import("faster_whisper"),
-}
-
-
-def is_windows() -> bool:
-    return sys.platform.startswith("win")
-
-
-def capabilities() -> List[str]:
-    found = ["stdlib"]
-    for name, module in MODULES.items():
-        if module is not None:
-            found.append(name)
-    if is_windows():
-        found.append("windows-host")
+def probe_capabilities() -> Dict[str, bool]:
+    found: Dict[str, bool] = {}
+    for name in PACKAGES:
+        try:
+            importlib.import_module(name)
+            found[name] = True
+        except Exception:
+            found[name] = False
     return found
 
 
-def unavailable(reason: str, install: str) -> Dict[str, Any]:
-    return {
-        "ok": False,
-        "unavailable": True,
-        "reason": reason,
-        "install": install,
-        "platform": platform.platform(),
-    }
+def require(package: str, install: str) -> None:
+    try:
+        importlib.import_module(package)
+    except Exception as exc:  # pragma: no cover - environment dependent
+        raise Unavailable(f"{package} is not importable: {exc}", install)
 
 
-# ----------------------------------------------------------------------------
-# Actions
-# ----------------------------------------------------------------------------
+class Unavailable(Exception):
+    def __init__(self, message: str, fix: str) -> None:
+        super().__init__(message)
+        self.message = message
+        self.fix = fix
+
 
 def action_health(params: Dict[str, Any]) -> Dict[str, Any]:
-    info: Dict[str, Any] = {
+    return {
+        "platform": platform.platform(),
         "python": sys.version.split()[0],
         "executable": sys.executable,
-        "platform": platform.platform(),
-        "worker": WORKER_VERSION,
-        "capabilities": capabilities(),
-        "pid": os.getpid(),
+        "is_windows": IS_WINDOWS,
+        "capabilities": probe_capabilities(),
+        "detail": f"sidecar online on {platform.system()} {platform.release()}",
     }
-    if MODULES["sounddevice"] is not None:
+
+
+def action_windows_list(params: Dict[str, Any]) -> Dict[str, Any]:
+    require("pywinauto", "pip install pywinauto")
+    from pywinauto import Desktop  # type: ignore
+
+    windows = []
+    for window in Desktop(backend="uia").windows():
         try:
-            import sounddevice as sd  # type: ignore
-
-            info["audio_inputs"] = [
-                {"name": device["name"], "channels": device["max_input_channels"]}
-                for device in sd.query_devices()
-                if device.get("max_input_channels", 0) > 0
-            ]
-        except Exception as exc:  # pragma: no cover - device dependent
-            info["audio_inputs_error"] = str(exc)
-    return info
-
-
-def require(module_key: str, purpose: str, install: str) -> Any:
-    module = MODULES.get(module_key)
-    if module is None:
-        raise RuntimeError(f"PYTHON_DEPENDENCY_MISSING::{module_key}::{purpose}::{install}")
-    return module
+            windows.append(
+                {
+                    "title": window.window_text(),
+                    "handle": getattr(window, "handle", None),
+                    "process_id": window.process_id(),
+                    "visible": window.is_visible(),
+                    "rect": [window.rectangle().left, window.rectangle().top, window.rectangle().right, window.rectangle().bottom],
+                }
+            )
+        except Exception:
+            continue
+    return {"windows": windows, "count": len(windows), "backend": "uia"}
 
 
-def _win_required(action: str) -> Dict[str, Any]:
-    return unavailable(
-        f'Action "{action}" controls the Windows desktop and cannot run on {platform.system()}.',
-        "Run AISHA on Windows 10/11 x64.",
-    )
+def action_windows_focus(params: Dict[str, Any]) -> Dict[str, Any]:
+    require("pywinauto", "pip install pywinauto")
+    from pywinauto import Desktop  # type: ignore
+
+    title = (params.get("title") or "").lower()
+    for window in Desktop(backend="uia").windows():
+        try:
+            if title and title in window.window_text().lower():
+                window.set_focus()
+                time.sleep(0.3)
+                return {"focused": window.window_text(), "requested": params.get("title")}
+        except Exception:
+            continue
+    raise Unavailable(f"no window matched '{params.get('title')}'", "check the window title substring")
 
 
-def action_uia_list_windows(params: Dict[str, Any]) -> Dict[str, Any]:
-    if not is_windows():
-        return _win_required("uia_list_windows")
+def _window(params: Dict[str, Any]):
+    from pywinauto import Application  # type: ignore
+
+    title = params.get("window_title") or ""
+    app = Application(backend="uia").connect(title_re=f".*{title}.*" if title else ".*", timeout=10)
+    return app.window(title_re=f".*{title}.*" if title else ".*")
+
+
+def action_uia_find(params: Dict[str, Any]) -> Dict[str, Any]:
+    require("pywinauto", "pip install pywinauto")
+    window = _window(params)
+    criteria: Dict[str, Any] = {}
+    if params.get("name"):
+        criteria["title"] = params["name"]
+    controls = window.descendants(**criteria) if criteria else window.descendants()
+    matches = []
+    for control in controls[:400]:
+        info = control.element_info
+        matches.append({"name": info.name, "control_type": info.control_type, "automation_id": info.automation_id, "enabled": info.enabled})
+        if params.get("control_type") and info.control_type != params["control_type"]:
+            matches.pop()
+    return {"count": len(matches), "matches": matches[:50], "criteria": criteria}
+
+
+def action_uia_read(params: Dict[str, Any]) -> Dict[str, Any]:
+    require("pywinauto", "pip install pywinauto")
+    window = _window(params)
+    control = window.child_window(title=params.get("name"), control_type=params.get("control_type")) if params.get("name") else window
+    text = control.window_text()
+    value = ""
     try:
-        desktop = require("pywinauto", "UI Automation window discovery", "pip install pywinauto")
-        from pywinauto import Desktop  # type: ignore
-
-        del desktop  # imported for the capability check above
-        windows = []
-        for window in Desktop(backend="uia").windows():
-            try:
-                rect = window.rectangle()
-                windows.append(
-                    {
-                        "title": window.window_text(),
-                        "class_name": window.class_name(),
-                        "automation_id": getattr(window.element_info, "automation_id", None),
-                        "control_type": getattr(window.element_info, "control_type", None),
-                        "process_id": getattr(window.element_info, "process_id", None),
-                        "rect": {"left": rect.left, "top": rect.top, "right": rect.right, "bottom": rect.bottom},
-                        "visible": bool(window.is_visible()),
-                        "enabled": bool(window.is_enabled()),
-                    }
-                )
-            except Exception as exc:
-                windows.append({"error": str(exc)})
-        return {"engine": "pywinauto-uia", "count": len(windows), "windows": windows}
-    except RuntimeError as exc:
-        parts = str(exc).split("::")
-        return unavailable(parts[2] if len(parts) > 2 else str(exc), parts[3] if len(parts) > 3 else "")
-
-
-def action_uia_tree(params: Dict[str, Any]) -> Dict[str, Any]:
-    if not is_windows():
-        return _win_required("uia_tree")
-    require("pywinauto", "UI Automation tree walk", "pip install pywinauto")
-    try:
-        from pywinauto import Desktop  # type: ignore
-
-        title = str(params.get("window", ""))
-        depth = int(params.get("depth", 3))
-        target = Desktop(backend="uia").window(title_re=f".*{title}.*") if title else Desktop(backend="uia").active_window()
-        elements: List[Dict[str, Any]] = []
-
-        def walk(control, level: int) -> None:
-            if level > depth or len(elements) > 400:
-                return
-            try:
-                rect = control.rectangle()
-                elements.append(
-                    {
-                        "level": level,
-                        "control_type": control.element_info.control_type,
-                        "name": control.window_text()[:120],
-                        "automation_id": getattr(control.element_info, "automation_id", None),
-                        "enabled": bool(control.is_enabled()),
-                        "focused": bool(control.has_focus()),
-                        "rect": {"left": rect.left, "top": rect.top, "right": rect.right, "bottom": rect.bottom},
-                    }
-                )
-                for child in control.children():
-                    walk(child, level + 1)
-            except Exception as exc:
-                elements.append({"level": level, "error": str(exc)})
-
-        walk(target, 0)
-        return {"engine": "pywinauto-uia", "window": title or "active", "element_count": len(elements), "elements": elements}
-    except Exception as exc:
-        return {"ok": False, "reason": f"UI Automation tree walk failed: {exc}"}
+        value = control.get_value()  # type: ignore[attr-defined]
+    except Exception:
+        value = ""
+    return {"text": text, "value": value, "control_type": getattr(control.element_info, "control_type", "unknown")}
 
 
 def action_uia_invoke(params: Dict[str, Any]) -> Dict[str, Any]:
-    """Semantic interaction: invoke a control by name/automation id (NOT coordinates)."""
-    if not is_windows():
-        return _win_required("uia_invoke")
-    require("pywinauto", "semantic UI Automation invocation", "pip install pywinauto")
+    require("pywinauto", "pip install pywinauto")
+    window = _window(params)
+    control = window.child_window(title=params.get("name"), control_type=params.get("control_type"))
+    control.invoke()
+    time.sleep(0.5)
+    return {"invoked": True, "control": params.get("name"), "window": params.get("window_title"), "readback": control.window_text()}
+
+
+def action_uia_fill(params: Dict[str, Any]) -> Dict[str, Any]:
+    require("pywinauto", "pip install pywinauto")
+    window = _window(params)
+    control = window.child_window(title=params.get("name"), control_type=params.get("control_type"))
+    control.set_text(params.get("value", ""))
+    time.sleep(0.3)
     try:
-        from pywinauto import Desktop  # type: ignore
-
-        window_title = str(params.get("window", ""))
-        control_name = str(params.get("control", ""))
-        control_id = str(params.get("automationId", ""))
-        action = str(params.get("action", "invoke"))
-        text_value = params.get("value")
-
-        target_window = Desktop(backend="uia").window(title_re=f".*{window_title}.*") if window_title else Desktop(backend="uia").active_window()
-        target_window.set_focus()
-        if control_id:
-            control = target_window.child_window(auto_id=control_id, found_index=0)
-        else:
-            control = target_window.child_window(title_re=f".*{control_name}.*", found_index=0)
-        evidence: Dict[str, Any] = {"engine": "pywinauto-uia", "window": target_window.window_text(), "control": control_name or control_id}
-        if action == "set_text":
-            control.set_edit_text(str(text_value if text_value is not None else ""))
-            evidence["value_set"] = control.window_text()
-            evidence["action"] = "set_text"
-        elif action == "select":
-            control.select()
-            evidence["action"] = "select"
-        else:
-            control.invoke()
-            evidence["action"] = "invoke"
-        evidence["resolved_name"] = control.window_text()[:160]
-        evidence["control_type"] = control.element_info.control_type
-        return evidence
-    except Exception as exc:
-        return {"ok": False, "reason": f"Semantic invocation failed: {exc}"}
+        verified_value = control.get_value()
+    except Exception:
+        verified_value = control.window_text()
+    return {"verifiedValue": verified_value, "requested": params.get("value"), "control": params.get("name")}
 
 
-def action_screenshot(params: Dict[str, Any]) -> Dict[str, Any]:
-    out_path = str(params.get("path", ""))
-    if not out_path:
-        raise RuntimeError("screenshot requires an explicit output path")
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    engine_used = None
-    if MODULES["mss"] is not None:
-        import mss  # type: ignore
-        from PIL import Image  # type: ignore
+def action_screen_capture(params: Dict[str, Any]) -> Dict[str, Any]:
+    require("mss", "pip install mss pillow")
+    import mss  # type: ignore
+    from PIL import Image  # type: ignore
 
-        with mss.mss() as capture:
-            monitor = capture.monitors[0]
-            raw = capture.grab(monitor)
-            image = Image.frombytes("RGB", raw.size, raw.bgra, "raw", "BGRX")
-            image.save(out_path)
-        engine_used = "mss"
-    elif is_windows() and MODULES["PIL"] is not None:
-        from PIL import ImageGrab  # type: ignore
-
-        ImageGrab.grab().save(out_path)
-        engine_used = "pillow-ImageGrab"
-    if engine_used is None:
-        return unavailable(
-            "No capture engine available (needs mss or Pillow, and a desktop session on Windows).",
-            "pip install mss pillow",
-        )
-    size = os.path.getsize(out_path)
-    if size < 1024:
-        return {"ok": False, "reason": f"Capture produced only {size} bytes; treat as failed."}
-    return {"engine": engine_used, "path": out_path, "bytes": size}
+    target = params.get("path")
+    if not target:
+        raise Unavailable("path parameter is required", "caller must supply an absolute output path")
+    os.makedirs(os.path.dirname(target), exist_ok=True)
+    with mss.mss() as sct:
+        monitor = sct.monitors[1]
+        raw = sct.grab(monitor)
+        image = Image.frombytes("RGB", raw.size, raw.bgra, "raw", "BGRX")
+        image.save(target, "PNG")
+    size = os.path.getsize(target)
+    return {"path": target, "bytes": size, "width": raw.size[0], "height": raw.size[1], "monitor": monitor}
 
 
-def action_ocr(params: Dict[str, Any]) -> Dict[str, Any]:
-    path = str(params.get("path", ""))
-    if not path or not os.path.exists(path):
-        return {"ok": False, "reason": f"No image at {path or '<none>'} to read. Capture a screenshot first."}
-    if MODULES["pytesseract"] is None:
-        return unavailable("pytesseract is not installed, so image text cannot be read.", "pip install pytesseract (plus a Tesseract install)")
-    try:
-        import pytesseract  # type: ignore
-        from PIL import Image  # type: ignore
-
-        text = pytesseract.image_to_string(Image.open(path))
-        return {"engine": "pytesseract", "path": path, "text": text.strip()[:8000], "chars": len(text.strip())}
-    except Exception as exc:
-        return {"ok": False, "reason": f"OCR failed: {exc}"}
-
-
-def action_mouse(params: Dict[str, Any]) -> Dict[str, Any]:
-    if not is_windows():
-        return _win_required("mouse")
-    module = MODULES["pyautogui"]
-    if module is None:
-        return unavailable("pyautogui is not installed, so pointer control is unavailable.", "pip install pyautogui")
+def action_input(params: Dict[str, Any]) -> Dict[str, Any]:
+    require("pyautogui", "pip install pyautogui")
     import pyautogui  # type: ignore
 
-    operation = str(params.get("operation", "click"))
-    x = params.get("x")
-    y = params.get("y")
-    before = pyautogui.position()
-    if operation == "move" and x is not None and y is not None:
-        pyautogui.moveTo(int(x), int(y), duration=0.15)
-    elif operation == "click" and x is not None and y is not None:
-        pyautogui.click(int(x), int(y))
-    elif operation == "double_click" and x is not None and y is not None:
-        pyautogui.doubleClick(int(x), int(y))
-    elif operation == "right_click" and x is not None and y is not None:
-        pyautogui.rightClick(int(x), int(y))
-    elif operation == "scroll":
-        pyautogui.scroll(int(params.get("clicks", -3)))
-    elif operation == "drag":
-        pyautogui.moveTo(int(x), int(y))
-        pyautogui.dragTo(int(params.get("toX", x)), int(params.get("toY", y)), duration=0.3)
-    elif operation == "position":
-        pass
-    else:
-        return {"ok": False, "reason": f"Unsupported mouse operation '{operation}'"}
-    after = pyautogui.position()
-    return {"engine": "pyautogui-coordinate", "operation": operation, "position_before": list(before), "position_after": list(after)}
+    action = params.get("action")
+    if action in {"move", "click", "double_click", "right_click"}:
+        x, y = params.get("x"), params.get("y")
+        if x is None or y is None:
+            raise Unavailable("x and y are required for pointer actions", "supply target coordinates")
+        pyautogui.moveTo(x, y, duration=0.2)
+        if action == "click":
+            pyautogui.click()
+        elif action == "double_click":
+            pyautogui.doubleClick()
+        elif action == "right_click":
+            pyautogui.rightClick()
+        position = [pyautogui.position().x, pyautogui.position().y]
+        return {"action": action, "position": position, "size": pyautogui.size()}
+    if action == "scroll":
+        pyautogui.scroll(int(params.get("amount") or -3))
+        return {"action": "scroll", "amount": params.get("amount"), "position": [pyautogui.position().x, pyautogui.position().y]}
+    if action == "type":
+        text = params.get("text") or ""
+        pyautogui.write(text, interval=0.02)
+        return {"action": "type", "sent": len(text)}
+    if action == "hotkey" or action == "key":
+        keys = params.get("keys") or ([params.get("text")] if params.get("text") else [])
+        if len(keys) > 1:
+            pyautogui.hotkey(*keys)
+        elif keys:
+            pyautogui.press(keys[0])
+        else:
+            raise Unavailable("keys are required for hotkey/key actions", "supply keys, e.g. ['ctrl','s']")
+        return {"action": action, "sent": len(keys), "keys": keys}
+    raise Unavailable(f"unsupported input action '{action}'", "use move|click|double_click|right_click|scroll|type|hotkey|key")
 
 
-def action_keyboard(params: Dict[str, Any]) -> Dict[str, Any]:
-    if not is_windows():
-        return _win_required("keyboard")
-    module = MODULES["pyautogui"]
-    if module is None:
-        return unavailable("pyautogui is not installed, so keyboard injection is unavailable.", "pip install pyautogui")
-    import pyautogui  # type: ignore
+def action_vision_ocr(params: Dict[str, Any]) -> Dict[str, Any]:
+    require("pytesseract", "pip install pytesseract pillow && install the tesseract binary")
+    from PIL import Image  # type: ignore
+    import pytesseract  # type: ignore
 
-    operation = str(params.get("operation", "type"))
-    if operation == "type":
-        text = str(params.get("text", ""))
-        pyautogui.write(text, interval=float(params.get("interval", 0.02)))
-        return {"engine": "pyautogui", "operation": "type", "chars_sent": len(text)}
-    if operation == "hotkey":
-        keys = [str(key) for key in params.get("keys", [])]
-        pyautogui.hotkey(*keys)
-        return {"engine": "pyautogui", "operation": "hotkey", "keys": keys}
-    if operation == "press":
-        key = str(params.get("key", "enter"))
-        pyautogui.press(key)
-        return {"engine": "pyautogui", "operation": "press", "key": key}
-    return {"ok": False, "reason": f"Unsupported keyboard operation '{operation}'"}
+    target = params.get("path")
+    if not target or not os.path.exists(target):
+        raise Unavailable(f"image not found: {target}", "capture a screenshot first or pass an existing path")
+    with Image.open(target) as image:
+        text = pytesseract.image_to_string(image)
+        width, height = image.size
+    return {"text": text, "chars": len(text.strip()), "width": width, "height": height, "path": target}
 
 
-def action_audio_devices(params: Dict[str, Any]) -> Dict[str, Any]:
-    if MODULES["sounddevice"] is None:
-        return unavailable("sounddevice is not installed, so audio devices cannot be enumerated.", "pip install sounddevice")
-    try:
-        import sounddevice as sd  # type: ignore
+def action_audio_transcribe(params: Dict[str, Any]) -> Dict[str, Any]:
+    require("faster_whisper", "pip install faster-whisper")
+    from faster_whisper import WhisperModel  # type: ignore
 
-        devices = []
-        for index, device in enumerate(sd.query_devices()):
-            if device.get("max_input_channels", 0) > 0:
-                devices.append({"index": index, "name": device["name"], "channels": device["max_input_channels"], "sample_rate": device["default_samplerate"]})
-        return {"engine": "sounddevice", "count": len(devices), "devices": devices}
-    except Exception as exc:
-        return {"ok": False, "reason": f"Audio device enumeration failed: {exc}"}
-
-
-def action_transcribe(params: Dict[str, Any]) -> Dict[str, Any]:
-    if MODULES["faster_whisper"] is None:
-        return unavailable("faster-whisper is not installed in this Python environment, so no transcription is possible here.", "pip install faster-whisper")
-    try:
-        from faster_whisper import WhisperModel  # type: ignore
-
-        audio_path = str(params.get("path", ""))
-        if not audio_path or not os.path.exists(audio_path):
-            return {"ok": False, "reason": f"No audio file at {audio_path or '<none>'}"}
-        model_size = str(params.get("model", "small"))
-        model = WhisperModel(model_size, device="cpu", compute_type="int8")
-        segments, info = model.transcribe(audio_path, word_timestamps=True)
-        words = []
-        text_parts = []
-        for segment in segments:
-            text_parts.append(segment.text)
-            for word in getattr(segment, "words", []) or []:
-                words.append({"word": word.word, "start": word.start, "end": word.end})
-        return {"engine": f"faster-whisper:{model_size}", "text": " ".join(text_parts).strip(), "words": words, "language": info.language, "duration": info.duration}
-    except Exception as exc:
-        return {"ok": False, "reason": f"Transcription failed: {exc}"}
+    target = params.get("path")
+    if not target or not os.path.exists(target):
+        raise Unavailable(f"audio not found: {target}", "provide a real audio file path")
+    model_size = os.environ.get("AISHA_WHISPER_MODEL", "base")
+    model = WhisperModel(model_size, device="cpu", compute_type="int8")
+    segments, info = model.transcribe(target, language=params.get("language") or None)
+    collected = [{"start": seg.start, "end": seg.end, "text": seg.text} for seg in segments]
+    return {"text": " ".join(seg["text"].strip() for seg in collected).strip(), "segments": collected, "language": info.language, "model": model_size}
 
 
-ACTIONS: Dict[str, Callable[[Dict[str, Any]], Dict[str, Any]]] = {
+def action_audio_tts(params: Dict[str, Any]) -> Dict[str, Any]:
+    # A real local engine is required; pyttsx3 plays through the OS but cannot
+    # return an audio artifact, so it is reported explicitly as such.
+    require("pyttsx3", "pip install pyttsx3  (or run a piper/kokoro HTTP endpoint and set TTS_URL)")
+    import pyttsx3  # type: ignore
+
+    text = params.get("text") or ""
+    if not text:
+        raise Unavailable("text is required", "supply the text to speak")
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+    return {"spoken": True, "chars": len(text), "artifact": None, "note": "OS speech synthesis played locally; no audio file is produced by pyttsx3"}
+
+
+ACTIONS = {
     "health": action_health,
-    "capabilities": lambda params: {"capabilities": capabilities(), "platform": platform.platform()},
-    "uia_list_windows": action_uia_list_windows,
-    "uia_tree": action_uia_tree,
-    "uia_invoke": action_uia_invoke,
-    "screenshot": action_screenshot,
-    "ocr": action_ocr,
-    "mouse": action_mouse,
-    "keyboard": action_keyboard,
-    "audio_devices": action_audio_devices,
-    "transcribe": action_transcribe,
+    "windows.list": action_windows_list,
+    "windows.focus": action_windows_focus,
+    "uia.find": action_uia_find,
+    "uia.read": action_uia_read,
+    "uia.invoke": action_uia_invoke,
+    "uia.fill": action_uia_fill,
+    "screen.capture": action_screen_capture,
+    "input.action": action_input,
+    "vision.ocr": action_vision_ocr,
+    "audio.transcribe": action_audio_transcribe,
+    "audio.tts": action_audio_tts,
 }
 
 
 def handle(request: Dict[str, Any]) -> Dict[str, Any]:
     started = time.time()
     request_id = request.get("id", "unknown")
-    action = str(request.get("action", ""))
+    action = request.get("action", "")
     params = request.get("params") or {}
     handler = ACTIONS.get(action)
     if handler is None:
-        return {"id": request_id, "ok": False, "error": f"Unknown action '{action}'. Known: {', '.join(sorted(ACTIONS))}", "ms": int((time.time() - started) * 1000)}
-    try:
-        result = handler(params)
-        ok = bool(result.get("ok", True))
-        if "ok" in result:
-            result = {key: value for key, value in result.items() if key != "ok"}
-        return {"id": request_id, "ok": ok, "result": result, "ms": int((time.time() - started) * 1000)}
-    except RuntimeError as exc:
-        message = str(exc)
-        if message.startswith("PYTHON_DEPENDENCY_MISSING::"):
-            _, module_name, purpose, install = message.split("::", 3)
-            return {
-                "id": request_id,
-                "ok": False,
-                "error": f"{purpose} requires the Python package \"{module_name}\", which is not installed.",
-                "result": unavailable(f"{purpose} requires the Python package \"{module_name}\".", install),
-                "ms": int((time.time() - started) * 1000),
-            }
-        return {"id": request_id, "ok": False, "error": message, "ms": int((time.time() - started) * 1000)}
-    except Exception as exc:  # never crash the worker on a bad request
+        return {"id": request_id, "ok": False, "error": f"unknown action '{action}'", "ms": int((time.time() - started) * 1000)}
+    if action != "health" and action.startswith(("windows.", "uia.")) and not IS_WINDOWS:
         return {
             "id": request_id,
             "ok": False,
-            "error": f"{type(exc).__name__}: {exc}",
-            "traceback": traceback.format_exc()[-1500:],
+            "unavailable": f"{action} requires Windows UI Automation; this host is {platform.system()}",
+            "fix": "run AISHA on Windows 10/11",
             "ms": int((time.time() - started) * 1000),
         }
+    try:
+        result = handler(params)
+        return {"id": request_id, "ok": True, "result": result, "ms": int((time.time() - started) * 1000)}
+    except Unavailable as exc:
+        return {"id": request_id, "ok": False, "unavailable": exc.message, "fix": exc.fix, "ms": int((time.time() - started) * 1000)}
+    except Exception as exc:  # real error, reported verbatim
+        return {"id": request_id, "ok": False, "error": f"{type(exc).__name__}: {exc}", "ms": int((time.time() - started) * 1000)}
 
 
 def main() -> None:
-    sys.stderr.write(f"[aisha_worker] v{WORKER_VERSION} up: python {sys.version.split()[0]} on {platform.platform()}; capabilities={capabilities()}\n")
-    sys.stderr.flush()
+    if "--one-shot" in sys.argv:
+        line = sys.stdin.readline()
+        if not line.strip():
+            print(json.dumps({"id": "unknown", "ok": False, "error": "no request received on stdin"}), flush=True)
+            return
+        print(json.dumps(handle(json.loads(line))), flush=True)
+        return
     for line in sys.stdin:
-        stripped = line.strip()
-        if not stripped:
+        if not line.strip():
             continue
         try:
-            request = json.loads(stripped)
-        except json.JSONDecodeError as exc:
-            sys.stdout.write(json.dumps({"id": "unknown", "ok": False, "error": f"Invalid JSON request: {exc}"}) + "\n")
-            sys.stdout.flush()
-            continue
-        response = handle(request)
-        sys.stdout.write(json.dumps(response, default=str) + "\n")
-        sys.stdout.flush()
+            print(json.dumps(handle(json.loads(line))), flush=True)
+        except Exception as exc:
+            print(json.dumps({"id": "unknown", "ok": False, "error": f"bad request: {exc}"}), flush=True)
 
 
 if __name__ == "__main__":

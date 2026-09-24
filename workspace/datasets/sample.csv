@@ -1,0 +1,6 @@
+supplier,unit_price,lead_time_days,reliability_score,country
+Atlas Components,120.50,12,0.93,DE
+Borealis Supply,98.75,18,0.88,SE
+Cygnus Industrial,143.20,9,0.95,JP
+Delta Fabrication,110.00,14,0.85,US
+Elysium Materials,131.40,11,0.91,FR

@@ -1,27 +1,40 @@
 {
-  "$comment": "AI-EXECUTIVE application configuration. Paths are resolved at runtime; nothing here hardcodes a user or developer machine path.",
-  "allowedCommands": [],
-  "$allowedCommandsNote": "Empty means the command validator applies its deny-list only. Add program names (without extension) to widen the scope EXPLICITLY, e.g. [\"git\",\"node\",\"npm\",\"python\",\"pip\"]. Widening this list is a deliberate user decision and is logged in logs/security.log.",
+  "$comment": "AISHA runtime configuration. No machine-specific paths and no secrets. Probed live by the Doctor; nothing here is assumed available.",
   "autonomy": {
-    "maxConcurrentTasks": 6,
-    "walkRealism": true,
-    "$walkRealismNote": "true = agents physically walk for the real backend-computed duration (no teleporting). false = short cinematic transits for low-power machines; agent logic is unchanged."
-  },
-  "media": {
-    "fps": 30,
-    "crf": 22,
-    "resolution": { "width": 1080, "height": 1920 },
-    "videoCodec": "h264",
-    "audioCodec": "aac",
-    "audioBitrate": "192k",
-    "pixelFormat": "yuv420p"
+    "maxConcurrentSteps": 4,
+    "maxConcurrentHeavy": 1,
+    "maxStepAttempts": 2,
+    "stepTimeoutMs": 120000,
+    "taskTimeoutMs": 900000,
+    "walkRealism": true
   },
   "approvals": {
     "ttlMinutes": 15,
-    "$approvalNote": "Every approval carries the SHA-256 hash of the exact action. Parameters are re-hashed at execution time; any change invalidates the approval and asks again."
+    "enforceActionHash": true
   },
   "uploads": {
     "maxBytes": 104857600,
-    "allowedExtensions": [".pdf", ".txt", ".md", ".csv", ".json", ".html", ".docx", ".xlsx", ".png", ".jpg", ".jpeg", ".mp3", ".wav", ".mp4", ".mov", ".webm"]
+    "allowedExtensions": [
+      ".pdf", ".txt", ".md", ".csv", ".json", ".html", ".docx", ".xlsx",
+      ".png", ".jpg", ".jpeg", ".webp", ".mp3", ".wav", ".mp4", ".mov", ".webm"
+    ]
+  },
+  "media": {
+    "fps": 24,
+    "crf": 26,
+    "resolution": { "width": 1280, "height": 720 },
+    "videoCodec": "libx264",
+    "audioCodec": "aac"
+  },
+  "resource": {
+    "minFreeRamMb": 400,
+    "heavyCpuLoadPerCore": 1.6,
+    "sampleIntervalMs": 5000
+  },
+  "workspace": {
+    "protectedPaths": [
+      "C:\\Windows", "C:\\Program Files", "C:\\Program Files (x86)", "C:\\ProgramData",
+      "/etc", "/bin", "/sbin", "/usr", "/boot", "/proc", "/sys", "/dev"
+    ]
   }
 }

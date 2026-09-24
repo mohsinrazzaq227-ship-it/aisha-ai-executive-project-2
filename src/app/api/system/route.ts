@@ -1,67 +1,58 @@
-import { agentStates } from "@/db/schema";
+import { desc } from "drizzle-orm";
 import { db } from "@/db";
-import { AGENTS, agentSlot, getAgent } from "@/lib/agents";
+import { auditLogs, capabilitySnapshots, resourceSamples } from "@/db/schema";
 import { runDoctor } from "@/lib/doctor";
-import { tailLog } from "@/lib/logging";
-import { providerInventory, providerSummary } from "@/lib/providers";
-import { ffmpegJobs } from "@/lib/tools/jobRegistry";
-import { missingHandlers } from "@/lib/tools";
-import { runningTasks } from "@/lib/supervisor";
+import { snapshot } from "@/lib/resources";
+import { listTools } from "@/lib/tools";
+import { agentsForOffice, officeLayout } from "@/lib/office";
+import { appConfig, providersConfig } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
 
 export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const wantDoctor = url.searchParams.get("doctor") === "1";
-  const logChannel = url.searchParams.get("log");
+  const section = new URL(request.url).searchParams.get("section") ?? "all";
 
-  const states = await db.select().from(agentStates);
-  const providers = await providerInventory();
-  const agents = AGENTS.map((agent) => {
-    const state = states.find((row) => row.agentId === agent.id);
-    return {
-      id: agent.id,
-      name: agent.name,
-      callsign: agent.callsign,
-      role: agent.role,
-      glyph: agent.glyph,
-      color: agent.color,
-      accent: agent.accent,
-      station: agent.station,
-      stationLabel: agent.station,
-      slot: agentSlot(agent.id),
-      brief: agent.brief,
-      capabilities: agent.capabilities,
-      tools: agent.tools,
-      riskProfile: agent.riskProfile,
-      state: state?.state ?? "IDLE",
-      mood: state?.mood ?? "CALM",
-      taskId: state?.taskId ?? null,
-      lastMessage: state?.lastMessage ?? null,
-      updatedAt: state?.updatedAt ?? null,
-    };
-  });
-
-  if (wantDoctor) {
-    const report = await runDoctor(true);
-    return Response.json({ ok: true, agents, providers, providerSummary: providerSummary(providers), doctor: report, running: runningTasks(), processes: ffmpegJobs.list(), registryGaps: missingHandlers() });
+  if (section === "resources") {
+    return Response.json({ resources: await snapshot(true), samples: await db.select().from(resourceSamples).orderBy(desc(resourceSamples.at)).limit(60) });
+  }
+  if (section === "audit") {
+    const logs = await db.select().from(auditLogs).orderBy(desc(auditLogs.at)).limit(200);
+    return Response.json({ audit: logs });
+  }
+  if (section === "tools") {
+    return Response.json({
+      tools: listTools().map((tool) => ({
+        id: tool.id,
+        title: tool.title,
+        group: tool.group,
+        risk: tool.risk,
+        resourceClass: tool.resourceClass,
+        agents: tool.agents,
+        description: tool.description,
+        verificationNote: tool.verificationNote,
+      })),
+    });
+  }
+  if (section === "office") {
+    return Response.json({ layout: officeLayout(), agents: await agentsForOffice() });
   }
 
-  if (logChannel) {
-    return Response.json({ ok: true, channel: logChannel, lines: tailLog(logChannel, 300) });
-  }
+  const [doctor, resources, providers, config, capabilities] = await Promise.all([
+    runDoctor(),
+    snapshot(true),
+    providersConfig(),
+    appConfig(),
+    db.select().from(capabilitySnapshots).orderBy(desc(capabilitySnapshots.at)).limit(1),
+  ]);
+
+  await db.insert(capabilitySnapshots).values({ payload: doctor as unknown as Record<string, unknown>, summary: doctor.summary }).catch(() => undefined);
 
   return Response.json({
-    ok: true,
-    agents,
+    doctor,
+    resources,
     providers,
-    providerSummary: providerSummary(providers),
-    running: runningTasks(),
-    processes: ffmpegJobs.list(),
-    registryGaps: missingHandlers(),
-    agentCount: AGENTS.length,
-    roles: Array.from(new Set(AGENTS.map((a) => a.role))),
-    master: getAgent("master_supervisor"),
+    config,
+    lastSnapshot: capabilities[0]?.at ?? null,
+    tools: listTools().length,
   });
 }

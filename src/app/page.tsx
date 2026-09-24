@@ -1,7 +1,7 @@
-import ExecutiveApp from "@/components/ExecutiveApp";
+import { ExecutiveConsole } from "@/components/ExecutiveConsole";
 
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
-  return <ExecutiveApp />;
+export default function ConsolePage() {
+  return <ExecutiveConsole />;
 }

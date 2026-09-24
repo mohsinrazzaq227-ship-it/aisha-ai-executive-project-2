@@ -1,31 +1,16 @@
-import { COMPUTER_TOOLS } from "@/lib/tools/computerTools";
-import { BROWSER_TOOLS } from "@/lib/tools/browserTools";
-import { EXTENDED_TOOLS } from "@/lib/tools/extendedTools";
-import { FS_TOOLS } from "@/lib/tools/fsTools";
-import { KNOWLEDGE_TOOLS } from "@/lib/tools/knowledgeTools";
-import { MEDIA_TOOLS } from "@/lib/tools/mediaTools";
-import { SYSTEM_TOOLS } from "@/lib/tools/systemTools";
-import { TOOLS } from "@/lib/tools/registry";
-import type { ToolHandler } from "@/lib/tools/types";
+/**
+ * Tool bootstrap. Importing this module registers the complete tool surface
+ * exactly once (duplicate ids throw in the registry).
+ */
+import "@/lib/tools/system";
+import "@/lib/tools/fs";
+import "@/lib/tools/docs";
+import "@/lib/tools/web";
+import "@/lib/tools/computer";
+import "@/lib/tools/media";
+import "@/lib/tools/voice";
+import "@/lib/tools/email";
+import "@/lib/tools/qa";
 
-const handlers: Record<string, ToolHandler> = {
-  ...FS_TOOLS,
-  ...COMPUTER_TOOLS,
-  ...BROWSER_TOOLS,
-  ...EXTENDED_TOOLS,
-  ...KNOWLEDGE_TOOLS,
-  ...MEDIA_TOOLS,
-  ...SYSTEM_TOOLS,
-};
-
-export const ALL_TOOLS = handlers;
-
-export function missingHandlers(): string[] {
-  return Object.keys(TOOLS).filter((id) => !handlers[id]);
-}
-
-export function getHandler(toolId: string): ToolHandler | undefined {
-  return handlers[toolId];
-}
-
-export { TOOLS, getTool } from "@/lib/tools/registry";
+export { listTools, getTool, runTool, toolsForAgent, requiresApproval } from "@/lib/tools/registry";
+export type { ToolDefinition, ToolResult, ToolContext } from "@/lib/tools/types";

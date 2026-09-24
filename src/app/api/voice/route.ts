@@ -1,97 +1,72 @@
-import { emit } from "@/lib/events";
+import { promises as fs } from "node:fs";
+import path from "node:path";
+import { z } from "zod";
+import { DIRS } from "@/lib/config";
+import { voiceStatus } from "@/lib/tools/voice";
+import { runTool } from "@/lib/tools";
+import { ensureDir, newId, slugify, toRelative, truncate } from "@/lib/util";
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
+export const maxDuration = 300;
 
-/**
- * Voice pipeline endpoint. Speech-to-text prefers a real local faster-whisper
- * server (WHISPER_URL) and speech synthesis prefers a local TTS server
- * (TTS_URL). When neither is configured the endpoint answers with an explicit
- * DISABLED status and the renderer falls back to the operating system speech
- * engines — the UI always shows which engine produced the transcript or voice,
- * and the app never claims to have heard speech that was not detected.
- */
+const Body = z.object({
+  action: z.enum(["transcribe", "speak"]),
+  text: z.string().max(4000).optional(),
+  audioBase64: z.string().max(40_000_000).optional(),
+  mimeType: z.string().default("audio/wav"),
+});
+
+export async function GET() {
+  const status = await voiceStatus();
+  return Response.json({
+    ...status,
+    honesty:
+      "LOCAL_ENGINE entries are probed over HTTP; CLIENT_SIDE entries are the browser's own speech APIs used with an explicit label. The server never claims to have transcribed or spoken anything it did not process.",
+  });
+}
+
 export async function POST(request: Request) {
-  const contentType = request.headers.get("content-type") ?? "";
+  const parsed = Body.safeParse(await request.json().catch(() => null));
+  if (!parsed.success) return Response.json({ error: "action (transcribe|speak) is required" }, { status: 400 });
+  const taskId = "voice";
+  const ctx = {
+    taskId,
+    stepId: `voice_${parsed.data.action}_${newId("v")}`,
+    agentId: "voice",
+    signal: new AbortController().signal,
+    approval: null,
+  };
 
-  if (contentType.includes("multipart/form-data")) {
-    const form = await request.formData();
-    const mode = String(form.get("mode") ?? "stt");
-    if (mode === "tts") {
-      const text = String(form.get("text") ?? "");
-      const voice = String(form.get("voice") ?? "default");
-      const ttsUrl = process.env.TTS_URL;
-      if (!ttsUrl) {
-        return Response.json({ ok: false, status: "DISABLED", engine: "browser-speech-synthesis", message: "TTS_URL is not configured. The renderer will use the operating system speech engine instead; this is reported in the UI." }, { status: 503 });
-      }
-      try {
-        const res = await fetch(`${ttsUrl.replace(/\/$/, "")}/tts`, {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ text, voice, format: "wav" }),
-        });
-        if (!res.ok) return Response.json({ ok: false, status: "ERROR", engine: "local-tts-server", message: `Local TTS server answered HTTP ${res.status}.` }, { status: 502 });
-        const buffer = Buffer.from(await res.arrayBuffer());
-        return new Response(new Uint8Array(buffer), { headers: { "content-type": "audio/wav", "x-tts-engine": "local-tts-server" } });
-      } catch (error) {
-        return Response.json({ ok: false, status: "ERROR", engine: "local-tts-server", message: `Local TTS server unreachable: ${(error as Error).message}` }, { status: 502 });
-      }
-    }
-
-    const audio = form.get("audio");
-    if (!(audio instanceof File)) {
-      return Response.json({ ok: false, status: "ERROR", message: "No audio part received (expected field name 'audio')." }, { status: 400 });
-    }
-    const buffer = Buffer.from(await audio.arrayBuffer());
-    const sampleRate = form.get("sampleRate") ? Number(form.get("sampleRate")) : null;
-    const durationMs = form.get("durationMs") ? Number(form.get("durationMs")) : null;
-    const whisperUrl = process.env.WHISPER_URL;
-    await emit({
-      ts: new Date().toISOString(),
-      agentId: "voice_agent",
-      type: "AGENT_STATE",
-      message: `Microphone capture received: ${buffer.byteLength} bytes${durationMs ? ` over ${(durationMs / 1000).toFixed(1)}s` : ""}${sampleRate ? ` @ ${sampleRate} Hz` : ""}.`,
-      data: { state: "LISTENING", bytes: buffer.byteLength, durationMs, sampleRate },
-    });
-    if (!whisperUrl) {
-      return Response.json(
-        {
-          ok: false,
-          status: "DISABLED",
-          engine: null,
-          bytes: buffer.byteLength,
-          message: "WHISPER_URL is not configured, so the local faster-whisper server could not transcribe this audio. Use the browser speech engine fallback (shown in the UI) or configure a local Whisper server. No transcript was invented.",
-        },
-        { status: 503 },
-      );
-    }
-    try {
-      const res = await fetch(`${whisperUrl.replace(/\/$/, "")}/transcribe`, {
-        method: "POST",
-        headers: { "content-type": "application/octet-stream", "x-filename": audio.name || "speech.webm", "x-sample-rate": String(sampleRate ?? 16000) },
-        body: new Uint8Array(buffer),
-      });
-      if (!res.ok) return Response.json({ ok: false, status: "ERROR", engine: "faster-whisper", message: `Whisper server answered HTTP ${res.status}.` }, { status: 502 });
-      const payload = (await res.json()) as { text?: string; transcript?: string; words?: { word: string; start: number; end: number }[]; language?: string; duration?: number };
-      const text = (payload.text ?? payload.transcript ?? "").trim();
-      if (text.length === 0) {
-        return Response.json({ ok: false, status: "NO_SPEECH", engine: "faster-whisper", message: "The local Whisper server detected no speech in this recording. I will not pretend to have heard you." }, { status: 200 });
-      }
-      return Response.json({ ok: true, status: "OK", engine: "faster-whisper", text, words: payload.words ?? [], language: payload.language ?? null, durationMs: payload.duration ? payload.duration * 1000 : durationMs, bytes: buffer.byteLength });
-    } catch (error) {
-      return Response.json({ ok: false, status: "ERROR", engine: "faster-whisper", message: `Whisper server unreachable: ${(error as Error).message}` }, { status: 502 });
-    }
+  if (parsed.data.action === "transcribe") {
+    if (!parsed.data.audioBase64) return Response.json({ error: "audioBase64 is required for transcription" }, { status: 400 });
+    const dir = path.join(DIRS.uploads, "voice");
+    await ensureDir(dir);
+    const ext = parsed.data.mimeType.includes("mp3") ? ".mp3" : parsed.data.mimeType.includes("webm") ? ".webm" : ".wav";
+    const file = path.join(dir, `${slugify(`speech-${Date.now()}`)}${ext}`);
+    await fs.writeFile(file, Buffer.from(parsed.data.audioBase64, "base64"));
+    const result = await runTool({ toolId: "voice.transcribe", params: { path: file }, ctx });
+    return Response.json(
+      {
+        status: result.status,
+        summary: result.summary,
+        text: (result.data as { text?: string })?.text ?? null,
+        engine: (result.data as { engine?: string })?.engine ?? null,
+        recordedFile: toRelative(DIRS.root, file),
+        detail: truncate(result.summary, 400),
+      },
+      { status: result.status === "SUCCESS" ? 200 : 501 },
+    );
   }
 
-  const ttsUrl = process.env.TTS_URL;
-  const whisperUrl = process.env.WHISPER_URL;
-  return Response.json({
-    ok: true,
-    stt: whisperUrl
-      ? { engine: "faster-whisper", status: "CONFIGURED", endpoint: whisperUrl }
-      : { engine: "browser-speech-recognition", status: "FALLBACK", note: "No local Whisper server configured; the renderer uses the operating system engine and labels it as such." },
-    tts: ttsUrl
-      ? { engine: "local-tts-server", status: "CONFIGURED", endpoint: ttsUrl }
-      : { engine: "browser-speech-synthesis", status: "FALLBACK", note: "No local TTS server configured. Narration is spoken in the interface but is not burned into rendered files." },
-  });
+  if (!parsed.data.text) return Response.json({ error: "text is required for speech synthesis" }, { status: 400 });
+  const result = await runTool({ toolId: "voice.speak", params: { text: parsed.data.text }, ctx });
+  return Response.json(
+    {
+      status: result.status,
+      summary: result.summary,
+      audio: (result.data as { artifacts?: unknown[] })?.artifacts ?? null,
+      detail: truncate(result.summary, 400),
+    },
+    { status: result.status === "SUCCESS" ? 200 : 501 },
+  );
 }

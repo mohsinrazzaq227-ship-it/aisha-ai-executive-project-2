@@ -1,20 +1,48 @@
 {
-  "$comment": "Declares every provider this system may use. Status is probed live by /api/system and the Doctor; nothing is assumed AVAILABLE.",
-  "statuses": ["AVAILABLE", "UNAVAILABLE", "DISABLED", "ERROR", "CLIENT_SIDE", "OPTIONAL_UNTESTED"],
+  "$comment": "Declares every external/local provider AISHA may use. Status vocabulary follows Project 2's convention and is probed live by /api/doctor. A provider is never reported AVAILABLE unless a live probe proved it.",
+  "statuses": ["AVAILABLE", "UNAVAILABLE", "MISCONFIGURED", "MISSING", "FAILED", "DISABLED", "CLIENT_SIDE", "AVAILABLE_BUT_OPTIONAL"],
   "llm": {
     "local": { "provider": "ollama", "env": ["OLLAMA_URL", "OLLAMA_MODEL"], "default": "http://127.0.0.1:11434", "cost": "free-local" },
-    "optionalCloud": { "enabledBy": "AI_EXECUTIVE_ENABLE_CLOUD_LLM=true", "supported": ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GROQ_API_KEY", "OPENROUTER_API_KEY"], "cost": "paid-optional", "rule": "Never used implicitly; the UI always shows which engine answered." }
+    "fallback": { "provider": "deterministic local planner", "status": "AVAILABLE", "rule": "Used when Ollama is absent. The UI always names the engine that answered." },
+    "optionalCloud": {
+      "enabledBy": "AISHA_ENABLE_CLOUD_LLM=true",
+      "supported": ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"],
+      "rule": "Never used implicitly and never required."
+    }
   },
   "stt": {
-    "local": { "provider": "faster-whisper", "env": ["WHISPER_URL"], "endpoint": "POST {WHISPER_URL}/transcribe", "cost": "free-local" },
-    "fallback": { "provider": "browser speech recognition", "status": "CLIENT_SIDE", "rule": "Visible fallback only; the app never claims to have heard speech that was not detected." }
+    "local": { "provider": "faster-whisper", "env": ["WHISPER_URL"], "endpoint": "POST {WHISPER_URL}/transcribe" },
+    "fallback": { "provider": "browser speech recognition", "status": "CLIENT_SIDE" }
   },
   "tts": {
-    "local": { "provider": "piper / kokoro / faster-tts", "env": ["TTS_URL"], "endpoint": "POST {TTS_URL}/tts", "cost": "free-local" },
-    "fallback": { "provider": "operating system speech synthesis", "status": "CLIENT_SIDE", "rule": "Spoken in the interface with real interruption; not burned into rendered video files." }
+    "local": { "provider": "piper / kokoro", "env": ["TTS_URL"], "endpoint": "POST {TTS_URL}/tts" },
+    "fallback": { "provider": "operating system speech synthesis", "status": "CLIENT_SIDE" },
+    "ffmpeg": { "provider": "ffmpeg sine synthesis for offline audio artifacts", "note": "Deterministic tone track for render pipelines, NOT speech synthesis." }
   },
-  "media": { "encoder": "ffmpeg (bundled ffmpeg-static or FFMPEG_PATH)", "validator": "ffprobe (bundled ffprobe-static or FFPROBE_PATH)" },
-  "research": { "sources": ["wikipedia REST", "OpenAlex", "Hacker News Algolia"], "optional": ["playwright for DOM navigation"], "rule": "Every citation is a real retrieved URL; failures are reported per engine." },
-  "email": { "connectors": ["IMAP_URL", "SMTP_URL", "GMAIL_REFRESH_TOKEN", "MS_GRAPH_TOKEN"], "optionalPackages": ["imapflow", "nodemailer"], "rule": "Sending is HIGH risk, never silent, and disabled until credentials are configured." },
-  "vision": { "hierarchy": ["windows accessibility tree", "playwright DOM", "tesseract OCR", "coordinate proposal"], "rule": "Structured sources are always preferred over pixel guessing." }
+  "browser": { "provider": "playwright + chromium", "env": ["PLAYWRIGHT_CHROMIUM_EXECUTABLE"], "install": "npx playwright install chromium" },
+  "computer": {
+    "provider": "python sidecar (pywinauto / pyautogui / mss / Pillow)",
+    "env": ["AISHA_PYTHON", "AISHA_SIDECAR"],
+    "install": "pip install -r python/requirements.txt",
+    "platform": "Windows-first; other platforms report UNAVAILABLE with the exact missing binary."
+  },
+  "ocr": { "provider": "tesseract via python sidecar", "install": "apt install tesseract-ocr / winget install tesseract" },
+  "media": { "encoder": "ffmpeg (ffmpeg-static or FFMPEG_PATH)", "validator": "ffprobe (ffprobe-static or FFPROBE_PATH)" },
+  "image": {
+    "deterministic": { "provider": "AISHA native PNG composer", "status": "AVAILABLE", "note": "Real raster PNG built from primitives. Never presented as AI generation." },
+    "ai": { "provider": "remote text-to-image API", "env": ["AISHA_IMAGE_API_URL", "AISHA_IMAGE_API_KEY"], "status": "UNAVAILABLE unless configured" }
+  },
+  "video": {
+    "deterministic": { "provider": "ffmpeg from real PNG scenes + captions", "status": "available when ffmpeg probe passes" },
+    "ai": { "provider": "remote text-to-video API", "env": ["AISHA_VIDEO_API_URL", "AISHA_VIDEO_API_KEY"], "status": "UNAVAILABLE unless configured" }
+  },
+  "email": {
+    "connectors": ["IMAP_URL", "SMTP_URL"],
+    "optionalPackages": ["imapflow", "nodemailer"],
+    "rule": "Sending is HIGH risk, always requires a human approval token, and returns the real SMTP response."
+  },
+  "research": {
+    "sources": ["direct HTTP fetch + readability extraction", "Wikipedia REST", "OpenAlex"],
+    "rule": "Every citation is a retrieved URL with byte evidence; per-engine failures are reported, never hidden."
+  }
 }

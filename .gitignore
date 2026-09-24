@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.env
+.env.local
+npm-debug.log*
+# runtime output (kept out of version control; directories are recreated on boot)
+artifacts/
+logs/
+runs/
+uploads/
+workspace/*
+!workspace/datasets/
+__pycache__/
+*.pyc
