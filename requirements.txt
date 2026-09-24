@@ -1,0 +1,20 @@
+# Optional Python helpers. NOT required: the core system runs without Python.
+# Install these only if you want the desktop-control helpers on Windows:
+#   python -m venv .venv && .venv\Scripts\activate && pip install -r requirements.txt
+# Nothing here is downloaded or installed automatically by AI-EXECUTIVE.
+
+# --- Windows desktop control helpers (pip: optional) ---
+# pywinauto==0.6.8        # real Windows accessibility/UI Automation driven control
+# pyautogui==0.9.54       # last-resort coordinate interaction (only after accessibility/DOM/OCR)
+# pynput==1.7.6           # global hotkeys for push-to-talk outside the browser window
+# opencv-python==4.10.0.84
+# pytesseract==0.3.13     # requires a system Tesseract install
+# numpy==1.26.4
+
+# --- Local speech (optional, used through WHISPER_URL / TTS_URL servers) ---
+# faster-whisper==1.0.3
+# silero-vad==5.1.0
+# piper-tts==1.2.0
+
+# --- Video/utility helpers (FFmpeg itself ships as a Node static binary) ---
+# ffmpeg-python==0.2.0

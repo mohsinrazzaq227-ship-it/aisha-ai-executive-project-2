@@ -1,0 +1,66 @@
+{
+  "steps": [
+    {
+      "id": "tsk_mueuho7i01ae01b372_s01",
+      "taskId": "tsk_mueuho7i01ae01b372",
+      "stepIndex": 0,
+      "title": "Validate the command",
+      "detail": "Run the command validator against the deny-list and allowlist before anything executes.",
+      "agentId": "computer_agent",
+      "toolId": "shell.preview",
+      "toolInput": {
+        "command": "rm -rf / --no-preserve-root"
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "FAILED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "risk": "HIGH",
+        "shell": "bash",
+        "reason": "Blocked by command validator: Recursive delete of the filesystem root",
+        "command": "rm -rf / --no-preserve-root",
+        "summary": "Command REJECTED by the validator: Blocked by command validator: Recursive delete of the filesystem root",
+        "wouldRun": "/bin/bash -lc rm -rf / --no-preserve-root",
+        "allowlist": [],
+        "validator": "REJECT",
+        "requiresApproval": true
+      },
+      "error": "Blocked by command validator: Recursive delete of the filesystem root",
+      "startedAt": "2026-09-24T01:20:27.291Z",
+      "finishedAt": "2026-09-24T01:20:27.318Z"
+    },
+    {
+      "id": "tsk_mueuho7i01ae01b372_s02",
+      "taskId": "tsk_mueuho7i01ae01b372",
+      "stepIndex": 1,
+      "title": "Execute with approval",
+      "detail": "HIGH risk: runs only after you approve these exact parameters. Timeout 45s, fully audited, cancellable.",
+      "agentId": "computer_agent",
+      "toolId": "shell.execute",
+      "toolInput": {
+        "command": "rm -rf / --no-preserve-root"
+      },
+      "risk": "HIGH",
+      "requiresApproval": true,
+      "status": "PENDING",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        0
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    }
+  ]
+}

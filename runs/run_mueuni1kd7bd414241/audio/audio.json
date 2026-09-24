@@ -1,0 +1,15 @@
+{
+  "id": "audio_run_mueuni1kd7bd414241",
+  "narrationIncluded": false,
+  "narrationFiles": [],
+  "narrationErrors": [
+    "TTS_URL is not configured, so no narration speech was generated (nothing was simulated)."
+  ],
+  "bedPath": "/app/runs/run_mueuni1kd7bd414241/audio/score_bed.m4a",
+  "bedDetail": "synthesised deterministic score bed",
+  "primaryAudioPath": "/app/runs/run_mueuni1kd7bd414241/audio/score_bed.m4a",
+  "audioPath": "/app/runs/run_mueuni1kd7bd414241/audio/score_bed.m4a",
+  "totalDurationSec": 45.01,
+  "providerMode": "SYNTHETIC_SCORE_BED_ONLY",
+  "createdAt": "2026-09-24T01:25:33.319Z"
+}

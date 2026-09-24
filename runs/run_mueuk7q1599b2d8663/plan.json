@@ -1,0 +1,856 @@
+{
+  "steps": [
+    {
+      "id": "tsk_mueuk7q1979946ba43_s01",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 0,
+      "title": "Research the topic on live sources",
+      "detail": "Gather real sources and citable facts about \"60 quantum entanglement\" for a 60s video.",
+      "agentId": "research_agent",
+      "toolId": "research.search",
+      "toolInput": {
+        "limit": 8,
+        "query": "60 quantum entanglement"
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [],
+      "parallel": true,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "facts": [
+          "We report the experimental realization and characterization of one 60-mode copy and of two 30-mode copies of a dual-rail quantum-wire cluster state in the quantum optical frequency comb of a bimodally pumped optical parametric oscillator.",
+          "This is the largest entangled system ever created whose subsystems are all available simultaneously.",
+          "Quantum cryptography could well be the first application of quantum mechanics at the single-quantum level.",
+          "The rapid progress in both theory and experiment in recent years is reviewed, with emphasis on open questions and technological issues.",
+          "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits.",
+          "Quantum computers, quantum cryptography, and quantum teleportation are among the most celebrated ideas that have emerged from this new field.",
+          "Multiphoton interference reveals strictly nonclassical phenomena.",
+          "Its applications range from fundamental tests of quantum mechanics to photonic quantum information processing, where a significant fraction of key experiments achieved so far comes from multiphoton state manipulation."
+        ],
+        "query": "60 quantum entanglement",
+        "handle": "research",
+        "engines": [
+          {
+            "error": "Unexpected token 'Y', \"You are ma\"... is not valid JSON",
+            "found": 0,
+            "engine": "wikipedia",
+            "status": "ERROR"
+          },
+          {
+            "found": 5,
+            "engine": "openalex",
+            "status": "OK"
+          },
+          {
+            "found": 5,
+            "engine": "hackernews",
+            "status": "OK"
+          }
+        ],
+        "sources": [
+          {
+            "url": "https://doi.org/10.1103/physrevlett.112.120505",
+            "kind": "scholarly",
+            "score": 486,
+            "title": "Experimental Realization of Multipartite Entanglement of 60 Modes of a Quantum Optical Frequency Comb",
+            "engine": "openalex",
+            "snippet": "We report the experimental realization and characterization of one 60-mode copy and of two 30-mode copies of a dual-rail quantum-wire cluster state in the quantum optical frequency comb of a bimodally pumped optical parametric oscillator. This is the largest entangled system ever created whose subsystems are all available simultaneously. The entanglement proceeds from the coherent concatenation of a multitude of Einstein, Podolsky, and Rosen pairs by a single beam splitter, a procedure which is also a building block for the realization of hypercubic-lattice cluster states for universal quantum computing.",
+            "publishedAt": "2014"
+          },
+          {
+            "url": "https://doi.org/10.1103/revmodphys.74.145",
+            "kind": "scholarly",
+            "score": 8510,
+            "title": "Quantum cryptography",
+            "engine": "openalex",
+            "snippet": "Quantum cryptography could well be the first application of quantum mechanics at the single-quantum level. The rapid progress in both theory and experiment in recent years is reviewed, with emphasis on open questions and technological issues.",
+            "publishedAt": "2002"
+          },
+          {
+            "url": "https://doi.org/10.1103/revmodphys.84.621",
+            "kind": "scholarly",
+            "score": 3761,
+            "title": "Gaussian quantum information",
+            "engine": "openalex",
+            "snippet": "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits. Quantum computers, quantum cryptography, and quantum teleportation are among the most celebrated ideas that have emerged from this new field. It was realized later on that using continuous-variable quantum information carriers, instead of qubits, constitutes an extremely powerful alternative approach to quantum information processing. This review focuses on continuous-variable quantum information processes that rely on any combination of Gaussian states, Gaussian operations, and Gaussian measurements. Interestingly, such a restriction to the Gaussian realm comes with various benefits, since on the theoretical side, simple analytical tools are available and, on the experimental side, optical components effecting Gaussian",
+            "publishedAt": "2012"
+          },
+          {
+            "url": "https://doi.org/10.1103/revmodphys.84.777",
+            "kind": "scholarly",
+            "score": 1446,
+            "title": "Multiphoton entanglement and interferometry",
+            "engine": "openalex",
+            "snippet": "Multiphoton interference reveals strictly nonclassical phenomena. Its applications range from fundamental tests of quantum mechanics to photonic quantum information processing, where a significant fraction of key experiments achieved so far comes from multiphoton state manipulation. The progress, both theoretical and experimental, of this rapidly advancing research is reviewed. The emphasis is given to the creation of photonic entanglement of various forms, tests of the completeness of quantum mechanics (in particular, violations of local realism), quantum information protocols for quantum communication (e.g., quantum teleportation, entanglement purification, and quantum repeater), and quantum computation with linear optics. The scope of the review is limited to ``few-photon'' phenomena involving measurements of discrete observables.",
+            "publishedAt": "2012"
+          },
+          {
+            "url": "https://doi.org/10.1038/s42254-021-00348-9",
+            "kind": "scholarly",
+            "score": 3280,
+            "title": "Variational quantum algorithms",
+            "engine": "openalex",
+            "snippet": "Nature Reviews Physics · cited by 3280",
+            "publishedAt": "2021"
+          },
+          {
+            "url": "https://news.ycombinator.com/item?id=9809035",
+            "kind": "community",
+            "score": null,
+            "title": "Discussion",
+            "engine": "hackernews",
+            "snippet": "Community discussion with 0 points",
+            "publishedAt": "2015-06-30T23:24:38Z"
+          },
+          {
+            "url": "https://news.ycombinator.com/item?id=8610617",
+            "kind": "community",
+            "title": "Discussion",
+            "engine": "hackernews",
+            "snippet": "Community discussion with 0 points",
+            "publishedAt": "2014-11-15T02:10:07Z"
+          },
+          {
+            "url": "https://news.ycombinator.com/item?id=41533965",
+            "kind": "community",
+            "title": "Discussion",
+            "engine": "hackernews",
+            "snippet": "Community discussion with 0 points",
+            "publishedAt": "2024-09-13T18:48:39Z"
+          }
+        ],
+        "summary": "Retrieved 8 live sources (openalex:5, hackernews:5) and extracted 8 citable facts.",
+        "factCount": 8,
+        "sourceCount": 8,
+        "agentMessage": "I completed the web research and collected 8 real sources with 8 extracted facts. No citations were invented."
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:22:29.182Z",
+      "finishedAt": "2026-09-24T01:22:31.063Z"
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s02",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 1,
+      "title": "Research a second angle",
+      "detail": "Run a second, independent live query so the script is not built from a single source set.",
+      "agentId": "research_agent",
+      "toolId": "research.search",
+      "toolInput": {
+        "limit": 6,
+        "query": "60 quantum entanglement evidence data"
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [],
+      "parallel": true,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "facts": [
+          "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits.",
+          "Quantum computers, quantum cryptography, and quantum teleportation are among the most celebrated ideas that have emerged from this new field.",
+          "The distribution of quantum states over long distances is limited by photon loss.",
+          "Straightforward amplification as in classical telecommunications is not an option in quantum communication because of the no-cloning theorem.",
+          "Quantum spin liquids may be considered 'quantum disordered' ground states of spin systems, in which zero-point fluctuations are so strong that they prevent conventional magnetic long-range order.",
+          "More interestingly, quantum spin liquids are prototypical examples of ground states with massive many-body entanglement, which is of a degree sufficient to render these states distinct phases of matter.",
+          "Physicists have long sought to understand how quantum dynamics generates the nonlocal correlations known as entanglement.",
+          "Theoretical models are proposed to explain the growth of entanglement over time in different numbers of spatial dimensions."
+        ],
+        "query": "60 quantum entanglement evidence data",
+        "handle": "research",
+        "engines": [
+          {
+            "error": "Unexpected token 'Y', \"You are ma\"... is not valid JSON",
+            "found": 0,
+            "engine": "wikipedia",
+            "status": "ERROR"
+          },
+          {
+            "found": 5,
+            "engine": "openalex",
+            "status": "OK"
+          },
+          {
+            "found": 0,
+            "engine": "hackernews",
+            "status": "OK"
+          }
+        ],
+        "sources": [
+          {
+            "url": "https://doi.org/10.1103/revmodphys.84.621",
+            "kind": "scholarly",
+            "score": 3761,
+            "title": "Gaussian quantum information",
+            "engine": "openalex",
+            "snippet": "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits. Quantum computers, quantum cryptography, and quantum teleportation are among the most celebrated ideas that have emerged from this new field. It was realized later on that using continuous-variable quantum information carriers, instead of qubits, constitutes an extremely powerful alternative approach to quantum information processing. This review focuses on continuous-variable quantum information processes that rely on any combination of Gaussian states, Gaussian operations, and Gaussian measurements. Interestingly, such a restriction to the Gaussian realm comes with various benefits, since on the theoretical side, simple analytical tools are available and, on the experimental side, optical components effecting Gaussian",
+            "publishedAt": "2012"
+          },
+          {
+            "url": "https://doi.org/10.1088/1126-6708/2007/07/062",
+            "kind": "scholarly",
+            "score": 1849,
+            "title": "A covariant holographic entanglement entropy proposal",
+            "engine": "openalex",
+            "snippet": "Journal of High Energy Physics · cited by 1849",
+            "publishedAt": "2007"
+          },
+          {
+            "url": "https://doi.org/10.1103/revmodphys.83.33",
+            "kind": "scholarly",
+            "score": 2059,
+            "title": "Quantum repeaters based on atomic ensembles and linear optics",
+            "engine": "openalex",
+            "snippet": "The distribution of quantum states over long distances is limited by photon loss. Straightforward amplification as in classical telecommunications is not an option in quantum communication because of the no-cloning theorem. This problem could be overcome by implementing quantum repeater protocols, which create long-distance entanglement from shorter-distance entanglement via entanglement swapping. Such protocols require the capacity to create entanglement in a heralded fashion, to store it in quantum memories, and to swap it. One attractive general strategy for realizing quantum repeaters is based on the use of atomic ensembles as quantum memories, in combination with linear optical techniques and photon counting to perform all required operations. Here the theoretical and experimental status quo of this very active field are reviewed. The potentials of different approaches are compared ",
+            "publishedAt": "2011"
+          },
+          {
+            "url": "https://doi.org/10.1088/0034-4885/80/1/016502",
+            "kind": "scholarly",
+            "score": 1920,
+            "title": "Quantum spin liquids: a review",
+            "engine": "openalex",
+            "snippet": "Quantum spin liquids may be considered 'quantum disordered' ground states of spin systems, in which zero-point fluctuations are so strong that they prevent conventional magnetic long-range order. More interestingly, quantum spin liquids are prototypical examples of ground states with massive many-body entanglement, which is of a degree sufficient to render these states distinct phases of matter. Their highly entangled nature imbues quantum spin liquids with unique physical aspects, such as non-local excitations, topological properties, and more. In this review, we discuss the nature of such phases and their properties based on paradigmatic models and general arguments, and introduce theoretical technology such as gauge theory and partons, which are conveniently used in the study of quantum spin liquids. An overview is given of the different types of quantum spin liquids and the models an",
+            "publishedAt": "2016"
+          },
+          {
+            "url": "https://doi.org/10.1103/physrevx.7.031016",
+            "kind": "scholarly",
+            "score": 672,
+            "title": "Quantum Entanglement Growth under Random Unitary Dynamics",
+            "engine": "openalex",
+            "snippet": "Physicists have long sought to understand how quantum dynamics generates the nonlocal correlations known as entanglement. Theoretical models are proposed to explain the growth of entanglement over time in different numbers of spatial dimensions.",
+            "publishedAt": "2017"
+          }
+        ],
+        "summary": "Retrieved 5 live sources (openalex:5, hackernews:0) and extracted 8 citable facts.",
+        "factCount": 8,
+        "sourceCount": 5,
+        "agentMessage": "I completed the web research and collected 5 real sources with 8 extracted facts. No citations were invented."
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:22:29.190Z",
+      "finishedAt": "2026-09-24T01:22:32.219Z"
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s03",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 2,
+      "title": "Cross-check claims against sources",
+      "detail": "Reject anything the sources do not support before it enters the script.",
+      "agentId": "research_agent",
+      "toolId": "research.verify",
+      "toolInput": {
+        "claims": [],
+        "sources": []
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        0,
+        1
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "summary": "Fact check complete: 0/8 claims are directly supported by the retrieved source records (source titles matched against claim keywords).",
+        "verdicts": [
+          {
+            "claim": "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits.",
+            "verdict": "UNSUPPORTED",
+            "coverage": 0.31,
+            "matchedKeywords": [
+              "quantum",
+              "information",
+              "information",
+              "quantum"
+            ]
+          },
+          {
+            "claim": "Quantum computers, quantum cryptography, and quantum teleportation are among the most celebrated ideas that have emerged from this new field.",
+            "verdict": "UNSUPPORTED",
+            "coverage": 0.27,
+            "matchedKeywords": [
+              "quantum",
+              "quantum",
+              "quantum"
+            ]
+          },
+          {
+            "claim": "The distribution of quantum states over long distances is limited by photon loss.",
+            "verdict": "UNSUPPORTED",
+            "coverage": 0.17,
+            "matchedKeywords": [
+              "quantum"
+            ]
+          },
+          {
+            "claim": "Straightforward amplification as in classical telecommunications is not an option in quantum communication because of the no-cloning theorem.",
+            "verdict": "UNSUPPORTED",
+            "coverage": 0.1,
+            "matchedKeywords": [
+              "quantum"
+            ]
+          },
+          {
+            "claim": "Quantum spin liquids may be considered 'quantum disordered' ground states of spin systems, in which zero-point fluctuations are so strong that they prevent conventional magnetic long-range order.",
+            "verdict": "UNSUPPORTED",
+            "coverage": 0.18,
+            "matchedKeywords": [
+              "quantum",
+              "liquids",
+              "quantum"
+            ]
+          },
+          {
+            "claim": "More interestingly, quantum spin liquids are prototypical examples of ground states with massive many-body entanglement, which is of a degree sufficient to render these states distinct phases of matter.",
+            "verdict": "UNSUPPORTED",
+            "coverage": 0.17,
+            "matchedKeywords": [
+              "quantum",
+              "liquids",
+              "entanglement"
+            ]
+          },
+          {
+            "claim": "Physicists have long sought to understand how quantum dynamics generates the nonlocal correlations known as entanglement.",
+            "verdict": "UNSUPPORTED",
+            "coverage": 0.3,
+            "matchedKeywords": [
+              "quantum",
+              "dynamics",
+              "entanglement"
+            ]
+          },
+          {
+            "claim": "Theoretical models are proposed to explain the growth of entanglement over time in different numbers of spatial dimensions.",
+            "verdict": "UNSUPPORTED",
+            "coverage": 0.2,
+            "matchedKeywords": [
+              "growth",
+              "entanglement"
+            ]
+          }
+        ],
+        "unsupported": [
+          "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits.",
+          "Quantum computers, quantum cryptography, and quantum teleportation are among the most celebrated ideas that have emerged from this new field.",
+          "The distribution of quantum states over long distances is limited by photon loss.",
+          "Straightforward amplification as in classical telecommunications is not an option in quantum communication because of the no-cloning theorem.",
+          "Quantum spin liquids may be considered 'quantum disordered' ground states of spin systems, in which zero-point fluctuations are so strong that they prevent conventional magnetic long-range order.",
+          "More interestingly, quantum spin liquids are prototypical examples of ground states with massive many-body entanglement, which is of a degree sufficient to render these states distinct phases of matter.",
+          "Physicists have long sought to understand how quantum dynamics generates the nonlocal correlations known as entanglement.",
+          "Theoretical models are proposed to explain the growth of entanglement over time in different numbers of spatial dimensions."
+        ],
+        "agentMessage": "8 claim(s) are only partially supported and are flagged as such in the report."
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:22:33.102Z",
+      "finishedAt": "2026-09-24T01:22:33.130Z"
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s04",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 3,
+      "title": "Write the creative brief",
+      "detail": "Define audience, platform, tone, visual style, scene count and pacing for a 60s piece.",
+      "agentId": "video_director",
+      "toolId": "director.brief",
+      "toolInput": {
+        "topic": "60 quantum entanglement",
+        "durationSec": 60
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        2
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "id": "brief_run_mueuk7q1599b2d8663_tsk_mueuk7q1979946ba43_s04",
+        "tone": "authoritative, calm, no hype",
+        "topic": "60 quantum entanglement",
+        "handle": "brief",
+        "pacing": "9 scenes over 60s (~6.7s per scene)",
+        "summary": "Creative brief ready: 9 scenes / 60s, audience \"curious adults, non-specialists\", style \"Neon Magenta\", grounded in 8 verified facts.",
+        "themeId": "magenta",
+        "audience": "curious adults, non-specialists",
+        "captions": "two-line maximum, 84px side safe area, 250px bottom safe area, measured line breaks, outline + shadow for contrast",
+        "platform": "vertical short-form explainer (1080x1920)",
+        "createdAt": "2026-09-24T01:22:33.235Z",
+        "factCheck": null,
+        "sceneCount": 9,
+        "durationSec": 60,
+        "soundDesign": "synthesised score bed, -23 LUFS target for the bed; narration mixed on top when a TTS provider is configured",
+        "transitions": "hard cuts inside a beat block, 0.35s crossfades across beat changes, dip-to-colour on the final close",
+        "visualStyle": "deterministic vector art, Neon Magenta palette, high-contrast typography, editorial grid, no stock photography",
+        "agentMessage": "Brief locked: 9 scenes across 60 seconds. The narration will be grounded in 8 verified research facts, not filler.",
+        "cameraLanguage": [
+          "push-in",
+          "pull-out",
+          "lateral pan",
+          "parallax drift",
+          "orbit tilt"
+        ],
+        "evidenceAvailable": 8,
+        "narrativeStructure": [
+          {
+            "beat": "HOOK",
+            "purpose": "Earn attention with the single most surprising verified fact",
+            "seconds": 6.67
+          },
+          {
+            "beat": "CONTEXT",
+            "purpose": "Establish what the viewer is looking at and why it matters",
+            "seconds": 6.67
+          },
+          {
+            "beat": "MECHANISM",
+            "purpose": "Explain the underlying mechanism step by step",
+            "seconds": 6.67
+          },
+          {
+            "beat": "EVIDENCE",
+            "purpose": "Present measured evidence with real numbers",
+            "seconds": 6.67
+          },
+          {
+            "beat": "APPLICATION",
+            "purpose": "Translate the mechanism into concrete modern applications",
+            "seconds": 6.67
+          },
+          {
+            "beat": "IMPLICATIONS",
+            "purpose": "State what this changes and what remains open",
+            "seconds": 6.67
+          },
+          {
+            "beat": "TAKEAWAY",
+            "purpose": "Close on one memorable, verifiable statement",
+            "seconds": 6.67
+          },
+          {
+            "beat": "HOOK",
+            "purpose": "Earn attention with the single most surprising verified fact (extended deep-dive 2)",
+            "seconds": 6.67
+          },
+          {
+            "beat": "CONTEXT",
+            "purpose": "Establish what the viewer is looking at and why it matters (extended deep-dive 2)",
+            "seconds": 6.67
+          }
+        ]
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:22:33.208Z",
+      "finishedAt": "2026-09-24T01:22:33.235Z"
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s05",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 4,
+      "title": "Write the narration script",
+      "detail": "Grounded, non-repetitive, adult narration sized to the requested duration.",
+      "agentId": "script_agent",
+      "toolId": "script.generate",
+      "toolInput": {
+        "topic": "60 quantum entanglement",
+        "durationSec": 60
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        3
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "beats": [
+          {
+            "beat": "HOOK",
+            "index": 0,
+            "engine": "deterministic-local",
+            "heading": "HOOK — Earn attention with the single most surprising verified fact",
+            "grounding": [
+              "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+            ],
+            "narration": "Here is the part of 60 quantum entanglement that surprises almost everyone. The science of quantum information has arisen over the last.",
+            "wordCount": 22,
+            "targetSeconds": 6.67
+          },
+          {
+            "beat": "CONTEXT",
+            "index": 1,
+            "engine": "deterministic-local",
+            "heading": "CONTEXT — Establish what the viewer is looking at and why it matters",
+            "grounding": [
+              "Straightforward amplification as in classical telecommunications is not an option in quantum communication because of the no-cloning theorem."
+            ],
+            "narration": "To make sense of this, start with the established picture of 60 quantum entanglement. Straightforward amplification as in classical telecommunications is not.",
+            "wordCount": 22,
+            "targetSeconds": 6.67
+          },
+          {
+            "beat": "MECHANISM",
+            "index": 2,
+            "engine": "deterministic-local",
+            "heading": "MECHANISM — Explain the underlying mechanism step by step",
+            "grounding": [
+              "Physicists have long sought to understand how quantum dynamics generates the nonlocal correlations known as entanglement."
+            ],
+            "narration": "The mechanism itself has a clear sequence. Physicists have long sought to understand how quantum dynamics generates the nonlocal correlations known as.",
+            "wordCount": 22,
+            "targetSeconds": 6.67
+          },
+          {
+            "beat": "EVIDENCE",
+            "index": 3,
+            "engine": "deterministic-local",
+            "heading": "EVIDENCE — Present measured evidence with real numbers",
+            "grounding": [
+              "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+            ],
+            "narration": "The numbers are what make this concrete. The science of quantum information has arisen over the last two decades centered on the.",
+            "wordCount": 22,
+            "targetSeconds": 6.67
+          },
+          {
+            "beat": "APPLICATION",
+            "index": 4,
+            "engine": "deterministic-local",
+            "heading": "APPLICATION — Translate the mechanism into concrete modern applications",
+            "grounding": [
+              "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+            ],
+            "narration": "That is not abstract: it shows up in real systems. The science of quantum information has arisen over the last two decades.",
+            "wordCount": 22,
+            "targetSeconds": 6.67
+          },
+          {
+            "beat": "IMPLICATIONS",
+            "index": 5,
+            "engine": "deterministic-local",
+            "heading": "IMPLICATIONS — State what this changes and what remains open",
+            "grounding": [
+              "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+            ],
+            "narration": "The consequences are measurable, and some questions stay open. The science of quantum information has arisen over the last two decades centered.",
+            "wordCount": 22,
+            "targetSeconds": 6.67
+          },
+          {
+            "beat": "TAKEAWAY",
+            "index": 6,
+            "engine": "deterministic-local",
+            "heading": "TAKEAWAY — Close on one memorable, verifiable statement",
+            "grounding": [
+              "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+            ],
+            "narration": "If you remember one thing, remember this: The science of quantum information has arisen over the last two decades centered on the.",
+            "wordCount": 22,
+            "targetSeconds": 6.67
+          },
+          {
+            "beat": "HOOK",
+            "index": 7,
+            "engine": "deterministic-local",
+            "heading": "HOOK — Earn attention with the single most surprising verified fact (extended deep-dive 2)",
+            "grounding": [
+              "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+            ],
+            "narration": "Here is the part of 60 quantum entanglement that surprises almost everyone. The science of quantum information has arisen over the last.",
+            "wordCount": 22,
+            "targetSeconds": 6.67
+          },
+          {
+            "beat": "CONTEXT",
+            "index": 8,
+            "engine": "deterministic-local",
+            "heading": "CONTEXT — Establish what the viewer is looking at and why it matters (extended deep-dive 2)",
+            "grounding": [
+              "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+            ],
+            "narration": "To make sense of this, start with the established picture of 60 quantum entanglement. The science of quantum information has arisen over.",
+            "wordCount": 22,
+            "targetSeconds": 6.67
+          }
+        ],
+        "handle": "script",
+        "engines": {
+          "llmBeats": 0,
+          "deterministicBeats": 9
+        },
+        "summary": "Script written: 9 sections, 198 words (0 sections by the configured model, 9 by the deterministic local writer).",
+        "scriptPath": "/app/runs/run_mueuk7q1599b2d8663/script/script.md",
+        "totalWords": 198,
+        "agentMessage": "Script complete — 9 sections, 198 words. No language model was configured, so the deterministic local writer produced every section and I am saying so rather than implying otherwise.",
+        "groundingAvailable": 8
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:22:35.082Z",
+      "finishedAt": "2026-09-24T01:22:35.124Z"
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s06",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 5,
+      "title": "Storyboard the scenes",
+      "detail": "One genuinely different visual representation per scene with camera moves and transitions.",
+      "agentId": "visual_agent",
+      "toolId": "storyboard.generate",
+      "toolInput": {
+        "scriptId": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        4
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "handle": "storyboard",
+        "summary": "Storyboard built: 9 scenes, 60.03s, 9 distinct visual representations, 0 repeated adjacent visual(s).",
+        "dataSource": "STORYBOARD_METRICS",
+        "sceneCount": 9,
+        "agentMessage": "Storyboard ready — 9 scenes and 9 genuinely different visual languages. Repeated adjacent visuals: 0.",
+        "storyboardPath": "/app/runs/run_mueuk7q1599b2d8663/storyboard/storyboard.json",
+        "visualDiversity": {
+          "types": [
+            "TITLE_CARD",
+            "PARALLAX_CROP",
+            "MECHANISM_STEPS",
+            "CHART_BARS",
+            "DIAGRAM_FLOW",
+            "STAT_CALLOUT",
+            "TIMELINE",
+            "COMPARISON_TABLE",
+            "QUOTE_CARD"
+          ],
+          "distinctTypes": 9
+        },
+        "totalDurationSec": 60.03
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:22:36.297Z",
+      "finishedAt": "2026-09-24T01:22:36.322Z"
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s07",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 6,
+      "title": "Render the frames",
+      "detail": "Offline vector frames at 1080x1920 with measured caption layout.",
+      "agentId": "visual_agent",
+      "toolId": "visuals.render",
+      "toolInput": {
+        "storyboardId": ""
+      },
+      "risk": "MEDIUM",
+      "requiresApproval": true,
+      "status": "CANCELLED",
+      "approvalId": "apr_mueukmr1a1540325a4",
+      "walkMs": 1200,
+      "dependsOn": [
+        5
+      ],
+      "parallel": false,
+      "resourceClass": "HEAVY",
+      "attempts": 1,
+      "output": null,
+      "error": null,
+      "startedAt": "2026-09-24T01:22:37.738Z",
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s08",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 7,
+      "title": "Produce audio",
+      "detail": "Narration when a local TTS provider is configured, otherwise a labelled score bed.",
+      "agentId": "audio_agent",
+      "toolId": "audio.narrate",
+      "toolInput": {
+        "storyboardId": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "CANCELLED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        5
+      ],
+      "parallel": false,
+      "resourceClass": "HEAVY",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s09",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 8,
+      "title": "Align timings",
+      "detail": "Word-level timestamps if the local Whisper server is available; otherwise directed scene windows, labelled.",
+      "agentId": "audio_agent",
+      "toolId": "audio.align",
+      "toolInput": {
+        "storyboardId": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "CANCELLED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        6,
+        7
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s10",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 9,
+      "title": "Compose captions",
+      "detail": "Two-line maximum inside safe areas using measured glyph widths.",
+      "agentId": "video_renderer",
+      "toolId": "captions.render",
+      "toolInput": {
+        "storyboardId": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "CANCELLED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        8
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s11",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 10,
+      "title": "Render and validate the MP4",
+      "detail": "FFmpeg H.264/AAC 1080x1920, motion, transitions, burned captions, atomic publish after ffprobe checks.",
+      "agentId": "video_renderer",
+      "toolId": "media.render",
+      "toolInput": {
+        "storyboardId": ""
+      },
+      "risk": "MEDIUM",
+      "requiresApproval": true,
+      "status": "CANCELLED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        9
+      ],
+      "parallel": false,
+      "resourceClass": "HEAVY",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s12",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 11,
+      "title": "Independent verification",
+      "detail": "Read the published file back from disk and verify every claim.",
+      "agentId": "validation_agent",
+      "toolId": "validation.ffprobe",
+      "toolInput": {
+        "path": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "CANCELLED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        10
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuk7q1979946ba43_s13",
+      "taskId": "tsk_mueuk7q1979946ba43",
+      "stepIndex": 12,
+      "title": "Register artifacts with the asset manifest",
+      "detail": "Checksum every produced file and link it to this task.",
+      "agentId": "asset_manager",
+      "toolId": "artifact.register",
+      "toolInput": {
+        "kind": "video",
+        "path": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "CANCELLED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        11
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    }
+  ]
+}

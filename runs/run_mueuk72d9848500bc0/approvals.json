@@ -1,0 +1,46 @@
+[
+  {
+    "id": "apr_mueukg51f32685e411",
+    "taskId": "tsk_mueuk72d3a89c355ec",
+    "stepId": "tsk_mueuk72d3a89c355ec_s07",
+    "agentId": "visual_agent",
+    "toolId": "visuals.render",
+    "action": {
+      "storyboardId": ""
+    },
+    "risk": "MEDIUM",
+    "parametersHash": "11b12bd2c6d6936bb70a2c0f5131f0613e1782effa53133c86df34bd81c04abe",
+    "reason": "Offline vector frames at 1080x1920 with measured caption layout.",
+    "target": "visuals.render",
+    "status": "APPROVED_ONCE",
+    "decision": "APPROVE_ONCE",
+    "scope": "ONCE",
+    "note": "acceptance harness",
+    "createdAt": "2026-09-24T01:22:29.173Z",
+    "expiresAt": "2026-09-24T01:37:29.173Z",
+    "decidedAt": "2026-09-24T01:23:00.575Z",
+    "tokenHash": "[stored]"
+  },
+  {
+    "id": "apr_mueule6sfd6925a5bc",
+    "taskId": "tsk_mueuk72d3a89c355ec",
+    "stepId": "tsk_mueuk72d3a89c355ec_s11",
+    "agentId": "video_renderer",
+    "toolId": "media.render",
+    "action": {
+      "storyboardId": ""
+    },
+    "risk": "MEDIUM",
+    "parametersHash": "dc1210b2066d611335c8ad981d8b492f58e889afcb2eb0166f4565deddaab712",
+    "reason": "FFmpeg H.264/AAC 1080x1920, motion, transitions, burned captions, atomic publish after ffprobe checks.",
+    "target": "media.render",
+    "status": "APPROVED_ONCE",
+    "decision": "APPROVE_ONCE",
+    "scope": "ONCE",
+    "note": "acceptance harness",
+    "createdAt": "2026-09-24T01:23:13.301Z",
+    "expiresAt": "2026-09-24T01:38:13.301Z",
+    "decidedAt": "2026-09-24T01:23:25.739Z",
+    "tokenHash": "[stored]"
+  }
+]

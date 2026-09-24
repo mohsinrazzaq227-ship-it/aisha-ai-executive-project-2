@@ -1,0 +1,233 @@
+[
+  {
+    "id": 167,
+    "ts": "2026-09-24T01:20:24.878Z",
+    "taskId": "tsk_mueuhs8b80d87e20d9",
+    "runId": "run_mueuhs8bfb39b1039a",
+    "agentId": "master_supervisor",
+    "type": "TASK_CREATED",
+    "message": "Task accepted: Desktop control: Notepad",
+    "data": {
+      "intent": "DESKTOP_CONTROL",
+      "message": "Open Notepad and type \"AISHA TEST\" then verify it exists",
+      "uploads": [],
+      "plannerDetail": "Deterministic local planner (no language model configured). Intent parsing is rule-based and auditable — nothing silently falls back to a paid API.",
+      "plannerEngine": "deterministic_local"
+    },
+    "severity": "info"
+  },
+  {
+    "id": 168,
+    "ts": "2026-09-24T01:20:24.880Z",
+    "taskId": "tsk_mueuhs8b80d87e20d9",
+    "runId": null,
+    "agentId": "master_supervisor",
+    "type": "AGENT_STATE",
+    "message": "Planning: Desktop control: Notepad",
+    "data": {
+      "mood": "FOCUSED",
+      "state": "PLANNING",
+      "stationId": "MASTER_SEAT_SEAT_0"
+    },
+    "severity": "info"
+  },
+  {
+    "id": 169,
+    "ts": "2026-09-24T01:20:24.881Z",
+    "taskId": "tsk_mueuhs8b80d87e20d9",
+    "runId": "run_mueuhs8bfb39b1039a",
+    "agentId": "master_supervisor",
+    "type": "TASK_PLANNED",
+    "message": "Plan ready with 6 steps. Risk classes: LOW, MEDIUM.",
+    "data": {
+      "notes": [
+        "Coordinate clicking is a last resort: UI Automation semantics first, then rendered/image evidence, then coordinates — the engine used is recorded per action."
+      ],
+      "steps": [
+        {
+          "risk": "LOW",
+          "role": "Computer Vision Agent",
+          "tool": "computer.state",
+          "agent": "Iris Lund",
+          "index": 1,
+          "title": "Capture the current computer state",
+          "requiresApproval": false
+        },
+        {
+          "risk": "MEDIUM",
+          "role": "Computer Control Agent",
+          "tool": "windows.open",
+          "agent": "Dax Okafor",
+          "index": 2,
+          "title": "Open the application",
+          "requiresApproval": true
+        },
+        {
+          "risk": "LOW",
+          "role": "Computer Vision Agent",
+          "tool": "windows.list",
+          "agent": "Iris Lund",
+          "index": 3,
+          "title": "Enumerate windows and the UI Automation tree",
+          "requiresApproval": false
+        },
+        {
+          "risk": "MEDIUM",
+          "role": "Computer Control Agent",
+          "tool": "windows.type",
+          "agent": "Dax Okafor",
+          "index": 4,
+          "title": "Type the requested text",
+          "requiresApproval": true
+        },
+        {
+          "risk": "LOW",
+          "role": "Computer Vision Agent",
+          "tool": "windows.screenshot",
+          "agent": "Iris Lund",
+          "index": 5,
+          "title": "Capture the resulting screen",
+          "requiresApproval": false
+        },
+        {
+          "risk": "LOW",
+          "role": "Validation Agent",
+          "tool": "computer.verify",
+          "agent": "Anya Vogel",
+          "index": 6,
+          "title": "Verify the resulting state",
+          "requiresApproval": false
+        }
+      ],
+      "engine": "deterministic_local"
+    },
+    "severity": "info"
+  },
+  {
+    "id": 978,
+    "ts": "2026-09-24T01:24:49.537Z",
+    "taskId": "tsk_mueuhs8b80d87e20d9",
+    "runId": "run_mueuhs8bfb39b1039a",
+    "agentId": "master_supervisor",
+    "type": "TASK_STATUS",
+    "message": "Recovered after a backend restart: resuming \"Desktop control: Notepad\" from its first incomplete step. Any step that was mid-flight is re-verified, not assumed to have succeeded.",
+    "data": {
+      "recovery": true
+    },
+    "severity": "warn"
+  },
+  {
+    "id": 1020,
+    "ts": "2026-09-24T01:24:53.198Z",
+    "taskId": "tsk_mueuhs8b80d87e20d9",
+    "runId": "run_mueuhs8bfb39b1039a",
+    "agentId": "vision_agent",
+    "type": "AGENT_ASSIGNED",
+    "message": "Iris Lund (Computer Vision Agent) assigned: Capture the current computer state",
+    "data": {
+      "risk": "LOW",
+      "detail": "Active window, visible windows, screenshot path, clipboard, pointer and focused control — the evidence baseline for verification.",
+      "stepId": "tsk_mueuhs8b80d87e20d9_s01",
+      "toolId": "computer.state",
+      "parallel": false,
+      "dependsOn": [],
+      "stepIndex": 0,
+      "resourceClass": "LIGHT",
+      "approvalRequired": false
+    },
+    "severity": "info"
+  },
+  {
+    "id": 1021,
+    "ts": "2026-09-24T01:24:53.200Z",
+    "taskId": "tsk_mueuhs8b80d87e20d9",
+    "runId": "run_mueuhs8bfb39b1039a",
+    "agentId": "vision_agent",
+    "type": "AGENT_WALKING",
+    "message": "Iris Lund is walking to COMPUTER_DESK_SEAT_1",
+    "data": {
+      "to": "COMPUTER_DESK_SEAT_1",
+      "from": "COMPUTER_DESK_SEAT_1",
+      "path": [
+        [
+          5.1,
+          0.6000000000000002
+        ]
+      ],
+      "heavy": false,
+      "nodes": [
+        "COMPUTER_DESK_SEAT_1"
+      ],
+      "phase": "to-station",
+      "failed": false,
+      "walkMs": 650,
+      "carrying": null,
+      "distance": 0
+    },
+    "severity": "info"
+  },
+  {
+    "id": 1022,
+    "ts": "2026-09-24T01:24:53.219Z",
+    "taskId": "tsk_mueuhs8b80d87e20d9",
+    "runId": null,
+    "agentId": "vision_agent",
+    "type": "AGENT_WORKING",
+    "message": "Capture the current computer state — Computer state capture",
+    "data": {
+      "mood": "WORKING",
+      "state": "WORKING",
+      "stationId": "COMPUTER_DESK_SEAT_1"
+    },
+    "severity": "info"
+  },
+  {
+    "id": 1023,
+    "ts": "2026-09-24T01:24:53.221Z",
+    "taskId": "tsk_mueuhs8b80d87e20d9",
+    "runId": "run_mueuhs8bfb39b1039a",
+    "agentId": "vision_agent",
+    "type": "TOOL_STARTED",
+    "message": "Iris Lund started Computer state capture (computer.state)",
+    "data": {
+      "risk": "LOW",
+      "stepId": "tsk_mueuhs8b80d87e20d9_s01",
+      "toolId": "computer.state",
+      "parameters": {
+        "purpose": "Open Notepad and type \"AISHA TEST\" then verify it exists"
+      }
+    },
+    "severity": "info"
+  },
+  {
+    "id": 1024,
+    "ts": "2026-09-24T01:24:53.224Z",
+    "taskId": "tsk_mueuhs8b80d87e20d9",
+    "runId": "run_mueuhs8bfb39b1039a",
+    "agentId": "vision_agent",
+    "type": "TOOL_FAILED",
+    "message": "Iris Lund hit an error in Capture the current computer state: No structured desktop access available in this environment",
+    "data": {
+      "stepId": "tsk_mueuhs8b80d87e20d9_s01",
+      "toolId": "computer.state",
+      "summary": "Computer state could not include window information on linux (no enumeration engine). Screenshot: unavailable. Nothing was inferred.",
+      "recovery": "Retry resets this step to PENDING so the task resumes from the first incomplete node.",
+      "diagnostics": {}
+    },
+    "severity": "error"
+  },
+  {
+    "id": 1025,
+    "ts": "2026-09-24T01:24:53.225Z",
+    "taskId": "tsk_mueuhs8b80d87e20d9",
+    "runId": null,
+    "agentId": "vision_agent",
+    "type": "AGENT_ERROR",
+    "message": "No structured desktop access available in this environment",
+    "data": {
+      "mood": "ERROR",
+      "state": "ERROR"
+    },
+    "severity": "error"
+  }
+]

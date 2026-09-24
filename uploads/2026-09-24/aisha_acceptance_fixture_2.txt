@@ -1,0 +1,3 @@
+AISHA acceptance fixture.
+
+Local video generation tools run offline on consumer hardware. The Event Horizon Telescope published the first image of a black hole in 2019. Offline speech recognition models can run on 16 GB of RAM without a dedicated GPU.

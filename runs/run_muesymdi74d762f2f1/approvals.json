@@ -1,0 +1,26 @@
+[
+  {
+    "id": "apr_muesyo7xffefa832e2",
+    "taskId": "tsk_muesymdi54b2790bf0",
+    "stepId": "tsk_muesymdi54b2790bf0_s03",
+    "agentId": "master_supervisor",
+    "toolId": "report.write",
+    "action": {
+      "title": "Research — developments local AI generation best free",
+      "sections": [],
+      "destination": "documents"
+    },
+    "risk": "MEDIUM",
+    "parametersHash": "447a0b0e55103fd1cf8f898b94845f362724936bd86ca39a42c8594b8602997c",
+    "reason": "Compose a Markdown report in your Documents folder. MEDIUM risk: creating a file on disk is always approved.",
+    "target": "documents",
+    "status": "APPROVED_ONCE",
+    "decision": "APPROVE_ONCE",
+    "scope": "ONCE",
+    "note": "automated acceptance run",
+    "createdAt": "2026-09-24T00:37:33.597Z",
+    "expiresAt": "2026-09-24T00:52:33.597Z",
+    "decidedAt": "2026-09-24T00:37:33.656Z",
+    "tokenHash": "[stored]"
+  }
+]

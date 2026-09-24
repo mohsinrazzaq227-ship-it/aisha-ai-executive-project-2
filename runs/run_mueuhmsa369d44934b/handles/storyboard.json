@@ -1,0 +1,249 @@
+{
+  "id": "storyboard_run_mueuhmsa369d44934b",
+  "briefId": "brief_run_mueuhmsa369d44934b_tsk_mueuhmsa32c3562b92_s04",
+  "topic": "developments local AI generation best free sourced saved",
+  "scenes": [
+    {
+      "index": 0,
+      "beat": "HOOK",
+      "purpose": "Earn attention with the single most surprising verified fact",
+      "narration": "Here is the part of developments local AI generation best free sourced saved that surprises almost everyone. Generative artificial intelligence is a.",
+      "durationSec": 6.67,
+      "visualType": "TITLE_CARD",
+      "motion": "ZOOM_IN",
+      "transition": "FADE",
+      "themeId": "bio-lab",
+      "bullets": [
+        "Generative artificial intelligence (GenAI) is a subfield of artificial intelligence (AI) that uses generative ",
+        "These models learn the underlying patterns and structures of their training data, and use them to generate new",
+        "OpenAI is an American artificial intelligence (AI) public benefit corporation (PBC) headquartered in San Franc"
+      ],
+      "data": [],
+      "dataSource": "STORYBOARD_METRICS",
+      "sources": []
+    },
+    {
+      "index": 1,
+      "beat": "CONTEXT",
+      "purpose": "Establish what the viewer is looking at and why it matters",
+      "narration": "To make sense of this, start with the established picture of developments local AI generation best free sourced saved. It develops proprietary.",
+      "durationSec": 6.67,
+      "visualType": "PARALLAX_CROP",
+      "motion": "PAN_LEFT",
+      "transition": "CUT",
+      "themeId": "bio-lab",
+      "bullets": [
+        "OpenAI is an American artificial intelligence (AI) public benefit corporation (PBC) headquartered in San Franc",
+        "It develops proprietary generative AI models, particularly its generative pre-trained transformer (GPT) series",
+        "Its release of ChatGPT in November 2022 has been credited with catalyzing the AI boom; as of September 2026, C"
+      ],
+      "data": [],
+      "dataSource": "STORYBOARD_METRICS",
+      "sources": []
+    },
+    {
+      "index": 2,
+      "beat": "MECHANISM",
+      "purpose": "Explain the underlying mechanism step by step",
+      "narration": "The mechanism itself has a clear sequence. Related glossaries include Glossary of computer science, Glossary of robotics, Glossary of machine vision, and.",
+      "durationSec": 6.67,
+      "visualType": "MECHANISM_STEPS",
+      "motion": "ZOOM_OUT",
+      "transition": "CUT",
+      "themeId": "bio-lab",
+      "bullets": [
+        "Its release of ChatGPT in November 2022 has been credited with catalyzing the AI boom; as of September 2026, C",
+        "This glossary of artificial intelligence is a list of definitions of terms and concepts relevant to the study ",
+        "Related glossaries include Glossary of computer science, Glossary of robotics, Glossary of machine vision, and"
+      ],
+      "data": [],
+      "dataSource": "STORYBOARD_METRICS",
+      "sources": []
+    },
+    {
+      "index": 3,
+      "beat": "EVIDENCE",
+      "purpose": "Present measured evidence with real numbers",
+      "narration": "The numbers are what make this concrete. As our dependence on intelligent machines continues to grow, so does the demand for more.",
+      "durationSec": 6.67,
+      "visualType": "CHART_BARS",
+      "motion": "PAN_RIGHT",
+      "transition": "FADE",
+      "themeId": "bio-lab",
+      "bullets": [
+        "Related glossaries include Glossary of computer science, Glossary of robotics, Glossary of machine vision, and",
+        "Transformative artificially intelligent tools, such as ChatGPT, designed to generate sophisticated text indist",
+        "The technology presents opportunities as well as, often ethical and legal, challenges, and has the potential f"
+      ],
+      "data": [
+        {
+          "label": "release ChatGPT November been credited with",
+          "value": "2022"
+        },
+        {
+          "label": "release ChatGPT November been credited with",
+          "value": "2026,"
+        },
+        {
+          "label": "field artificial intelligence evolved considerably last",
+          "value": "60 years"
+        }
+      ],
+      "dataSource": "RESEARCH_FACTS",
+      "sources": []
+    },
+    {
+      "index": 4,
+      "beat": "APPLICATION",
+      "purpose": "Translate the mechanism into concrete modern applications",
+      "narration": "That is not abstract: it shows up in real systems. While there are now many AI applications that have been deployed in.",
+      "durationSec": 6.67,
+      "visualType": "DIAGRAM_FLOW",
+      "motion": "PARALLAX",
+      "transition": "CUT",
+      "themeId": "bio-lab",
+      "bullets": [
+        "The technology presents opportunities as well as, often ethical and legal, challenges, and has the potential f",
+        "As our dependence on intelligent machines continues to grow, so does the demand for more transparent and inter",
+        "In addition, the ability to explain the model generally is now the gold standard for building trust and deploy"
+      ],
+      "data": [],
+      "dataSource": "STORYBOARD_METRICS",
+      "sources": []
+    },
+    {
+      "index": 5,
+      "beat": "IMPLICATIONS",
+      "purpose": "State what this changes and what remains open",
+      "narration": "The consequences are measurable, and some questions stay open. Over the past decade, there has been a notable surge in AI-driven research,.",
+      "durationSec": 6.67,
+      "visualType": "STAT_CALLOUT",
+      "motion": "ROTATE",
+      "transition": "CUT",
+      "themeId": "bio-lab",
+      "bullets": [
+        "In addition, the ability to explain the model generally is now the gold standard for building trust and deploy",
+        "The field of artificial intelligence (AI) has evolved considerably in the last 60 years.",
+        "While there are now many AI applications that have been deployed in high-income country contexts, use in resou"
+      ],
+      "data": [
+        {
+          "label": "release ChatGPT November been credited with",
+          "value": "2022"
+        },
+        {
+          "label": "release ChatGPT November been credited with",
+          "value": "2026,"
+        },
+        {
+          "label": "field artificial intelligence evolved considerably last",
+          "value": "60 years"
+        }
+      ],
+      "dataSource": "RESEARCH_FACTS",
+      "sources": []
+    },
+    {
+      "index": 6,
+      "beat": "TAKEAWAY",
+      "purpose": "Close on one memorable, verifiable statement",
+      "narration": "If you remember one thing, remember this: Generative artificial intelligence is a subfield of artificial intelligence that uses generative models to generate.",
+      "durationSec": 6.67,
+      "visualType": "TIMELINE",
+      "motion": "ZOOM_IN",
+      "transition": "FADE",
+      "themeId": "bio-lab",
+      "bullets": [
+        "While there are now many AI applications that have been deployed in high-income country contexts, use in resou",
+        "Recently, artificial intelligence (AI) and blockchain have become two of the most trending and disruptive tech",
+        "Blockchain technology has the ability to automate payment in cryptocurrency and to provide access to a shared "
+      ],
+      "data": [
+        {
+          "label": "release ChatGPT November been credited with",
+          "value": "2022"
+        },
+        {
+          "label": "release ChatGPT November been credited with",
+          "value": "2026,"
+        },
+        {
+          "label": "field artificial intelligence evolved considerably last",
+          "value": "60 years"
+        }
+      ],
+      "dataSource": "RESEARCH_FACTS",
+      "sources": []
+    },
+    {
+      "index": 7,
+      "beat": "HOOK",
+      "purpose": "Earn attention with the single most surprising verified fact (extended deep-dive 2)",
+      "narration": "Here is the part of developments local AI generation best free sourced saved that surprises almost everyone. Generative artificial intelligence is a.",
+      "durationSec": 6.67,
+      "visualType": "COMPARISON_TABLE",
+      "motion": "PAN_LEFT",
+      "transition": "CUT",
+      "themeId": "bio-lab",
+      "bullets": [
+        "Blockchain technology has the ability to automate payment in cryptocurrency and to provide access to a shared ",
+        "Over the past decade, there has been a notable surge in AI-driven research, specifically geared toward enhanci",
+        "The potential of AI-powered decision support systems to streamline clinical workflows, assist in diagnostics, "
+      ],
+      "data": [
+        {
+          "label": "release ChatGPT November been credited with",
+          "value": "2022"
+        },
+        {
+          "label": "release ChatGPT November been credited with",
+          "value": "2026,"
+        },
+        {
+          "label": "field artificial intelligence evolved considerably last",
+          "value": "60 years"
+        }
+      ],
+      "dataSource": "RESEARCH_FACTS",
+      "sources": []
+    },
+    {
+      "index": 8,
+      "beat": "CONTEXT",
+      "purpose": "Establish what the viewer is looking at and why it matters (extended deep-dive 2)",
+      "narration": "To make sense of this, start with the established picture of developments local AI generation best free sourced saved. Generative artificial intelligence.",
+      "durationSec": 6.67,
+      "visualType": "QUOTE_CARD",
+      "motion": "ZOOM_OUT",
+      "transition": "FADE",
+      "themeId": "bio-lab",
+      "bullets": [
+        "The potential of AI-powered decision support systems to streamline clinical workflows, assist in diagnostics, "
+      ],
+      "data": [],
+      "dataSource": "STORYBOARD_METRICS",
+      "sources": []
+    }
+  ],
+  "totalDurationSec": 60.03,
+  "fps": 30,
+  "resolution": {
+    "width": 1080,
+    "height": 1920
+  },
+  "visualDiversity": {
+    "distinctTypes": 9,
+    "types": [
+      "TITLE_CARD",
+      "PARALLAX_CROP",
+      "MECHANISM_STEPS",
+      "CHART_BARS",
+      "DIAGRAM_FLOW",
+      "STAT_CALLOUT",
+      "TIMELINE",
+      "COMPARISON_TABLE",
+      "QUOTE_CARD"
+    ]
+  },
+  "createdAt": "2026-09-24T01:20:25.757Z"
+}

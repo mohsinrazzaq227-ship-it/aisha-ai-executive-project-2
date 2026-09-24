@@ -1,0 +1,234 @@
+{
+  "id": "storyboard_run_mueuk72d9848500bc0",
+  "briefId": "brief_run_mueuk72d9848500bc0_tsk_mueuk72d3a89c355ec_s04",
+  "topic": "45 black holes",
+  "scenes": [
+    {
+      "index": 0,
+      "beat": "HOOK",
+      "purpose": "Earn attention with the single most surprising verified fact",
+      "narration": "Here is the part of 45 black holes that surprises almost everyone. A supermassive black hole is the largest type of black.",
+      "durationSec": 6.43,
+      "visualType": "TITLE_CARD",
+      "motion": "ZOOM_IN",
+      "transition": "FADE",
+      "themeId": "deep-space",
+      "bullets": [
+        "A supermassive black hole is the largest type of black hole, with its mass being on the order of hundreds of t",
+        "Black holes are a class of astronomical objects that have undergone gravitational collapse, leaving behind sph",
+        "Observational evidence indicates that almost every large galaxy has a supermassive black hole at its center."
+      ],
+      "data": [],
+      "dataSource": "STORYBOARD_METRICS",
+      "sources": []
+    },
+    {
+      "index": 1,
+      "beat": "CONTEXT",
+      "purpose": "Establish what the viewer is looking at and why it matters",
+      "narration": "To make sense of this, start with the established picture of 45 black holes. Sagittarius A*, abbreviated as Sgr A*, is the.",
+      "durationSec": 6.43,
+      "visualType": "PARALLAX_CROP",
+      "motion": "PAN_LEFT",
+      "transition": "CUT",
+      "themeId": "deep-space",
+      "bullets": [
+        "Observational evidence indicates that almost every large galaxy has a supermassive black hole at its center.",
+        "Sagittarius A*, abbreviated as Sgr A*, is the supermassive black hole at the Galactic Center of the Milky Way.",
+        "Viewed from Earth, it is located near the border of the constellations Sagittarius and Scorpius, about 5.6° so"
+      ],
+      "data": [],
+      "dataSource": "STORYBOARD_METRICS",
+      "sources": []
+    },
+    {
+      "index": 2,
+      "beat": "MECHANISM",
+      "purpose": "Explain the underlying mechanism step by step",
+      "narration": "The mechanism itself has a clear sequence. This is an ordered list of the most massive black holes so far discovered ,.",
+      "durationSec": 6.43,
+      "visualType": "MECHANISM_STEPS",
+      "motion": "ZOOM_OUT",
+      "transition": "CUT",
+      "themeId": "deep-space",
+      "bullets": [
+        "Viewed from Earth, it is located near the border of the constellations Sagittarius and Scorpius, about 5.6° so",
+        "Sagittarius A* is a bright and very compact astronomical radio source.",
+        "This is an ordered list of the most massive black holes so far discovered (and probable candidates), measured "
+      ],
+      "data": [],
+      "dataSource": "STORYBOARD_METRICS",
+      "sources": []
+    },
+    {
+      "index": 3,
+      "beat": "EVIDENCE",
+      "purpose": "Present measured evidence with real numbers",
+      "narration": "The numbers are what make this concrete. The masses of supermassive black holes correlate almost perfectly with the velocity dispersions of their.",
+      "durationSec": 6.43,
+      "visualType": "CHART_BARS",
+      "motion": "PAN_RIGHT",
+      "transition": "FADE",
+      "themeId": "deep-space",
+      "bullets": [
+        "This is an ordered list of the most massive black holes so far discovered (and probable candidates), measured ",
+        "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observa",
+        "The signal sweeps upwards in frequency from 35 to 250 Hz with a peak gravitational-wave strain of 1.0×10(-21)."
+      ],
+      "data": [
+        {
+          "label": "Viewed from Earth, located near border",
+          "value": "5.6"
+        },
+        {
+          "label": "Viewed from Earth, located near border",
+          "value": "6"
+        },
+        {
+          "label": "This ordered list most massive black",
+          "value": "2"
+        },
+        {
+          "label": "This ordered list most massive black",
+          "value": "1030"
+        },
+        {
+          "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+          "value": "14,"
+        },
+        {
+          "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+          "value": "2015"
+        }
+      ],
+      "dataSource": "RESEARCH_FACTS",
+      "sources": []
+    },
+    {
+      "index": 4,
+      "beat": "APPLICATION",
+      "purpose": "Translate the mechanism into concrete modern applications",
+      "narration": "That is not abstract: it shows up in real systems. The analysis and classification of the quasinormal spectra require solving non-Hermitian eigenvalue.",
+      "durationSec": 6.43,
+      "visualType": "DIAGRAM_FLOW",
+      "motion": "PARALLAX",
+      "transition": "CUT",
+      "themeId": "deep-space",
+      "bullets": [
+        "The signal sweeps upwards in frequency from 35 to 250 Hz with a peak gravitational-wave strain of 1.0×10(-21).",
+        "The masses of supermassive black holes correlate almost perfectly with the velocity dispersions of their host ",
+        "The relation is much tighter than the relation between M bh and bulge luminosity, with a scatter no larger tha"
+      ],
+      "data": [],
+      "dataSource": "STORYBOARD_METRICS",
+      "sources": []
+    },
+    {
+      "index": 5,
+      "beat": "IMPLICATIONS",
+      "purpose": "State what this changes and what remains open",
+      "narration": "The consequences are measurable, and some questions stay open. A supermassive black hole is the largest type of black hole, with its.",
+      "durationSec": 6.43,
+      "visualType": "STAT_CALLOUT",
+      "motion": "ROTATE",
+      "transition": "CUT",
+      "themeId": "deep-space",
+      "bullets": [
+        "The relation is much tighter than the relation between M bh and bulge luminosity, with a scatter no larger tha",
+        "Perturbations of classical gravitational backgrounds involving black holes or branes naturally lead to quasino",
+        "The analysis and classification of the quasinormal spectra require solving non-Hermitian eigenvalue problems f"
+      ],
+      "data": [
+        {
+          "label": "Viewed from Earth, located near border",
+          "value": "5.6"
+        },
+        {
+          "label": "Viewed from Earth, located near border",
+          "value": "6"
+        },
+        {
+          "label": "This ordered list most massive black",
+          "value": "2"
+        },
+        {
+          "label": "This ordered list most massive black",
+          "value": "1030"
+        },
+        {
+          "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+          "value": "14,"
+        },
+        {
+          "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+          "value": "2015"
+        }
+      ],
+      "dataSource": "RESEARCH_FACTS",
+      "sources": []
+    },
+    {
+      "index": 6,
+      "beat": "TAKEAWAY",
+      "purpose": "Close on one memorable, verifiable statement",
+      "narration": "If you remember one thing, remember this: A supermassive black hole is the largest type of black hole, with its mass being.",
+      "durationSec": 6.43,
+      "visualType": "TIMELINE",
+      "motion": "ZOOM_IN",
+      "transition": "FADE",
+      "themeId": "deep-space",
+      "bullets": [
+        "The analysis and classification of the quasinormal spectra require solving non-Hermitian eigenvalue problems f",
+        "Abstract When surrounded by a transparent emission region, black holes are expected to reveal a dark shadow ca",
+        "To image and study this phenomenon, we have assembled the Event Horizon Telescope, a global very long baseline"
+      ],
+      "data": [
+        {
+          "label": "Viewed from Earth, located near border",
+          "value": "5.6"
+        },
+        {
+          "label": "Viewed from Earth, located near border",
+          "value": "6"
+        },
+        {
+          "label": "This ordered list most massive black",
+          "value": "2"
+        },
+        {
+          "label": "This ordered list most massive black",
+          "value": "1030"
+        },
+        {
+          "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+          "value": "14,"
+        },
+        {
+          "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+          "value": "2015"
+        }
+      ],
+      "dataSource": "RESEARCH_FACTS",
+      "sources": []
+    }
+  ],
+  "totalDurationSec": 45.01,
+  "fps": 30,
+  "resolution": {
+    "width": 1080,
+    "height": 1920
+  },
+  "visualDiversity": {
+    "distinctTypes": 7,
+    "types": [
+      "TITLE_CARD",
+      "PARALLAX_CROP",
+      "MECHANISM_STEPS",
+      "CHART_BARS",
+      "DIAGRAM_FLOW",
+      "STAT_CALLOUT",
+      "TIMELINE"
+    ]
+  },
+  "createdAt": "2026-09-24T01:22:27.745Z"
+}

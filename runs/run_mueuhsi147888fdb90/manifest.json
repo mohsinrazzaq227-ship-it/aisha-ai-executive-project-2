@@ -1,0 +1,50 @@
+{
+  "taskId": "tsk_mueuhsi0af12743fcf",
+  "runId": "run_mueuhsi147888fdb90",
+  "title": "Browser task on en.wikipedia.org/wiki/Black_hole",
+  "status": "QUEUED",
+  "createdAt": "2026-09-24T01:20:25.225Z",
+  "updatedAt": "2026-09-24T01:24:58.000Z",
+  "plannerEngine": "deterministic_local",
+  "findings": [],
+  "steps": [
+    {
+      "index": 0,
+      "title": "Verify the browser engine is really working",
+      "agent": "browser_agent",
+      "tool": "browser.probe",
+      "status": "FAILED",
+      "risk": "LOW",
+      "approvalId": null
+    },
+    {
+      "index": 1,
+      "title": "Navigate to the page",
+      "agent": "browser_agent",
+      "tool": "browser.navigate",
+      "status": "PENDING",
+      "risk": "MEDIUM",
+      "approvalId": null
+    },
+    {
+      "index": 2,
+      "title": "Extract the page structure",
+      "agent": "browser_agent",
+      "tool": "browser.extract",
+      "status": "PENDING",
+      "risk": "LOW",
+      "approvalId": null
+    },
+    {
+      "index": 3,
+      "title": "Capture evidence",
+      "agent": "vision_agent",
+      "tool": "browser.screenshot",
+      "status": "PENDING",
+      "risk": "MEDIUM",
+      "approvalId": null
+    }
+  ],
+  "artifacts": [],
+  "artifacts_count": 0
+}

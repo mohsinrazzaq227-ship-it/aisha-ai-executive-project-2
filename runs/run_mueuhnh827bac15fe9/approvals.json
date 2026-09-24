@@ -1,0 +1,24 @@
+[
+  {
+    "id": "apr_mueuhu38b470fad847",
+    "taskId": "tsk_mueuhnh888cc11c1c6",
+    "stepId": "tsk_mueuhnh888cc11c1c6_s02",
+    "agentId": "computer_agent",
+    "toolId": "shell.execute",
+    "action": {
+      "command": "echo AISHA-SHELL-ACCEPTANCE"
+    },
+    "risk": "HIGH",
+    "parametersHash": "77e6a9b9dfa903e6be575c13e93d4e2e273059310b1aef43a29535678b8bf846",
+    "reason": "HIGH risk: runs only after you approve these exact parameters. Timeout 45s, fully audited, cancellable.",
+    "target": "program: echo · interpreter: bash",
+    "status": "APPROVED_ONCE",
+    "decision": "APPROVE_ONCE",
+    "scope": "ONCE",
+    "note": "acceptance harness",
+    "createdAt": "2026-09-24T01:20:27.285Z",
+    "expiresAt": "2026-09-24T01:35:27.284Z",
+    "decidedAt": "2026-09-24T01:21:07.154Z",
+    "tokenHash": "[stored]"
+  }
+]

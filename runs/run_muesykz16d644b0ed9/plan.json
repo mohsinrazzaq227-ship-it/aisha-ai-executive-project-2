@@ -1,0 +1,28 @@
+{
+  "steps": [
+    {
+      "id": "tsk_muesykz14b978202e7_s01",
+      "taskId": "tsk_muesykz14b978202e7",
+      "stepIndex": 0,
+      "title": "Inspect the location",
+      "detail": "Real directory listing for my documents folder.",
+      "agentId": "file_agent",
+      "toolId": "fs.list",
+      "toolInput": {
+        "path": "my documents folder",
+        "limit": 100
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "FAILED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "output": {
+        "summary": "Directory not found: /app/data/documents/my documents folder"
+      },
+      "error": "ENOENT",
+      "startedAt": "2026-09-24T00:37:29.439Z",
+      "finishedAt": "2026-09-24T00:37:29.448Z"
+    }
+  ]
+}

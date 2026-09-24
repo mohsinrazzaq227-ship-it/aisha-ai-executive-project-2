@@ -1,0 +1,123 @@
+{
+  "id": "script_run_mueuhrjjf4f5852f4b",
+  "topic": "60 quantum entanglement",
+  "durationSec": 60,
+  "audience": "curious adults",
+  "tone": "authoritative, calm",
+  "beats": [
+    {
+      "index": 0,
+      "beat": "HOOK",
+      "heading": "HOOK — Earn attention with the single most surprising verified fact",
+      "narration": "Here is the part of 60 quantum entanglement that surprises almost everyone. The science of quantum information has arisen over the last.",
+      "wordCount": 22,
+      "targetSeconds": 6.67,
+      "engine": "deterministic-local",
+      "grounding": [
+        "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+      ]
+    },
+    {
+      "index": 1,
+      "beat": "CONTEXT",
+      "heading": "CONTEXT — Establish what the viewer is looking at and why it matters",
+      "narration": "To make sense of this, start with the established picture of 60 quantum entanglement. Straightforward amplification as in classical telecommunications is not.",
+      "wordCount": 22,
+      "targetSeconds": 6.67,
+      "engine": "deterministic-local",
+      "grounding": [
+        "Straightforward amplification as in classical telecommunications is not an option in quantum communication because of the no-cloning theorem."
+      ]
+    },
+    {
+      "index": 2,
+      "beat": "MECHANISM",
+      "heading": "MECHANISM — Explain the underlying mechanism step by step",
+      "narration": "The mechanism itself has a clear sequence. Physicists have long sought to understand how quantum dynamics generates the nonlocal correlations known as.",
+      "wordCount": 22,
+      "targetSeconds": 6.67,
+      "engine": "deterministic-local",
+      "grounding": [
+        "Physicists have long sought to understand how quantum dynamics generates the nonlocal correlations known as entanglement."
+      ]
+    },
+    {
+      "index": 3,
+      "beat": "EVIDENCE",
+      "heading": "EVIDENCE — Present measured evidence with real numbers",
+      "narration": "The numbers are what make this concrete. The science of quantum information has arisen over the last two decades centered on the.",
+      "wordCount": 22,
+      "targetSeconds": 6.67,
+      "engine": "deterministic-local",
+      "grounding": [
+        "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+      ]
+    },
+    {
+      "index": 4,
+      "beat": "APPLICATION",
+      "heading": "APPLICATION — Translate the mechanism into concrete modern applications",
+      "narration": "That is not abstract: it shows up in real systems. The science of quantum information has arisen over the last two decades.",
+      "wordCount": 22,
+      "targetSeconds": 6.67,
+      "engine": "deterministic-local",
+      "grounding": [
+        "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+      ]
+    },
+    {
+      "index": 5,
+      "beat": "IMPLICATIONS",
+      "heading": "IMPLICATIONS — State what this changes and what remains open",
+      "narration": "The consequences are measurable, and some questions stay open. The science of quantum information has arisen over the last two decades centered.",
+      "wordCount": 22,
+      "targetSeconds": 6.67,
+      "engine": "deterministic-local",
+      "grounding": [
+        "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+      ]
+    },
+    {
+      "index": 6,
+      "beat": "TAKEAWAY",
+      "heading": "TAKEAWAY — Close on one memorable, verifiable statement",
+      "narration": "If you remember one thing, remember this: The science of quantum information has arisen over the last two decades centered on the.",
+      "wordCount": 22,
+      "targetSeconds": 6.67,
+      "engine": "deterministic-local",
+      "grounding": [
+        "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+      ]
+    },
+    {
+      "index": 7,
+      "beat": "HOOK",
+      "heading": "HOOK — Earn attention with the single most surprising verified fact (extended deep-dive 2)",
+      "narration": "Here is the part of 60 quantum entanglement that surprises almost everyone. The science of quantum information has arisen over the last.",
+      "wordCount": 22,
+      "targetSeconds": 6.67,
+      "engine": "deterministic-local",
+      "grounding": [
+        "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+      ]
+    },
+    {
+      "index": 8,
+      "beat": "CONTEXT",
+      "heading": "CONTEXT — Establish what the viewer is looking at and why it matters (extended deep-dive 2)",
+      "narration": "To make sense of this, start with the established picture of 60 quantum entanglement. The science of quantum information has arisen over.",
+      "wordCount": 22,
+      "targetSeconds": 6.67,
+      "engine": "deterministic-local",
+      "grounding": [
+        "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits."
+      ]
+    }
+  ],
+  "totalWords": 198,
+  "engines": {
+    "llmBeats": 0,
+    "deterministicBeats": 9
+  },
+  "createdAt": "2026-09-24T01:24:55.259Z"
+}

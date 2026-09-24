@@ -1,0 +1,184 @@
+{
+  "steps": [
+    {
+      "id": "tsk_mueuhs8b80d87e20d9_s01",
+      "taskId": "tsk_mueuhs8b80d87e20d9",
+      "stepIndex": 0,
+      "title": "Capture the current computer state",
+      "detail": "Active window, visible windows, screenshot path, clipboard, pointer and focused control — the evidence baseline for verification.",
+      "agentId": "vision_agent",
+      "toolId": "computer.state",
+      "toolInput": {
+        "purpose": "Open Notepad and type \"AISHA TEST\" then verify it exists"
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "FAILED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "engine": "none",
+        "errors": [],
+        "handle": "computerState",
+        "pointer": null,
+        "summary": "Computer state could not include window information on linux (no enumeration engine). Screenshot: unavailable. Nothing was inferred.",
+        "platform": "linux",
+        "clipboard": {
+          "preview": null,
+          "available": false
+        },
+        "elapsedMs": 1,
+        "capturedAt": "2026-09-24T01:24:53.222Z",
+        "screenshot": null,
+        "windowCount": 0,
+        "activeWindow": null,
+        "visibleWindows": [],
+        "screenshotError": "screen capture unavailable on linux",
+        "verificationHint": "No structured window information available in this environment; actions that depend on it will refuse rather than guess."
+      },
+      "error": "No structured desktop access available in this environment",
+      "startedAt": "2026-09-24T01:24:53.196Z",
+      "finishedAt": "2026-09-24T01:24:53.223Z"
+    },
+    {
+      "id": "tsk_mueuhs8b80d87e20d9_s02",
+      "taskId": "tsk_mueuhs8b80d87e20d9",
+      "stepIndex": 1,
+      "title": "Open the application",
+      "detail": "Launch \"Notepad\" and verify a real window appears.",
+      "agentId": "computer_agent",
+      "toolId": "windows.open",
+      "toolInput": {
+        "target": "Notepad"
+      },
+      "risk": "MEDIUM",
+      "requiresApproval": true,
+      "status": "PENDING",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        0
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuhs8b80d87e20d9_s03",
+      "taskId": "tsk_mueuhs8b80d87e20d9",
+      "stepIndex": 2,
+      "title": "Enumerate windows and the UI Automation tree",
+      "detail": "Semantic discovery first: window titles, automation ids, control types, bounding rectangles.",
+      "agentId": "vision_agent",
+      "toolId": "windows.list",
+      "toolInput": {
+        "purpose": "Open Notepad and type \"AISHA TEST\" then verify it exists"
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "PENDING",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        1
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuhs8b80d87e20d9_s04",
+      "taskId": "tsk_mueuhs8b80d87e20d9",
+      "stepIndex": 3,
+      "title": "Type the requested text",
+      "detail": "Type \"AISHA TEST\" into the focused application using real keyboard input.",
+      "agentId": "computer_agent",
+      "toolId": "windows.type",
+      "toolInput": {
+        "text": "AISHA TEST"
+      },
+      "risk": "MEDIUM",
+      "requiresApproval": true,
+      "status": "PENDING",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        2
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuhs8b80d87e20d9_s05",
+      "taskId": "tsk_mueuhs8b80d87e20d9",
+      "stepIndex": 4,
+      "title": "Capture the resulting screen",
+      "detail": "Screenshot after the action, stored as a real artifact.",
+      "agentId": "vision_agent",
+      "toolId": "windows.screenshot",
+      "toolInput": {},
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "PENDING",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        2
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuhs8b80d87e20d9_s06",
+      "taskId": "tsk_mueuhs8b80d87e20d9",
+      "stepIndex": 5,
+      "title": "Verify the resulting state",
+      "detail": "Re-inspect the window/control tree, typed text and file state. Success is claimed only when the evidence confirms it — never because an input command was sent.",
+      "agentId": "validation_agent",
+      "toolId": "computer.verify",
+      "toolInput": {
+        "app": "Notepad",
+        "saveAs": null,
+        "typedText": "AISHA TEST",
+        "expectation": "AISHA TEST"
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "PENDING",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        3
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "taskId": "tsk_mueuhplu8d2c47038a",
+  "runId": "run_mueuhplufcc00f9738",
+  "title": "Research current state open source speech recognition evidence comparison",
+  "status": "QUEUED",
+  "createdAt": "2026-09-24T01:20:21.475Z",
+  "updatedAt": "2026-09-24T01:20:34.803Z",
+  "plannerEngine": "deterministic_local",
+  "findings": [],
+  "steps": [
+    {
+      "index": 0,
+      "title": "Research live sources",
+      "agent": "research_agent",
+      "tool": "research.search",
+      "status": "COMPLETED",
+      "risk": "LOW",
+      "approvalId": null
+    },
+    {
+      "index": 1,
+      "title": "Research an independent second query",
+      "agent": "research_agent",
+      "tool": "research.search",
+      "status": "COMPLETED",
+      "risk": "LOW",
+      "approvalId": null
+    },
+    {
+      "index": 2,
+      "title": "Cross-check the evidence",
+      "agent": "research_agent",
+      "tool": "research.verify",
+      "status": "COMPLETED",
+      "risk": "LOW",
+      "approvalId": null
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "art_mueuhxy2dd62d5a976",
+      "kind": "research",
+      "name": "current_state_open_source_speech_recogni.json",
+      "path": "runs/run_mueuhplufcc00f9738/research/current_state_open_source_speech_recogni.json",
+      "size": 9793,
+      "validated": true,
+      "sha256": "09caa43cbd9d7df270f0b103efc9059c654b39e25747ac2f486986897ad79246"
+    },
+    {
+      "id": "art_mueuhz4bf3259ddc6c",
+      "kind": "research",
+      "name": "current_state_open_source_speech_recogni.json",
+      "path": "runs/run_mueuhplufcc00f9738/research/current_state_open_source_speech_recogni.json",
+      "size": 6566,
+      "validated": true,
+      "sha256": "09caa43cbd9d7df270f0b103efc9059c654b39e25747ac2f486986897ad79246"
+    }
+  ],
+  "artifacts_count": 2
+}

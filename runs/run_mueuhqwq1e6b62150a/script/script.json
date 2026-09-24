@@ -1,0 +1,85 @@
+{
+  "id": "script_run_mueuhqwq1e6b62150a",
+  "topic": "45 black holes",
+  "durationSec": 45,
+  "audience": "curious adults",
+  "tone": "authoritative, calm",
+  "beats": [
+    {
+      "index": 0,
+      "beat": "HOOK",
+      "heading": "HOOK — Earn attention with the single most surprising verified fact",
+      "narration": "Here is the part of 45 black holes that surprises almost everyone. No source material was retrieved for 45 black holes, so.",
+      "wordCount": 22,
+      "targetSeconds": 6.43,
+      "engine": "deterministic-local",
+      "grounding": []
+    },
+    {
+      "index": 1,
+      "beat": "CONTEXT",
+      "heading": "CONTEXT — Establish what the viewer is looking at and why it matters",
+      "narration": "To make sense of this, start with the established picture of 45 black holes. No source material was retrieved for 45 black.",
+      "wordCount": 22,
+      "targetSeconds": 6.43,
+      "engine": "deterministic-local",
+      "grounding": []
+    },
+    {
+      "index": 2,
+      "beat": "MECHANISM",
+      "heading": "MECHANISM — Explain the underlying mechanism step by step",
+      "narration": "The mechanism itself has a clear sequence. No source material was retrieved for 45 black holes, so this section states only that.",
+      "wordCount": 22,
+      "targetSeconds": 6.43,
+      "engine": "deterministic-local",
+      "grounding": []
+    },
+    {
+      "index": 3,
+      "beat": "EVIDENCE",
+      "heading": "EVIDENCE — Present measured evidence with real numbers",
+      "narration": "The numbers are what make this concrete. No source material was retrieved for 45 black holes, so this section states only that.",
+      "wordCount": 22,
+      "targetSeconds": 6.43,
+      "engine": "deterministic-local",
+      "grounding": []
+    },
+    {
+      "index": 4,
+      "beat": "APPLICATION",
+      "heading": "APPLICATION — Translate the mechanism into concrete modern applications",
+      "narration": "That is not abstract: it shows up in real systems. No source material was retrieved for 45 black holes, so this section.",
+      "wordCount": 22,
+      "targetSeconds": 6.43,
+      "engine": "deterministic-local",
+      "grounding": []
+    },
+    {
+      "index": 5,
+      "beat": "IMPLICATIONS",
+      "heading": "IMPLICATIONS — State what this changes and what remains open",
+      "narration": "The consequences are measurable, and some questions stay open. No source material was retrieved for 45 black holes, so this section states.",
+      "wordCount": 22,
+      "targetSeconds": 6.43,
+      "engine": "deterministic-local",
+      "grounding": []
+    },
+    {
+      "index": 6,
+      "beat": "TAKEAWAY",
+      "heading": "TAKEAWAY — Close on one memorable, verifiable statement",
+      "narration": "If you remember one thing, remember this: No source material was retrieved for 45 black holes, so this section states only that.",
+      "wordCount": 22,
+      "targetSeconds": 6.43,
+      "engine": "deterministic-local",
+      "grounding": []
+    }
+  ],
+  "totalWords": 154,
+  "engines": {
+    "llmBeats": 0,
+    "deterministicBeats": 7
+  },
+  "createdAt": "2026-09-24T01:20:42.933Z"
+}

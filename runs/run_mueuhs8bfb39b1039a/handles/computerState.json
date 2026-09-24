@@ -1,0 +1,17 @@
+{
+  "capturedAt": "2026-09-24T01:24:53.222Z",
+  "platform": "linux",
+  "engine": "none",
+  "activeWindow": null,
+  "visibleWindows": [],
+  "windowCount": 0,
+  "screenshot": null,
+  "screenshotError": "screen capture unavailable on linux",
+  "clipboard": {
+    "available": false,
+    "preview": null
+  },
+  "pointer": null,
+  "errors": [],
+  "verificationHint": "No structured window information available in this environment; actions that depend on it will refuse rather than guess."
+}

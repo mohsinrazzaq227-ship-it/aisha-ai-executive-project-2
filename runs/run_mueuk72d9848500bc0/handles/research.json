@@ -1,0 +1,92 @@
+{
+  "query": "45 black holes evidence data",
+  "sources": [
+    {
+      "engine": "wikipedia",
+      "title": "Supermassive black hole",
+      "url": "https://en.wikipedia.org/wiki/Supermassive_black_hole",
+      "snippet": "A supermassive black hole is the largest type of black hole, with its mass being on the order of hundreds of thousands, or millions to billions, of times the mass of the Sun (M☉). Black holes are a class of astronomical objects that have undergone gravitational collapse, leaving behind spheroidal regions of space that nothing, not even light, can escape. Observational evidence indicates that almost every large galaxy has a supermassive black hole at its center. For example, the Milky Way galaxy has a supermassive black hole at its center, corresponding to the radio source Sagittarius A*. Accretion of interstellar gas onto supermassive black holes is the process responsible for powering active galactic nuclei (AGNs) and quasars.",
+      "publishedAt": "2026-09-08T14:21:33Z",
+      "kind": "encyclopedia"
+    },
+    {
+      "engine": "wikipedia",
+      "title": "Sagittarius A*",
+      "url": "https://en.wikipedia.org/wiki/Sagittarius_A*",
+      "snippet": "Sagittarius A*, abbreviated as Sgr A*, is the supermassive black hole at the Galactic Center of the Milky Way. Viewed from Earth, it is located near the border of the constellations Sagittarius and Scorpius, about 5.6° south of the ecliptic, visually close to the Butterfly Cluster (M6) and Lambda Scorpii. Sagittarius A* is a bright and very compact astronomical radio source.",
+      "publishedAt": "2026-09-21T11:58:51Z",
+      "kind": "encyclopedia"
+    },
+    {
+      "engine": "wikipedia",
+      "title": "List of most massive black holes",
+      "url": "https://en.wikipedia.org/wiki/List_of_most_massive_black_holes",
+      "snippet": "This is an ordered list of the most massive black holes so far discovered (and probable candidates), measured in units of solar masses (M☉), about 2×1030 kilograms.",
+      "publishedAt": "2026-08-23T02:13:36Z",
+      "kind": "encyclopedia"
+    },
+    {
+      "engine": "openalex",
+      "title": "Observation of Gravitational Waves from a Binary Black Hole Merger",
+      "url": "https://doi.org/10.1103/physrevlett.116.061102",
+      "snippet": "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal. The signal sweeps upwards in frequency from 35 to 250 Hz with a peak gravitational-wave strain of 1.0×10(-21). It matches the waveform predicted by general relativity for the inspiral and merger of a pair of black holes and the ringdown of the resulting single black hole. The signal was observed with a matched-filter signal-to-noise ratio of 24 and a false alarm rate estimated to be less than 1 event per 203,000 years, equivalent to a significance greater than 5.1σ. The source lies at a luminosity distance of 410(-180)(+160) Mpc corresponding to a redshift z=0.09(-0.04)(+0.03). In the source frame, the initial black hole masses are 36(-4)(+5)M⊙ and 29(-4)(+4)M⊙, and the final black hole mass is 62(-4)(+4)M⊙, with",
+      "publishedAt": "2016",
+      "score": 14545,
+      "kind": "scholarly"
+    },
+    {
+      "engine": "openalex",
+      "title": "A Fundamental Relation between Supermassive Black Holes and Their Host Galaxies",
+      "url": "https://doi.org/10.1086/312838",
+      "snippet": "The masses of supermassive black holes correlate almost perfectly with the velocity dispersions of their host bulges, M bh ∝ σ α , where α = 4.8 ± 0.5. The relation is much tighter than the relation between M bh and bulge luminosity, with a scatter no larger than expected on the basis of measurement error alone. Black hole masses recently estimated by Magorrian et al. lie systematically above the M bh -σ relation defined by more accurate mass estimates, some by as much as 2 orders of magnitude. The tightness of the M bh -σ relation implies a strong link between black hole formation and the properties of the stellar bulge.",
+      "publishedAt": "2000",
+      "score": 4479,
+      "kind": "scholarly"
+    },
+    {
+      "engine": "openalex",
+      "title": "Quasinormal modes of black holes and black branes",
+      "url": "https://doi.org/10.1088/0264-9381/26/16/163001",
+      "snippet": "Quasinormal modes are eigenmodes of dissipative systems. Perturbations of classical gravitational backgrounds involving black holes or branes naturally lead to quasinormal modes. The analysis and classification of the quasinormal spectra require solving non-Hermitian eigenvalue problems for the associated linear differential equations. Within the recently developed gauge-gravity duality, these modes serve as an important tool for determining the near-equilibrium properties of strongly coupled quantum field theories, in particular their transport coefficients, such as viscosity, conductivity and diffusion constants. In astrophysics, the detection of quasinormal modes in gravitational wave experiments would allow precise measurements of the mass and spin of black holes as well as new tests of general relativity. This review is meant as an introduction to the subject, with a focus on the re",
+      "publishedAt": "2009",
+      "score": 2351,
+      "kind": "scholarly"
+    }
+  ],
+  "facts": [
+    "A supermassive black hole is the largest type of black hole, with its mass being on the order of hundreds of thousands, or millions to billions, of times the mass of the Sun (M☉).",
+    "Black holes are a class of astronomical objects that have undergone gravitational collapse, leaving behind spheroidal regions of space that nothing, not even light, can escape.",
+    "Observational evidence indicates that almost every large galaxy has a supermassive black hole at its center.",
+    "Sagittarius A*, abbreviated as Sgr A*, is the supermassive black hole at the Galactic Center of the Milky Way.",
+    "Viewed from Earth, it is located near the border of the constellations Sagittarius and Scorpius, about 5.6° south of the ecliptic, visually close to the Butterfly Cluster (M6) and Lambda Scorpii.",
+    "Sagittarius A* is a bright and very compact astronomical radio source.",
+    "This is an ordered list of the most massive black holes so far discovered (and probable candidates), measured in units of solar masses (M☉), about 2×1030 kilograms.",
+    "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal.",
+    "The signal sweeps upwards in frequency from 35 to 250 Hz with a peak gravitational-wave strain of 1.0×10(-21).",
+    "The masses of supermassive black holes correlate almost perfectly with the velocity dispersions of their host bulges, M bh ∝ σ α , where α = 4.8 ± 0.5.",
+    "The relation is much tighter than the relation between M bh and bulge luminosity, with a scatter no larger than expected on the basis of measurement error alone.",
+    "Perturbations of classical gravitational backgrounds involving black holes or branes naturally lead to quasinormal modes.",
+    "The analysis and classification of the quasinormal spectra require solving non-Hermitian eigenvalue problems for the associated linear differential equations.",
+    "Abstract When surrounded by a transparent emission region, black holes are expected to reveal a dark shadow caused by gravitational light bending and photon capture at the event horizon.",
+    "To image and study this phenomenon, we have assembled the Event Horizon Telescope, a global very long baseline interferometry array observing at a wavelength of 1.3 mm."
+  ],
+  "engines": [
+    {
+      "engine": "wikipedia",
+      "status": "OK",
+      "found": 4
+    },
+    {
+      "engine": "openalex",
+      "status": "OK",
+      "found": 5
+    },
+    {
+      "engine": "hackernews",
+      "status": "OK",
+      "found": 1
+    }
+  ],
+  "fetchedAt": "2026-09-24T01:22:23.617Z",
+  "mode": "LIVE_NETWORK"
+}

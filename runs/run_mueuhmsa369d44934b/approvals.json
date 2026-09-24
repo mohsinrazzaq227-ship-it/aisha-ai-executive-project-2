@@ -1,0 +1,12 @@
+{
+  "requestedAt": "2026-09-24T01:20:27.178Z",
+  "approvalId": "apr_mueuhu05b1fc099202",
+  "stepId": "tsk_mueuhmsa32c3562b92_s07",
+  "toolId": "visuals.render",
+  "risk": "MEDIUM",
+  "parametersHash": "136e6d4ad849954913fc269724f61ad7a31054428df27e4c67d9f82d784ec728",
+  "action": {
+    "storyboardId": ""
+  },
+  "reason": "Offline vector frames at 1080x1920 with measured caption layout."
+}

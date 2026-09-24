@@ -1,0 +1,105 @@
+{
+  "query": "60 quantum entanglement",
+  "sources": [
+    {
+      "engine": "openalex",
+      "title": "Experimental Realization of Multipartite Entanglement of 60 Modes of a Quantum Optical Frequency Comb",
+      "url": "https://doi.org/10.1103/physrevlett.112.120505",
+      "snippet": "We report the experimental realization and characterization of one 60-mode copy and of two 30-mode copies of a dual-rail quantum-wire cluster state in the quantum optical frequency comb of a bimodally pumped optical parametric oscillator. This is the largest entangled system ever created whose subsystems are all available simultaneously. The entanglement proceeds from the coherent concatenation of a multitude of Einstein, Podolsky, and Rosen pairs by a single beam splitter, a procedure which is also a building block for the realization of hypercubic-lattice cluster states for universal quantum computing.",
+      "publishedAt": "2014",
+      "score": 486,
+      "kind": "scholarly"
+    },
+    {
+      "engine": "openalex",
+      "title": "Quantum cryptography",
+      "url": "https://doi.org/10.1103/revmodphys.74.145",
+      "snippet": "Quantum cryptography could well be the first application of quantum mechanics at the single-quantum level. The rapid progress in both theory and experiment in recent years is reviewed, with emphasis on open questions and technological issues.",
+      "publishedAt": "2002",
+      "score": 8510,
+      "kind": "scholarly"
+    },
+    {
+      "engine": "openalex",
+      "title": "Gaussian quantum information",
+      "url": "https://doi.org/10.1103/revmodphys.84.621",
+      "snippet": "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits. Quantum computers, quantum cryptography, and quantum teleportation are among the most celebrated ideas that have emerged from this new field. It was realized later on that using continuous-variable quantum information carriers, instead of qubits, constitutes an extremely powerful alternative approach to quantum information processing. This review focuses on continuous-variable quantum information processes that rely on any combination of Gaussian states, Gaussian operations, and Gaussian measurements. Interestingly, such a restriction to the Gaussian realm comes with various benefits, since on the theoretical side, simple analytical tools are available and, on the experimental side, optical components effecting Gaussian",
+      "publishedAt": "2012",
+      "score": 3761,
+      "kind": "scholarly"
+    },
+    {
+      "engine": "openalex",
+      "title": "Multiphoton entanglement and interferometry",
+      "url": "https://doi.org/10.1103/revmodphys.84.777",
+      "snippet": "Multiphoton interference reveals strictly nonclassical phenomena. Its applications range from fundamental tests of quantum mechanics to photonic quantum information processing, where a significant fraction of key experiments achieved so far comes from multiphoton state manipulation. The progress, both theoretical and experimental, of this rapidly advancing research is reviewed. The emphasis is given to the creation of photonic entanglement of various forms, tests of the completeness of quantum mechanics (in particular, violations of local realism), quantum information protocols for quantum communication (e.g., quantum teleportation, entanglement purification, and quantum repeater), and quantum computation with linear optics. The scope of the review is limited to ``few-photon'' phenomena involving measurements of discrete observables.",
+      "publishedAt": "2012",
+      "score": 1446,
+      "kind": "scholarly"
+    },
+    {
+      "engine": "openalex",
+      "title": "Variational quantum algorithms",
+      "url": "https://doi.org/10.1038/s42254-021-00348-9",
+      "snippet": "Nature Reviews Physics · cited by 3280",
+      "publishedAt": "2021",
+      "score": 3280,
+      "kind": "scholarly"
+    },
+    {
+      "engine": "hackernews",
+      "title": "Discussion",
+      "url": "https://news.ycombinator.com/item?id=9809035",
+      "snippet": "Community discussion with 0 points",
+      "publishedAt": "2015-06-30T23:24:38Z",
+      "score": null,
+      "kind": "community"
+    },
+    {
+      "engine": "hackernews",
+      "title": "Discussion",
+      "url": "https://news.ycombinator.com/item?id=8610617",
+      "snippet": "Community discussion with 0 points",
+      "publishedAt": "2014-11-15T02:10:07Z",
+      "kind": "community"
+    },
+    {
+      "engine": "hackernews",
+      "title": "Discussion",
+      "url": "https://news.ycombinator.com/item?id=41533965",
+      "snippet": "Community discussion with 0 points",
+      "publishedAt": "2024-09-13T18:48:39Z",
+      "kind": "community"
+    }
+  ],
+  "facts": [
+    "We report the experimental realization and characterization of one 60-mode copy and of two 30-mode copies of a dual-rail quantum-wire cluster state in the quantum optical frequency comb of a bimodally pumped optical parametric oscillator.",
+    "This is the largest entangled system ever created whose subsystems are all available simultaneously.",
+    "Quantum cryptography could well be the first application of quantum mechanics at the single-quantum level.",
+    "The rapid progress in both theory and experiment in recent years is reviewed, with emphasis on open questions and technological issues.",
+    "The science of quantum information has arisen over the last two decades centered on the manipulation of individual quanta of information, known as quantum bits or qubits.",
+    "Quantum computers, quantum cryptography, and quantum teleportation are among the most celebrated ideas that have emerged from this new field.",
+    "Multiphoton interference reveals strictly nonclassical phenomena.",
+    "Its applications range from fundamental tests of quantum mechanics to photonic quantum information processing, where a significant fraction of key experiments achieved so far comes from multiphoton state manipulation."
+  ],
+  "engines": [
+    {
+      "engine": "wikipedia",
+      "status": "ERROR",
+      "found": 0,
+      "error": "Unexpected token 'Y', \"You are ma\"... is not valid JSON"
+    },
+    {
+      "engine": "openalex",
+      "status": "OK",
+      "found": 5
+    },
+    {
+      "engine": "hackernews",
+      "status": "OK",
+      "found": 5
+    }
+  ],
+  "fetchedAt": "2026-09-24T01:22:31.063Z",
+  "mode": "LIVE_NETWORK"
+}

@@ -1,0 +1,23 @@
+{
+  "taskId": "tsk_muesykz14b978202e7",
+  "runId": "run_muesykz16d644b0ed9",
+  "title": "Files at my documents folder",
+  "status": "QUEUED",
+  "createdAt": "2026-09-24T00:37:29.390Z",
+  "updatedAt": "2026-09-24T00:37:29.460Z",
+  "plannerEngine": "deterministic_local",
+  "findings": [],
+  "steps": [
+    {
+      "index": 0,
+      "title": "Inspect the location",
+      "agent": "file_agent",
+      "tool": "fs.list",
+      "status": "FAILED",
+      "risk": "LOW",
+      "approvalId": null
+    }
+  ],
+  "artifacts": [],
+  "artifacts_count": 0
+}

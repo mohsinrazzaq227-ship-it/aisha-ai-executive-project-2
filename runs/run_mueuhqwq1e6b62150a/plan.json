@@ -1,0 +1,703 @@
+{
+  "steps": [
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s01",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 0,
+      "title": "Research the topic on live sources",
+      "detail": "Gather real sources and citable facts about \"45 black holes\" for a 45s video.",
+      "agentId": "research_agent",
+      "toolId": "research.search",
+      "toolInput": {
+        "limit": 8,
+        "query": "45 black holes"
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [],
+      "parallel": true,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "facts": [],
+        "query": "45 black holes",
+        "handle": "research",
+        "engines": [
+          {
+            "error": "Unexpected token 'Y', \"You are ma\"... is not valid JSON",
+            "found": 0,
+            "engine": "wikipedia",
+            "status": "ERROR"
+          },
+          {
+            "found": 0,
+            "engine": "openalex",
+            "status": "OK"
+          },
+          {
+            "found": 5,
+            "engine": "hackernews",
+            "status": "OK"
+          }
+        ],
+        "sources": [
+          {
+            "url": "https://blogs.futura-sciences.com/e-luminet/2018/03/07/45-years-black-hole-imaging-1-early-work-1972-1988/",
+            "kind": "community",
+            "score": 3,
+            "title": "40 Years of Black Hole Imaging (1): Early Work 1972-1988",
+            "engine": "hackernews",
+            "snippet": "Community discussion with 3 points",
+            "publishedAt": "2023-10-18T10:47:04Z"
+          },
+          {
+            "url": "https://blogs.futura-sciences.com/e-luminet/2018/03/07/45-years-black-hole-imaging-1-early-work-1972-1988/",
+            "kind": "community",
+            "score": 2,
+            "title": "40 Years of Black Hole Imaging",
+            "engine": "hackernews",
+            "snippet": "Community discussion with 2 points",
+            "publishedAt": "2022-03-05T23:30:03Z"
+          },
+          {
+            "url": "https://news.ycombinator.com/item?id=42188182",
+            "kind": "community",
+            "title": "Discussion",
+            "engine": "hackernews",
+            "snippet": "Community discussion with 0 points",
+            "publishedAt": "2024-11-19T21:18:28Z"
+          },
+          {
+            "url": "https://news.ycombinator.com/item?id=9653749",
+            "kind": "community",
+            "score": null,
+            "title": "Discussion",
+            "engine": "hackernews",
+            "snippet": "Community discussion with 0 points",
+            "publishedAt": "2015-06-03T16:29:13Z"
+          },
+          {
+            "url": "https://news.ycombinator.com/item?id=8245022",
+            "kind": "community",
+            "title": "Discussion",
+            "engine": "hackernews",
+            "snippet": "Community discussion with 0 points",
+            "publishedAt": "2014-08-29T23:35:03Z"
+          }
+        ],
+        "summary": "Retrieved 5 live sources (openalex:0, hackernews:5) and extracted 0 citable facts.",
+        "factCount": 0,
+        "sourceCount": 5,
+        "agentMessage": "I completed the web research and collected 5 real sources with 0 extracted facts. No citations were invented."
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:20:37.545Z",
+      "finishedAt": "2026-09-24T01:20:40.057Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s02",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 1,
+      "title": "Research a second angle",
+      "detail": "Run a second, independent live query so the script is not built from a single source set.",
+      "agentId": "research_agent",
+      "toolId": "research.search",
+      "toolInput": {
+        "limit": 6,
+        "query": "45 black holes evidence data"
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [],
+      "parallel": true,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "facts": [
+          "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal.",
+          "The signal sweeps upwards in frequency from 35 to 250 Hz with a peak gravitational-wave strain of 1.0×10(-21).",
+          "The masses of supermassive black holes correlate almost perfectly with the velocity dispersions of their host bulges, M bh ∝ σ α , where α = 4.8 ± 0.5.",
+          "The relation is much tighter than the relation between M bh and bulge luminosity, with a scatter no larger than expected on the basis of measurement error alone.",
+          "Perturbations of classical gravitational backgrounds involving black holes or branes naturally lead to quasinormal modes.",
+          "The analysis and classification of the quasinormal spectra require solving non-Hermitian eigenvalue problems for the associated linear differential equations.",
+          "Abstract When surrounded by a transparent emission region, black holes are expected to reveal a dark shadow caused by gravitational light bending and photon capture at the event horizon.",
+          "To image and study this phenomenon, we have assembled the Event Horizon Telescope, a global very long baseline interferometry array observing at a wavelength of 1.3 mm."
+        ],
+        "query": "45 black holes evidence data",
+        "handle": "research",
+        "engines": [
+          {
+            "error": "Unexpected token 'Y', \"You are ma\"... is not valid JSON",
+            "found": 0,
+            "engine": "wikipedia",
+            "status": "ERROR"
+          },
+          {
+            "found": 5,
+            "engine": "openalex",
+            "status": "OK"
+          },
+          {
+            "found": 1,
+            "engine": "hackernews",
+            "status": "OK"
+          }
+        ],
+        "sources": [
+          {
+            "url": "https://doi.org/10.1103/physrevlett.116.061102",
+            "kind": "scholarly",
+            "score": 14545,
+            "title": "Observation of Gravitational Waves from a Binary Black Hole Merger",
+            "engine": "openalex",
+            "snippet": "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal. The signal sweeps upwards in frequency from 35 to 250 Hz with a peak gravitational-wave strain of 1.0×10(-21). It matches the waveform predicted by general relativity for the inspiral and merger of a pair of black holes and the ringdown of the resulting single black hole. The signal was observed with a matched-filter signal-to-noise ratio of 24 and a false alarm rate estimated to be less than 1 event per 203,000 years, equivalent to a significance greater than 5.1σ. The source lies at a luminosity distance of 410(-180)(+160) Mpc corresponding to a redshift z=0.09(-0.04)(+0.03). In the source frame, the initial black hole masses are 36(-4)(+5)M⊙ and 29(-4)(+4)M⊙, and the final black hole mass is 62(-4)(+4)M⊙, with",
+            "publishedAt": "2016"
+          },
+          {
+            "url": "https://doi.org/10.1086/312838",
+            "kind": "scholarly",
+            "score": 4479,
+            "title": "A Fundamental Relation between Supermassive Black Holes and Their Host Galaxies",
+            "engine": "openalex",
+            "snippet": "The masses of supermassive black holes correlate almost perfectly with the velocity dispersions of their host bulges, M bh ∝ σ α , where α = 4.8 ± 0.5. The relation is much tighter than the relation between M bh and bulge luminosity, with a scatter no larger than expected on the basis of measurement error alone. Black hole masses recently estimated by Magorrian et al. lie systematically above the M bh -σ relation defined by more accurate mass estimates, some by as much as 2 orders of magnitude. The tightness of the M bh -σ relation implies a strong link between black hole formation and the properties of the stellar bulge.",
+            "publishedAt": "2000"
+          },
+          {
+            "url": "https://doi.org/10.1088/0264-9381/26/16/163001",
+            "kind": "scholarly",
+            "score": 2351,
+            "title": "Quasinormal modes of black holes and black branes",
+            "engine": "openalex",
+            "snippet": "Quasinormal modes are eigenmodes of dissipative systems. Perturbations of classical gravitational backgrounds involving black holes or branes naturally lead to quasinormal modes. The analysis and classification of the quasinormal spectra require solving non-Hermitian eigenvalue problems for the associated linear differential equations. Within the recently developed gauge-gravity duality, these modes serve as an important tool for determining the near-equilibrium properties of strongly coupled quantum field theories, in particular their transport coefficients, such as viscosity, conductivity and diffusion constants. In astrophysics, the detection of quasinormal modes in gravitational wave experiments would allow precise measurements of the mass and spin of black holes as well as new tests of general relativity. This review is meant as an introduction to the subject, with a focus on the re",
+            "publishedAt": "2009"
+          },
+          {
+            "url": "https://doi.org/10.3847/2041-8213/ab0ec7",
+            "kind": "scholarly",
+            "score": 4300,
+            "title": "First M87 Event Horizon Telescope Results. I. The Shadow of the Supermassive Black Hole",
+            "engine": "openalex",
+            "snippet": "Abstract When surrounded by a transparent emission region, black holes are expected to reveal a dark shadow caused by gravitational light bending and photon capture at the event horizon. To image and study this phenomenon, we have assembled the Event Horizon Telescope, a global very long baseline interferometry array observing at a wavelength of 1.3 mm. This allows us to reconstruct event-horizon-scale images of the supermassive black hole candidate in the center of the giant elliptical galaxy M87. We have resolved the central compact radio source as an asymmetric bright emission ring with a diameter of 42 ± 3 μ as, which is circular and encompasses a central depression in brightness with a flux ratio ≳10:1. The emission ring is recovered using different calibration and imaging schemes, with its diameter and width remaining stable over four different observations carried out in different",
+            "publishedAt": "2019"
+          },
+          {
+            "url": "https://doi.org/10.1111/j.1365-2966.2005.09675.x",
+            "kind": "scholarly",
+            "score": 3715,
+            "title": "The many lives of active galactic nuclei: cooling flows, black holes and the luminosities and colours of galaxies",
+            "engine": "openalex",
+            "snippet": "We simulate the growth of galaxies and their central supermassive black holes by implementing a suite of semi-analytic models on the output of the Millennium Run, a very large simulation of the concordance cold dark matter cosmogony.Our procedures follow the detailed assembly history of each object and are able to track the evolution of all galaxies more massive than the Small Magellanic Cloud throughout a volume comparable to that of large modern redshift surveys.In this first paper we supplement previous treatments of the growth and activity of central black holes with a new model for 'radio' feedback from those active galactic nuclei that lie at the centre of a quasi-static X-ray-emitting atmosphere in a galaxy group or cluster.We show that for energetically and observationally plausible parameters such a model can simultaneously explain: (i) the low observed mass drop-out rate in coo",
+            "publishedAt": "2005"
+          },
+          {
+            "url": "https://news.ycombinator.com/item?id=16531647",
+            "kind": "community",
+            "title": "Discussion",
+            "engine": "hackernews",
+            "snippet": "Community discussion with 0 points",
+            "publishedAt": "2018-03-06T20:10:01Z"
+          }
+        ],
+        "summary": "Retrieved 6 live sources (openalex:5, hackernews:1) and extracted 8 citable facts.",
+        "factCount": 8,
+        "sourceCount": 6,
+        "agentMessage": "I completed the web research and collected 6 real sources with 8 extracted facts. No citations were invented."
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:20:37.546Z",
+      "finishedAt": "2026-09-24T01:20:39.662Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s03",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 2,
+      "title": "Cross-check claims against sources",
+      "detail": "Reject anything the sources do not support before it enters the script.",
+      "agentId": "research_agent",
+      "toolId": "research.verify",
+      "toolInput": {
+        "claims": [],
+        "sources": []
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        0,
+        1
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "summary": "Fact check complete: 0/0 claims are directly supported by the retrieved source records (source titles matched against claim keywords).",
+        "verdicts": [],
+        "unsupported": [],
+        "agentMessage": "Every claim maps onto a retrieved source record."
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:20:40.937Z",
+      "finishedAt": "2026-09-24T01:20:40.961Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s04",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 3,
+      "title": "Write the creative brief",
+      "detail": "Define audience, platform, tone, visual style, scene count and pacing for a 45s piece.",
+      "agentId": "video_director",
+      "toolId": "director.brief",
+      "toolInput": {
+        "topic": "45 black holes",
+        "durationSec": 45
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        2
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "id": "brief_run_mueuhqwq1e6b62150a_tsk_mueuhqwqbe77c687a6_s04",
+        "tone": "authoritative, calm, no hype",
+        "topic": "45 black holes",
+        "handle": "brief",
+        "pacing": "7 scenes over 45s (~6.4s per scene)",
+        "summary": "Creative brief ready: 7 scenes / 45s, audience \"curious adults, non-specialists\", style \"Deep Space\", grounded in 0 verified facts.",
+        "themeId": "deep-space",
+        "audience": "curious adults, non-specialists",
+        "captions": "two-line maximum, 84px side safe area, 250px bottom safe area, measured line breaks, outline + shadow for contrast",
+        "platform": "vertical short-form explainer (1080x1920)",
+        "createdAt": "2026-09-24T01:20:41.052Z",
+        "factCheck": null,
+        "sceneCount": 7,
+        "durationSec": 45,
+        "soundDesign": "synthesised score bed, -23 LUFS target for the bed; narration mixed on top when a TTS provider is configured",
+        "transitions": "hard cuts inside a beat block, 0.35s crossfades across beat changes, dip-to-colour on the final close",
+        "visualStyle": "deterministic vector art, Deep Space palette, high-contrast typography, editorial grid, no stock photography",
+        "agentMessage": "Brief locked: 7 scenes across 45 seconds. The narration will be grounded in 0 verified research facts, not filler.",
+        "cameraLanguage": [
+          "push-in",
+          "pull-out",
+          "lateral pan",
+          "parallax drift",
+          "orbit tilt"
+        ],
+        "evidenceAvailable": 0,
+        "narrativeStructure": [
+          {
+            "beat": "HOOK",
+            "purpose": "Earn attention with the single most surprising verified fact",
+            "seconds": 6.43
+          },
+          {
+            "beat": "CONTEXT",
+            "purpose": "Establish what the viewer is looking at and why it matters",
+            "seconds": 6.43
+          },
+          {
+            "beat": "MECHANISM",
+            "purpose": "Explain the underlying mechanism step by step",
+            "seconds": 6.43
+          },
+          {
+            "beat": "EVIDENCE",
+            "purpose": "Present measured evidence with real numbers",
+            "seconds": 6.43
+          },
+          {
+            "beat": "APPLICATION",
+            "purpose": "Translate the mechanism into concrete modern applications",
+            "seconds": 6.43
+          },
+          {
+            "beat": "IMPLICATIONS",
+            "purpose": "State what this changes and what remains open",
+            "seconds": 6.43
+          },
+          {
+            "beat": "TAKEAWAY",
+            "purpose": "Close on one memorable, verifiable statement",
+            "seconds": 6.43
+          }
+        ]
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:20:41.021Z",
+      "finishedAt": "2026-09-24T01:20:41.052Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s05",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 4,
+      "title": "Write the narration script",
+      "detail": "Grounded, non-repetitive, adult narration sized to the requested duration.",
+      "agentId": "script_agent",
+      "toolId": "script.generate",
+      "toolInput": {
+        "topic": "45 black holes",
+        "durationSec": 45
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        3
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "beats": [
+          {
+            "beat": "HOOK",
+            "index": 0,
+            "engine": "deterministic-local",
+            "heading": "HOOK — Earn attention with the single most surprising verified fact",
+            "grounding": [],
+            "narration": "Here is the part of 45 black holes that surprises almost everyone. No source material was retrieved for 45 black holes, so.",
+            "wordCount": 22,
+            "targetSeconds": 6.43
+          },
+          {
+            "beat": "CONTEXT",
+            "index": 1,
+            "engine": "deterministic-local",
+            "heading": "CONTEXT — Establish what the viewer is looking at and why it matters",
+            "grounding": [],
+            "narration": "To make sense of this, start with the established picture of 45 black holes. No source material was retrieved for 45 black.",
+            "wordCount": 22,
+            "targetSeconds": 6.43
+          },
+          {
+            "beat": "MECHANISM",
+            "index": 2,
+            "engine": "deterministic-local",
+            "heading": "MECHANISM — Explain the underlying mechanism step by step",
+            "grounding": [],
+            "narration": "The mechanism itself has a clear sequence. No source material was retrieved for 45 black holes, so this section states only that.",
+            "wordCount": 22,
+            "targetSeconds": 6.43
+          },
+          {
+            "beat": "EVIDENCE",
+            "index": 3,
+            "engine": "deterministic-local",
+            "heading": "EVIDENCE — Present measured evidence with real numbers",
+            "grounding": [],
+            "narration": "The numbers are what make this concrete. No source material was retrieved for 45 black holes, so this section states only that.",
+            "wordCount": 22,
+            "targetSeconds": 6.43
+          },
+          {
+            "beat": "APPLICATION",
+            "index": 4,
+            "engine": "deterministic-local",
+            "heading": "APPLICATION — Translate the mechanism into concrete modern applications",
+            "grounding": [],
+            "narration": "That is not abstract: it shows up in real systems. No source material was retrieved for 45 black holes, so this section.",
+            "wordCount": 22,
+            "targetSeconds": 6.43
+          },
+          {
+            "beat": "IMPLICATIONS",
+            "index": 5,
+            "engine": "deterministic-local",
+            "heading": "IMPLICATIONS — State what this changes and what remains open",
+            "grounding": [],
+            "narration": "The consequences are measurable, and some questions stay open. No source material was retrieved for 45 black holes, so this section states.",
+            "wordCount": 22,
+            "targetSeconds": 6.43
+          },
+          {
+            "beat": "TAKEAWAY",
+            "index": 6,
+            "engine": "deterministic-local",
+            "heading": "TAKEAWAY — Close on one memorable, verifiable statement",
+            "grounding": [],
+            "narration": "If you remember one thing, remember this: No source material was retrieved for 45 black holes, so this section states only that.",
+            "wordCount": 22,
+            "targetSeconds": 6.43
+          }
+        ],
+        "handle": "script",
+        "engines": {
+          "llmBeats": 0,
+          "deterministicBeats": 7
+        },
+        "summary": "Script written: 7 sections, 154 words (0 sections by the configured model, 7 by the deterministic local writer).",
+        "scriptPath": "/app/runs/run_mueuhqwq1e6b62150a/script/script.md",
+        "totalWords": 154,
+        "agentMessage": "Script complete — 7 sections, 154 words. No language model was configured, so the deterministic local writer produced every section and I am saying so rather than implying otherwise.",
+        "groundingAvailable": 0
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:20:42.895Z",
+      "finishedAt": "2026-09-24T01:20:42.934Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s06",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 5,
+      "title": "Storyboard the scenes",
+      "detail": "One genuinely different visual representation per scene with camera moves and transitions.",
+      "agentId": "visual_agent",
+      "toolId": "storyboard.generate",
+      "toolInput": {
+        "scriptId": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        4
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "handle": "storyboard",
+        "summary": "Storyboard built: 7 scenes, 45.01s, 7 distinct visual representations, 0 repeated adjacent visual(s).",
+        "dataSource": "STORYBOARD_METRICS",
+        "sceneCount": 7,
+        "agentMessage": "Storyboard ready — 7 scenes and 7 genuinely different visual languages. Repeated adjacent visuals: 0.",
+        "storyboardPath": "/app/runs/run_mueuhqwq1e6b62150a/storyboard/storyboard.json",
+        "visualDiversity": {
+          "types": [
+            "TITLE_CARD",
+            "PARALLAX_CROP",
+            "MECHANISM_STEPS",
+            "CHART_BARS",
+            "DIAGRAM_FLOW",
+            "STAT_CALLOUT",
+            "TIMELINE"
+          ],
+          "distinctTypes": 7
+        },
+        "totalDurationSec": 45.01
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:20:44.106Z",
+      "finishedAt": "2026-09-24T01:20:44.131Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s07",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 6,
+      "title": "Render the frames",
+      "detail": "Offline vector frames at 1080x1920 with measured caption layout.",
+      "agentId": "visual_agent",
+      "toolId": "visuals.render",
+      "toolInput": {
+        "storyboardId": ""
+      },
+      "risk": "MEDIUM",
+      "requiresApproval": true,
+      "status": "WAITING_APPROVAL",
+      "approvalId": "apr_mueui86i300aae36af",
+      "walkMs": 1200,
+      "dependsOn": [
+        5
+      ],
+      "parallel": false,
+      "resourceClass": "HEAVY",
+      "attempts": 1,
+      "output": null,
+      "error": null,
+      "startedAt": "2026-09-24T01:20:45.543Z",
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s08",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 7,
+      "title": "Produce audio",
+      "detail": "Narration when a local TTS provider is configured, otherwise a labelled score bed.",
+      "agentId": "audio_agent",
+      "toolId": "audio.narrate",
+      "toolInput": {
+        "storyboardId": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "COMPLETED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        5
+      ],
+      "parallel": false,
+      "resourceClass": "HEAVY",
+      "attempts": 1,
+      "output": {
+        "errors": [
+          "TTS_URL is not configured, so no narration speech was generated (nothing was simulated)."
+        ],
+        "handle": "audio",
+        "summary": "No narration speech was produced (TTS_URL is not configured, so no narration speech was generated (nothing was simulated).). No audio track could be produced.",
+        "agentMessage": "I must be precise: no TTS provider is configured, so the video will contain a synthesised score bed and will be labelled as having no narration rather than pretending otherwise.",
+        "providerMode": "NO_AUDIO",
+        "narrationCount": 0,
+        "primaryAudioPath": null,
+        "narrationIncluded": false
+      },
+      "error": null,
+      "startedAt": "2026-09-24T01:21:07.105Z",
+      "finishedAt": "2026-09-24T01:21:07.155Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s09",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 8,
+      "title": "Align timings",
+      "detail": "Word-level timestamps if the local Whisper server is available; otherwise directed scene windows, labelled.",
+      "agentId": "audio_agent",
+      "toolId": "audio.align",
+      "toolInput": {
+        "storyboardId": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "SKIPPED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        6,
+        7
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": "Skipped: an upstream dependency did not complete.",
+      "startedAt": null,
+      "finishedAt": "2026-09-24T01:21:09.057Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s10",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 9,
+      "title": "Compose captions",
+      "detail": "Two-line maximum inside safe areas using measured glyph widths.",
+      "agentId": "video_renderer",
+      "toolId": "captions.render",
+      "toolInput": {
+        "storyboardId": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "SKIPPED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        8
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": "Skipped: an upstream dependency did not complete.",
+      "startedAt": null,
+      "finishedAt": "2026-09-24T01:21:09.058Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s11",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 10,
+      "title": "Render and validate the MP4",
+      "detail": "FFmpeg H.264/AAC 1080x1920, motion, transitions, burned captions, atomic publish after ffprobe checks.",
+      "agentId": "video_renderer",
+      "toolId": "media.render",
+      "toolInput": {
+        "storyboardId": ""
+      },
+      "risk": "MEDIUM",
+      "requiresApproval": true,
+      "status": "SKIPPED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        9
+      ],
+      "parallel": false,
+      "resourceClass": "HEAVY",
+      "attempts": 0,
+      "output": null,
+      "error": "Skipped: an upstream dependency did not complete.",
+      "startedAt": null,
+      "finishedAt": "2026-09-24T01:21:09.059Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s12",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 11,
+      "title": "Independent verification",
+      "detail": "Read the published file back from disk and verify every claim.",
+      "agentId": "validation_agent",
+      "toolId": "validation.ffprobe",
+      "toolInput": {
+        "path": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "SKIPPED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        10
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": "Skipped: an upstream dependency did not complete.",
+      "startedAt": null,
+      "finishedAt": "2026-09-24T01:21:09.059Z"
+    },
+    {
+      "id": "tsk_mueuhqwqbe77c687a6_s13",
+      "taskId": "tsk_mueuhqwqbe77c687a6",
+      "stepIndex": 12,
+      "title": "Register artifacts with the asset manifest",
+      "detail": "Checksum every produced file and link it to this task.",
+      "agentId": "asset_manager",
+      "toolId": "artifact.register",
+      "toolInput": {
+        "kind": "video",
+        "path": ""
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "SKIPPED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        11
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": "Skipped: an upstream dependency did not complete.",
+      "startedAt": null,
+      "finishedAt": "2026-09-24T01:21:09.060Z"
+    }
+  ]
+}

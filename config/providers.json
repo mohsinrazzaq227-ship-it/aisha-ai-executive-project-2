@@ -1,0 +1,20 @@
+{
+  "$comment": "Declares every provider this system may use. Status is probed live by /api/system and the Doctor; nothing is assumed AVAILABLE.",
+  "statuses": ["AVAILABLE", "UNAVAILABLE", "DISABLED", "ERROR", "CLIENT_SIDE", "OPTIONAL_UNTESTED"],
+  "llm": {
+    "local": { "provider": "ollama", "env": ["OLLAMA_URL", "OLLAMA_MODEL"], "default": "http://127.0.0.1:11434", "cost": "free-local" },
+    "optionalCloud": { "enabledBy": "AI_EXECUTIVE_ENABLE_CLOUD_LLM=true", "supported": ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GROQ_API_KEY", "OPENROUTER_API_KEY"], "cost": "paid-optional", "rule": "Never used implicitly; the UI always shows which engine answered." }
+  },
+  "stt": {
+    "local": { "provider": "faster-whisper", "env": ["WHISPER_URL"], "endpoint": "POST {WHISPER_URL}/transcribe", "cost": "free-local" },
+    "fallback": { "provider": "browser speech recognition", "status": "CLIENT_SIDE", "rule": "Visible fallback only; the app never claims to have heard speech that was not detected." }
+  },
+  "tts": {
+    "local": { "provider": "piper / kokoro / faster-tts", "env": ["TTS_URL"], "endpoint": "POST {TTS_URL}/tts", "cost": "free-local" },
+    "fallback": { "provider": "operating system speech synthesis", "status": "CLIENT_SIDE", "rule": "Spoken in the interface with real interruption; not burned into rendered video files." }
+  },
+  "media": { "encoder": "ffmpeg (bundled ffmpeg-static or FFMPEG_PATH)", "validator": "ffprobe (bundled ffprobe-static or FFPROBE_PATH)" },
+  "research": { "sources": ["wikipedia REST", "OpenAlex", "Hacker News Algolia"], "optional": ["playwright for DOM navigation"], "rule": "Every citation is a real retrieved URL; failures are reported per engine." },
+  "email": { "connectors": ["IMAP_URL", "SMTP_URL", "GMAIL_REFRESH_TOKEN", "MS_GRAPH_TOKEN"], "optionalPackages": ["imapflow", "nodemailer"], "rule": "Sending is HIGH risk, never silent, and disabled until credentials are configured." },
+  "vision": { "hierarchy": ["windows accessibility tree", "playwright DOM", "tesseract OCR", "coordinate proposal"], "rule": "Structured sources are always preferred over pixel guessing." }
+}

@@ -1,0 +1,81 @@
+{
+  "taskId": "tsk_mueuhovrac8392971e",
+  "runId": "run_mueuhovrb8a6b05559",
+  "title": "Analyse aisha_acceptance_fixture.txt",
+  "status": "WAITING_APPROVAL",
+  "createdAt": "2026-09-24T01:20:20.536Z",
+  "updatedAt": "2026-09-24T01:21:09.092Z",
+  "plannerEngine": "deterministic_local",
+  "findings": [
+    "documents",
+    "artifactPaths"
+  ],
+  "steps": [
+    {
+      "index": 0,
+      "title": "Extract the document",
+      "agent": "document_agent",
+      "tool": "doc.extract",
+      "status": "COMPLETED",
+      "risk": "LOW",
+      "approvalId": null
+    },
+    {
+      "index": 1,
+      "title": "Analyse the content",
+      "agent": "document_agent",
+      "tool": "doc.analyse",
+      "status": "COMPLETED",
+      "risk": "LOW",
+      "approvalId": null
+    },
+    {
+      "index": 2,
+      "title": "Save the findings as a document",
+      "agent": "master_supervisor",
+      "tool": "report.write",
+      "status": "WAITING_APPROVAL",
+      "risk": "MEDIUM",
+      "approvalId": "apr_mueuhwb3b127725346"
+    },
+    {
+      "index": 3,
+      "title": "Validate the written report file",
+      "agent": "validation_agent",
+      "tool": "validation.ffprobe",
+      "status": "SKIPPED",
+      "risk": "LOW",
+      "approvalId": null
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "art_mueuhu5d940c5bd263",
+      "kind": "extraction",
+      "name": "aisha_acceptance_fixture.txt.extracted.txt",
+      "path": "runs/run_mueuhovrb8a6b05559/extractions/aisha_acceptance_fixture.txt.extracted.txt",
+      "size": 252,
+      "validated": false,
+      "sha256": "97ffccf9eb483f71d311579e34b7ce2673567ddc85e7ef348b1d50b63d42fbf6"
+    },
+    {
+      "id": "art_mueuhv986c2af6989d",
+      "kind": "analysis",
+      "name": "document_analysis.json",
+      "path": "runs/run_mueuhovrb8a6b05559/analysis/document_analysis.json",
+      "size": 1648,
+      "validated": true,
+      "sha256": "2c5096c060a6eb29fdb04ccd409b45652155e91b2b61a1a909f0154f6ecf48bf"
+    },
+    {
+      "id": "art_mueuhv9a85ec2378a3",
+      "kind": "analysis",
+      "name": "document_analysis.md",
+      "path": "runs/run_mueuhovrb8a6b05559/analysis/document_analysis.md",
+      "size": 615,
+      "validated": false,
+      "sha256": "5b84ba6f232ed34c94ad1bfa00c0a0b0f287fedef5c7c498e6c48b90fbf8a7d3"
+    }
+  ],
+  "artifacts_count": 3
+}

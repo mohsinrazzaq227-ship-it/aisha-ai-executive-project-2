@@ -1,0 +1,24 @@
+[
+  {
+    "id": "apr_mueui86i300aae36af",
+    "taskId": "tsk_mueuhqwqbe77c687a6",
+    "stepId": "tsk_mueuhqwqbe77c687a6_s07",
+    "agentId": "visual_agent",
+    "toolId": "visuals.render",
+    "action": {
+      "storyboardId": ""
+    },
+    "risk": "MEDIUM",
+    "parametersHash": "3f88f3a63d08f91d58705cda3d059d5526a5679cea93ef04b75ae8ee81f7d38d",
+    "reason": "Offline vector frames at 1080x1920 with measured caption layout.",
+    "target": "visuals.render",
+    "status": "APPROVED_ONCE",
+    "decision": "APPROVE_ONCE",
+    "scope": "ONCE",
+    "note": "acceptance harness",
+    "createdAt": "2026-09-24T01:20:45.546Z",
+    "expiresAt": "2026-09-24T01:35:45.546Z",
+    "decidedAt": "2026-09-24T01:21:07.085Z",
+    "tokenHash": "[stored]"
+  }
+]

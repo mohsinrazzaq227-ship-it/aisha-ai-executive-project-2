@@ -1,0 +1,771 @@
+{
+  "findings": {
+    "research": {
+      "query": "45 black holes evidence data",
+      "sources": [
+        {
+          "engine": "openalex",
+          "title": "Observation of Gravitational Waves from a Binary Black Hole Merger",
+          "url": "https://doi.org/10.1103/physrevlett.116.061102",
+          "snippet": "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal. The signal sweeps upwards in frequency from 35 to 250 Hz with a peak gravitational-wave strain of 1.0×10(-21). It matches the waveform predicted by general relativity for the inspiral and merger of a pair of black holes and the ringdown of the resulting single black hole. The signal was observed with a matched-filter signal-to-noise ratio of 24 and a false alarm rate estimated to be less than 1 event per 203,000 years, equivalent to a significance greater than 5.1σ. The source lies at a luminosity distance of 410(-180)(+160) Mpc corresponding to a redshift z=0.09(-0.04)(+0.03). In the source frame, the initial black hole masses are 36(-4)(+5)M⊙ and 29(-4)(+4)M⊙, and the final black hole mass is 62(-4)(+4)M⊙, with",
+          "publishedAt": "2016",
+          "score": 14545,
+          "kind": "scholarly"
+        },
+        {
+          "engine": "openalex",
+          "title": "A Fundamental Relation between Supermassive Black Holes and Their Host Galaxies",
+          "url": "https://doi.org/10.1086/312838",
+          "snippet": "The masses of supermassive black holes correlate almost perfectly with the velocity dispersions of their host bulges, M bh ∝ σ α , where α = 4.8 ± 0.5. The relation is much tighter than the relation between M bh and bulge luminosity, with a scatter no larger than expected on the basis of measurement error alone. Black hole masses recently estimated by Magorrian et al. lie systematically above the M bh -σ relation defined by more accurate mass estimates, some by as much as 2 orders of magnitude. The tightness of the M bh -σ relation implies a strong link between black hole formation and the properties of the stellar bulge.",
+          "publishedAt": "2000",
+          "score": 4479,
+          "kind": "scholarly"
+        },
+        {
+          "engine": "openalex",
+          "title": "Quasinormal modes of black holes and black branes",
+          "url": "https://doi.org/10.1088/0264-9381/26/16/163001",
+          "snippet": "Quasinormal modes are eigenmodes of dissipative systems. Perturbations of classical gravitational backgrounds involving black holes or branes naturally lead to quasinormal modes. The analysis and classification of the quasinormal spectra require solving non-Hermitian eigenvalue problems for the associated linear differential equations. Within the recently developed gauge-gravity duality, these modes serve as an important tool for determining the near-equilibrium properties of strongly coupled quantum field theories, in particular their transport coefficients, such as viscosity, conductivity and diffusion constants. In astrophysics, the detection of quasinormal modes in gravitational wave experiments would allow precise measurements of the mass and spin of black holes as well as new tests of general relativity. This review is meant as an introduction to the subject, with a focus on the re",
+          "publishedAt": "2009",
+          "score": 2351,
+          "kind": "scholarly"
+        },
+        {
+          "engine": "openalex",
+          "title": "First M87 Event Horizon Telescope Results. I. The Shadow of the Supermassive Black Hole",
+          "url": "https://doi.org/10.3847/2041-8213/ab0ec7",
+          "snippet": "Abstract When surrounded by a transparent emission region, black holes are expected to reveal a dark shadow caused by gravitational light bending and photon capture at the event horizon. To image and study this phenomenon, we have assembled the Event Horizon Telescope, a global very long baseline interferometry array observing at a wavelength of 1.3 mm. This allows us to reconstruct event-horizon-scale images of the supermassive black hole candidate in the center of the giant elliptical galaxy M87. We have resolved the central compact radio source as an asymmetric bright emission ring with a diameter of 42 ± 3 μ as, which is circular and encompasses a central depression in brightness with a flux ratio ≳10:1. The emission ring is recovered using different calibration and imaging schemes, with its diameter and width remaining stable over four different observations carried out in different",
+          "publishedAt": "2019",
+          "score": 4300,
+          "kind": "scholarly"
+        },
+        {
+          "engine": "openalex",
+          "title": "The many lives of active galactic nuclei: cooling flows, black holes and the luminosities and colours of galaxies",
+          "url": "https://doi.org/10.1111/j.1365-2966.2005.09675.x",
+          "snippet": "We simulate the growth of galaxies and their central supermassive black holes by implementing a suite of semi-analytic models on the output of the Millennium Run, a very large simulation of the concordance cold dark matter cosmogony.Our procedures follow the detailed assembly history of each object and are able to track the evolution of all galaxies more massive than the Small Magellanic Cloud throughout a volume comparable to that of large modern redshift surveys.In this first paper we supplement previous treatments of the growth and activity of central black holes with a new model for 'radio' feedback from those active galactic nuclei that lie at the centre of a quasi-static X-ray-emitting atmosphere in a galaxy group or cluster.We show that for energetically and observationally plausible parameters such a model can simultaneously explain: (i) the low observed mass drop-out rate in coo",
+          "publishedAt": "2005",
+          "score": 3715,
+          "kind": "scholarly"
+        },
+        {
+          "engine": "hackernews",
+          "title": "Discussion",
+          "url": "https://news.ycombinator.com/item?id=16531647",
+          "snippet": "Community discussion with 0 points",
+          "publishedAt": "2018-03-06T20:10:01Z",
+          "kind": "community"
+        }
+      ],
+      "facts": [
+        "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal.",
+        "The signal sweeps upwards in frequency from 35 to 250 Hz with a peak gravitational-wave strain of 1.0×10(-21).",
+        "The masses of supermassive black holes correlate almost perfectly with the velocity dispersions of their host bulges, M bh ∝ σ α , where α = 4.8 ± 0.5.",
+        "The relation is much tighter than the relation between M bh and bulge luminosity, with a scatter no larger than expected on the basis of measurement error alone.",
+        "Perturbations of classical gravitational backgrounds involving black holes or branes naturally lead to quasinormal modes.",
+        "The analysis and classification of the quasinormal spectra require solving non-Hermitian eigenvalue problems for the associated linear differential equations.",
+        "Abstract When surrounded by a transparent emission region, black holes are expected to reveal a dark shadow caused by gravitational light bending and photon capture at the event horizon.",
+        "To image and study this phenomenon, we have assembled the Event Horizon Telescope, a global very long baseline interferometry array observing at a wavelength of 1.3 mm."
+      ],
+      "engines": [
+        {
+          "engine": "wikipedia",
+          "status": "ERROR",
+          "found": 0,
+          "error": "Unexpected token 'Y', \"You are ma\"... is not valid JSON"
+        },
+        {
+          "engine": "openalex",
+          "status": "OK",
+          "found": 5
+        },
+        {
+          "engine": "hackernews",
+          "status": "OK",
+          "found": 1
+        }
+      ],
+      "fetchedAt": "2026-09-24T01:25:01.001Z",
+      "mode": "LIVE_NETWORK"
+    },
+    "artifactPaths": {
+      "art_mueunpaj397a4108ea": "/app/runs/run_mueuni1kd7bd414241/research/45_black_holes_evidence_data.json",
+      "art_mueunq2tf0ed3b1547": "/app/runs/run_mueuni1kd7bd414241/script/creative_brief.json",
+      "art_mueunrj8c8f3c5ab78": "/app/runs/run_mueuni1kd7bd414241/script/script.json",
+      "art_mueunrj9ea2547a767": "/app/runs/run_mueuni1kd7bd414241/script/script.md",
+      "art_mueunsgl78aeddcdfe": "/app/runs/run_mueuni1kd7bd414241/storyboard/storyboard.json",
+      "art_mueunsgn28e73d3144": "/app/runs/run_mueuni1kd7bd414241/storyboard/storyboard.md",
+      "art_mueuocge2ffb1c7e0b": "/app/runs/run_mueuni1kd7bd414241/images/scene_01_frame.png",
+      "art_mueuocggd10bf01a95": "/app/runs/run_mueuni1kd7bd414241/images/scene_02_frame.png",
+      "art_mueuocghbbc5180873": "/app/runs/run_mueuni1kd7bd414241/images/scene_03_frame.png",
+      "art_mueuocgia7ec2594f2": "/app/runs/run_mueuni1kd7bd414241/images/scene_04_frame.png",
+      "art_mueuocgk557fab5069": "/app/runs/run_mueuni1kd7bd414241/images/scene_05_frame.png",
+      "art_mueuocgl504a678821": "/app/runs/run_mueuni1kd7bd414241/images/scene_06_frame.png",
+      "art_mueuocgn436e77c613": "/app/runs/run_mueuni1kd7bd414241/images/scene_07_frame.png",
+      "art_mueuoe8810630acdcd": "/app/runs/run_mueuni1kd7bd414241/audio/audio.json",
+      "art_mueuoe8a8cc07118ec": "/app/runs/run_mueuni1kd7bd414241/audio/score_bed.m4a",
+      "art_mueuofpqfbfb5ef335": "/app/runs/run_mueuni1kd7bd414241/audio/alignment.json",
+      "art_mueuoiqk8320c07dff": "/app/runs/run_mueuni1kd7bd414241/captions/captions.srt",
+      "art_mueuoiqn79118762ec": "/app/runs/run_mueuni1kd7bd414241/captions/captions.json",
+      "art_mueupjle2f8450e331": "/app/output/renders/45-black-holes_run_mueuni1kd7bd414241.mp4",
+      "art_mueupjlg72728df3bf": "/app/runs/run_mueuni1kd7bd414241/validation/render_validation.json",
+      "art_mueupjlif289c0f48c": "/app/output/renders/45-black-holes_run_mueuni1kd7bd414241.srt"
+    },
+    "brief": {
+      "id": "brief_run_mueuni1kd7bd414241_tsk_mueuni1kb884b42be5_s04",
+      "topic": "45 black holes",
+      "audience": "curious adults, non-specialists",
+      "platform": "vertical short-form explainer (1080x1920)",
+      "durationSec": 45,
+      "tone": "authoritative, calm, no hype",
+      "visualStyle": "deterministic vector art, Deep Space palette, high-contrast typography, editorial grid, no stock photography",
+      "narrativeStructure": [
+        {
+          "beat": "HOOK",
+          "purpose": "Earn attention with the single most surprising verified fact",
+          "seconds": 6.43
+        },
+        {
+          "beat": "CONTEXT",
+          "purpose": "Establish what the viewer is looking at and why it matters",
+          "seconds": 6.43
+        },
+        {
+          "beat": "MECHANISM",
+          "purpose": "Explain the underlying mechanism step by step",
+          "seconds": 6.43
+        },
+        {
+          "beat": "EVIDENCE",
+          "purpose": "Present measured evidence with real numbers",
+          "seconds": 6.43
+        },
+        {
+          "beat": "APPLICATION",
+          "purpose": "Translate the mechanism into concrete modern applications",
+          "seconds": 6.43
+        },
+        {
+          "beat": "IMPLICATIONS",
+          "purpose": "State what this changes and what remains open",
+          "seconds": 6.43
+        },
+        {
+          "beat": "TAKEAWAY",
+          "purpose": "Close on one memorable, verifiable statement",
+          "seconds": 6.43
+        }
+      ],
+      "sceneCount": 7,
+      "transitions": "hard cuts inside a beat block, 0.35s crossfades across beat changes, dip-to-colour on the final close",
+      "cameraLanguage": [
+        "push-in",
+        "pull-out",
+        "lateral pan",
+        "parallax drift",
+        "orbit tilt"
+      ],
+      "soundDesign": "synthesised score bed, -23 LUFS target for the bed; narration mixed on top when a TTS provider is configured",
+      "captions": "two-line maximum, 84px side safe area, 250px bottom safe area, measured line breaks, outline + shadow for contrast",
+      "pacing": "7 scenes over 45s (~6.4s per scene)",
+      "themeId": "deep-space",
+      "evidenceAvailable": 8,
+      "factCheck": null,
+      "createdAt": "2026-09-24T01:25:02.020Z"
+    },
+    "script": {
+      "id": "script_run_mueuni1kd7bd414241",
+      "topic": "45 black holes",
+      "durationSec": 45,
+      "audience": "curious adults",
+      "tone": "authoritative, calm",
+      "beats": [
+        {
+          "index": 0,
+          "beat": "HOOK",
+          "heading": "HOOK — Earn attention with the single most surprising verified fact",
+          "narration": "Here is the part of 45 black holes that surprises almost everyone. On September 14, 2015 at 09:50:45 UTC the two detectors.",
+          "wordCount": 22,
+          "targetSeconds": 6.43,
+          "engine": "deterministic-local",
+          "grounding": [
+            "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal."
+          ]
+        },
+        {
+          "index": 1,
+          "beat": "CONTEXT",
+          "heading": "CONTEXT — Establish what the viewer is looking at and why it matters",
+          "narration": "To make sense of this, start with the established picture of 45 black holes. The relation is much tighter than the relation.",
+          "wordCount": 22,
+          "targetSeconds": 6.43,
+          "engine": "deterministic-local",
+          "grounding": [
+            "The relation is much tighter than the relation between M bh and bulge luminosity, with a scatter no larger than expected on the basis of measurement error alone."
+          ]
+        },
+        {
+          "index": 2,
+          "beat": "MECHANISM",
+          "heading": "MECHANISM — Explain the underlying mechanism step by step",
+          "narration": "The mechanism itself has a clear sequence. Abstract When surrounded by a transparent emission region, black holes are expected to reveal a.",
+          "wordCount": 22,
+          "targetSeconds": 6.43,
+          "engine": "deterministic-local",
+          "grounding": [
+            "Abstract When surrounded by a transparent emission region, black holes are expected to reveal a dark shadow caused by gravitational light bending and photon capture at the event horizon."
+          ]
+        },
+        {
+          "index": 3,
+          "beat": "EVIDENCE",
+          "heading": "EVIDENCE — Present measured evidence with real numbers",
+          "narration": "The numbers are what make this concrete. On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave.",
+          "wordCount": 22,
+          "targetSeconds": 6.43,
+          "engine": "deterministic-local",
+          "grounding": [
+            "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal."
+          ]
+        },
+        {
+          "index": 4,
+          "beat": "APPLICATION",
+          "heading": "APPLICATION — Translate the mechanism into concrete modern applications",
+          "narration": "That is not abstract: it shows up in real systems. On September 14, 2015 at 09:50:45 UTC the two detectors of the.",
+          "wordCount": 22,
+          "targetSeconds": 6.43,
+          "engine": "deterministic-local",
+          "grounding": [
+            "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal."
+          ]
+        },
+        {
+          "index": 5,
+          "beat": "IMPLICATIONS",
+          "heading": "IMPLICATIONS — State what this changes and what remains open",
+          "narration": "The consequences are measurable, and some questions stay open. On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser.",
+          "wordCount": 22,
+          "targetSeconds": 6.43,
+          "engine": "deterministic-local",
+          "grounding": [
+            "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal."
+          ]
+        },
+        {
+          "index": 6,
+          "beat": "TAKEAWAY",
+          "heading": "TAKEAWAY — Close on one memorable, verifiable statement",
+          "narration": "If you remember one thing, remember this: On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave.",
+          "wordCount": 22,
+          "targetSeconds": 6.43,
+          "engine": "deterministic-local",
+          "grounding": [
+            "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observatory simultaneously observed a transient gravitational-wave signal."
+          ]
+        }
+      ],
+      "totalWords": 154,
+      "engines": {
+        "llmBeats": 0,
+        "deterministicBeats": 7
+      },
+      "createdAt": "2026-09-24T01:25:03.906Z"
+    },
+    "storyboard": {
+      "id": "storyboard_run_mueuni1kd7bd414241",
+      "briefId": "brief_run_mueuni1kd7bd414241_tsk_mueuni1kb884b42be5_s04",
+      "topic": "45 black holes",
+      "scenes": [
+        {
+          "index": 0,
+          "beat": "HOOK",
+          "purpose": "Earn attention with the single most surprising verified fact",
+          "narration": "Here is the part of 45 black holes that surprises almost everyone. On September 14, 2015 at 09:50:45 UTC the two detectors.",
+          "durationSec": 6.43,
+          "visualType": "TITLE_CARD",
+          "motion": "ZOOM_IN",
+          "transition": "FADE",
+          "themeId": "deep-space",
+          "bullets": [
+            "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave Observa",
+            "The signal sweeps upwards in frequency from 35 to 250 Hz with a peak gravitational-wave strain of 1.0×10(-21).",
+            "The masses of supermassive black holes correlate almost perfectly with the velocity dispersions of their host "
+          ],
+          "data": [],
+          "dataSource": "STORYBOARD_METRICS",
+          "sources": [],
+          "bgPath": "/app/runs/run_mueuni1kd7bd414241/images/scene_01_bg.png",
+          "framePath": "/app/runs/run_mueuni1kd7bd414241/images/scene_01_frame.png"
+        },
+        {
+          "index": 1,
+          "beat": "CONTEXT",
+          "purpose": "Establish what the viewer is looking at and why it matters",
+          "narration": "To make sense of this, start with the established picture of 45 black holes. The relation is much tighter than the relation.",
+          "durationSec": 6.43,
+          "visualType": "PARALLAX_CROP",
+          "motion": "PAN_LEFT",
+          "transition": "CUT",
+          "themeId": "deep-space",
+          "bullets": [
+            "The masses of supermassive black holes correlate almost perfectly with the velocity dispersions of their host ",
+            "The relation is much tighter than the relation between M bh and bulge luminosity, with a scatter no larger tha",
+            "Perturbations of classical gravitational backgrounds involving black holes or branes naturally lead to quasino"
+          ],
+          "data": [],
+          "dataSource": "STORYBOARD_METRICS",
+          "sources": [],
+          "bgPath": "/app/runs/run_mueuni1kd7bd414241/images/scene_02_bg.png",
+          "framePath": "/app/runs/run_mueuni1kd7bd414241/images/scene_02_frame.png"
+        },
+        {
+          "index": 2,
+          "beat": "MECHANISM",
+          "purpose": "Explain the underlying mechanism step by step",
+          "narration": "The mechanism itself has a clear sequence. Abstract When surrounded by a transparent emission region, black holes are expected to reveal a.",
+          "durationSec": 6.43,
+          "visualType": "MECHANISM_STEPS",
+          "motion": "ZOOM_OUT",
+          "transition": "CUT",
+          "themeId": "deep-space",
+          "bullets": [
+            "Perturbations of classical gravitational backgrounds involving black holes or branes naturally lead to quasino",
+            "The analysis and classification of the quasinormal spectra require solving non-Hermitian eigenvalue problems f",
+            "Abstract When surrounded by a transparent emission region, black holes are expected to reveal a dark shadow ca"
+          ],
+          "data": [],
+          "dataSource": "STORYBOARD_METRICS",
+          "sources": [],
+          "bgPath": "/app/runs/run_mueuni1kd7bd414241/images/scene_03_bg.png",
+          "framePath": "/app/runs/run_mueuni1kd7bd414241/images/scene_03_frame.png"
+        },
+        {
+          "index": 3,
+          "beat": "EVIDENCE",
+          "purpose": "Present measured evidence with real numbers",
+          "narration": "The numbers are what make this concrete. On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave.",
+          "durationSec": 6.43,
+          "visualType": "CHART_BARS",
+          "motion": "PAN_RIGHT",
+          "transition": "FADE",
+          "themeId": "deep-space",
+          "bullets": [
+            "Abstract When surrounded by a transparent emission region, black holes are expected to reveal a dark shadow ca",
+            "To image and study this phenomenon, we have assembled the Event Horizon Telescope, a global very long baseline"
+          ],
+          "data": [
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "14,"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "2015"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "09"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "50"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "45"
+            },
+            {
+              "label": "signal sweeps upwards frequency from with",
+              "value": "35"
+            }
+          ],
+          "dataSource": "RESEARCH_FACTS",
+          "sources": [],
+          "bgPath": "/app/runs/run_mueuni1kd7bd414241/images/scene_04_bg.png",
+          "framePath": "/app/runs/run_mueuni1kd7bd414241/images/scene_04_frame.png"
+        },
+        {
+          "index": 4,
+          "beat": "APPLICATION",
+          "purpose": "Translate the mechanism into concrete modern applications",
+          "narration": "That is not abstract: it shows up in real systems. On September 14, 2015 at 09:50:45 UTC the two detectors of the.",
+          "durationSec": 6.43,
+          "visualType": "DIAGRAM_FLOW",
+          "motion": "PARALLAX",
+          "transition": "CUT",
+          "themeId": "deep-space",
+          "bullets": [],
+          "data": [],
+          "dataSource": "STORYBOARD_METRICS",
+          "sources": [],
+          "bgPath": "/app/runs/run_mueuni1kd7bd414241/images/scene_05_bg.png",
+          "framePath": "/app/runs/run_mueuni1kd7bd414241/images/scene_05_frame.png"
+        },
+        {
+          "index": 5,
+          "beat": "IMPLICATIONS",
+          "purpose": "State what this changes and what remains open",
+          "narration": "The consequences are measurable, and some questions stay open. On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser.",
+          "durationSec": 6.43,
+          "visualType": "STAT_CALLOUT",
+          "motion": "ROTATE",
+          "transition": "CUT",
+          "themeId": "deep-space",
+          "bullets": [],
+          "data": [
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "14,"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "2015"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "09"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "50"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "45"
+            },
+            {
+              "label": "signal sweeps upwards frequency from with",
+              "value": "35"
+            }
+          ],
+          "dataSource": "RESEARCH_FACTS",
+          "sources": [],
+          "bgPath": "/app/runs/run_mueuni1kd7bd414241/images/scene_06_bg.png",
+          "framePath": "/app/runs/run_mueuni1kd7bd414241/images/scene_06_frame.png"
+        },
+        {
+          "index": 6,
+          "beat": "TAKEAWAY",
+          "purpose": "Close on one memorable, verifiable statement",
+          "narration": "If you remember one thing, remember this: On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave.",
+          "durationSec": 6.43,
+          "visualType": "TIMELINE",
+          "motion": "ZOOM_IN",
+          "transition": "FADE",
+          "themeId": "deep-space",
+          "bullets": [],
+          "data": [
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "14,"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "2015"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "09"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "50"
+            },
+            {
+              "label": "September detectors Laser Interferometer Gravitational-Wave Observatory",
+              "value": "45"
+            },
+            {
+              "label": "signal sweeps upwards frequency from with",
+              "value": "35"
+            }
+          ],
+          "dataSource": "RESEARCH_FACTS",
+          "sources": [],
+          "bgPath": "/app/runs/run_mueuni1kd7bd414241/images/scene_07_bg.png",
+          "framePath": "/app/runs/run_mueuni1kd7bd414241/images/scene_07_frame.png"
+        }
+      ],
+      "totalDurationSec": 45.01,
+      "fps": 30,
+      "resolution": {
+        "width": 1080,
+        "height": 1920
+      },
+      "visualDiversity": {
+        "distinctTypes": 7,
+        "types": [
+          "TITLE_CARD",
+          "PARALLAX_CROP",
+          "MECHANISM_STEPS",
+          "CHART_BARS",
+          "DIAGRAM_FLOW",
+          "STAT_CALLOUT",
+          "TIMELINE"
+        ]
+      },
+      "createdAt": "2026-09-24T01:25:05.108Z"
+    },
+    "approvedParametersHash": "5710446a7ede6dcb5ff88be3bffdad9b61bf609cd8e78116f78db307062bb7c5",
+    "audio": {
+      "id": "audio_run_mueuni1kd7bd414241",
+      "narrationIncluded": false,
+      "narrationFiles": [],
+      "narrationErrors": [
+        "TTS_URL is not configured, so no narration speech was generated (nothing was simulated)."
+      ],
+      "bedPath": "/app/runs/run_mueuni1kd7bd414241/audio/score_bed.m4a",
+      "bedDetail": "synthesised deterministic score bed",
+      "primaryAudioPath": "/app/runs/run_mueuni1kd7bd414241/audio/score_bed.m4a",
+      "audioPath": "/app/runs/run_mueuni1kd7bd414241/audio/score_bed.m4a",
+      "totalDurationSec": 45.01,
+      "providerMode": "SYNTHETIC_SCORE_BED_ONLY",
+      "createdAt": "2026-09-24T01:25:33.319Z"
+    },
+    "alignment": {
+      "id": "alignment_run_mueuni1kd7bd414241",
+      "timingSource": "SCENE_LEVEL_STORYBOARD",
+      "reason": "WHISPER_URL is not configured, so no word-level timestamps exist. Scene windows come from the directed storyboard durations, not from guessing speech rate.",
+      "sceneTimings": [
+        {
+          "sceneIndex": 0,
+          "start": 0,
+          "end": 6.43,
+          "words": 22
+        },
+        {
+          "sceneIndex": 1,
+          "start": 6.43,
+          "end": 12.86,
+          "words": 22
+        },
+        {
+          "sceneIndex": 2,
+          "start": 12.86,
+          "end": 19.29,
+          "words": 22
+        },
+        {
+          "sceneIndex": 3,
+          "start": 19.29,
+          "end": 25.72,
+          "words": 22
+        },
+        {
+          "sceneIndex": 4,
+          "start": 25.72,
+          "end": 32.15,
+          "words": 22
+        },
+        {
+          "sceneIndex": 5,
+          "start": 32.15,
+          "end": 38.58,
+          "words": 22
+        },
+        {
+          "sceneIndex": 6,
+          "start": 38.58,
+          "end": 45.01,
+          "words": 22
+        }
+      ],
+      "audioPath": "/app/runs/run_mueuni1kd7bd414241/audio/score_bed.m4a",
+      "createdAt": "2026-09-24T01:25:35.245Z"
+    },
+    "captions": {
+      "id": "captions_run_mueuni1kd7bd414241",
+      "cues": [
+        {
+          "sceneIndex": 0,
+          "start": 0,
+          "end": 3.48,
+          "text": "Here is the part of 45 black holes that surprises almost everyone.",
+          "lines": [
+            "Here is the part of 45 black",
+            "holes that surprises almost"
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_001.png",
+          "measuredWidth": 834.2,
+          "overflowed": true,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 0,
+          "start": 3.48,
+          "end": 6.43,
+          "text": "On September 14, 2015 at 09:50:45 UTC the two detectors.",
+          "lines": [
+            "On September 14, 2015 at",
+            "09:50:45 UTC the two"
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_002.png",
+          "measuredWidth": 802.5,
+          "overflowed": true,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 1,
+          "start": 6.43,
+          "end": 10.4,
+          "text": "To make sense of this, start with the established picture of 45 black holes.",
+          "lines": [
+            "To make sense of this, start",
+            "with the established picture"
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_003.png",
+          "measuredWidth": 859.2,
+          "overflowed": true,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 1,
+          "start": 10.4,
+          "end": 12.86,
+          "text": "The relation is much tighter than the relation.",
+          "lines": [
+            "The relation is much tighter",
+            "than the relation."
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_004.png",
+          "measuredWidth": 851.5,
+          "overflowed": false,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 2,
+          "start": 12.86,
+          "end": 14.82,
+          "text": "The mechanism itself has a clear sequence.",
+          "lines": [
+            "The mechanism itself has a",
+            "clear sequence."
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_005.png",
+          "measuredWidth": 830.8,
+          "overflowed": false,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 2,
+          "start": 14.82,
+          "end": 19.29,
+          "text": "Abstract When surrounded by a transparent emission region, black holes are expected to reveal a.",
+          "lines": [
+            "Abstract When surrounded",
+            "by a transparent emission"
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_006.png",
+          "measuredWidth": 821.7,
+          "overflowed": true,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 3,
+          "start": 19.29,
+          "end": 21.09,
+          "text": "The numbers are what make this concrete.",
+          "lines": [
+            "The numbers are what make",
+            "this concrete."
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_007.png",
+          "measuredWidth": 869.8,
+          "overflowed": false,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 3,
+          "start": 21.09,
+          "end": 25.72,
+          "text": "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave.",
+          "lines": [
+            "On September 14, 2015 at",
+            "09:50:45 UTC the two"
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_008.png",
+          "measuredWidth": 802.5,
+          "overflowed": true,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 4,
+          "start": 25.72,
+          "end": 28.57,
+          "text": "That is not abstract: it shows up in real systems.",
+          "lines": [
+            "That is not abstract: it shows",
+            "up in real systems."
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_009.png",
+          "measuredWidth": 893.1,
+          "overflowed": false,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 4,
+          "start": 28.57,
+          "end": 32.15,
+          "text": "On September 14, 2015 at 09:50:45 UTC the two detectors of the.",
+          "lines": [
+            "On September 14, 2015 at",
+            "09:50:45 UTC the two"
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_010.png",
+          "measuredWidth": 802.5,
+          "overflowed": true,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 5,
+          "start": 32.15,
+          "end": 35.19,
+          "text": "The consequences are measurable, and some questions stay open.",
+          "lines": [
+            "The consequences are",
+            "measurable, and some"
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_011.png",
+          "measuredWidth": 690.6,
+          "overflowed": true,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 5,
+          "start": 35.19,
+          "end": 38.58,
+          "text": "On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser.",
+          "lines": [
+            "On September 14, 2015 at",
+            "09:50:45 UTC the two"
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_012.png",
+          "measuredWidth": 802.5,
+          "overflowed": true,
+          "fontSize": 54
+        },
+        {
+          "sceneIndex": 6,
+          "start": 38.58,
+          "end": 45.01,
+          "text": "If you remember one thing, remember this: On September 14, 2015 at 09:50:45 UTC the two detectors of the Laser Interferometer Gravitational-Wave.",
+          "lines": [
+            "If you remember one thing,",
+            "remember this: On"
+          ],
+          "pngPath": "/app/runs/run_mueuni1kd7bd414241/captions/cue_013.png",
+          "measuredWidth": 836.4,
+          "overflowed": true,
+          "fontSize": 54
+        }
+      ],
+      "timingSource": "SCENE_DURATION_PROPORTIONAL",
+      "overflowCount": 9,
+      "srtPath": "/app/runs/run_mueuni1kd7bd414241/captions/captions.srt",
+      "createdAt": "2026-09-24T01:25:39.161Z"
+    },
+    "videoPath": "/app/output/renders/45-black-holes_run_mueuni1kd7bd414241.mp4"
+  },
+  "updatedAt": "2026-09-24T01:26:29.249Z"
+}

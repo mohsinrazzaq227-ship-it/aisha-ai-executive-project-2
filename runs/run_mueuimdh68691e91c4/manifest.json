@@ -1,0 +1,72 @@
+{
+  "taskId": "tsk_mueuimdhc3f4f9ea69",
+  "runId": "run_mueuimdh68691e91c4",
+  "title": "Research developments local AI generation best free sourced saved",
+  "status": "WAITING_APPROVAL",
+  "createdAt": "2026-09-24T01:21:03.942Z",
+  "updatedAt": "2026-09-24T01:21:07.109Z",
+  "plannerEngine": "deterministic_local",
+  "findings": [
+    "research",
+    "artifactPaths"
+  ],
+  "steps": [
+    {
+      "index": 0,
+      "title": "Research live sources",
+      "agent": "research_agent",
+      "tool": "research.search",
+      "status": "COMPLETED",
+      "risk": "LOW",
+      "approvalId": null
+    },
+    {
+      "index": 1,
+      "title": "Research an independent second query",
+      "agent": "research_agent",
+      "tool": "research.search",
+      "status": "COMPLETED",
+      "risk": "LOW",
+      "approvalId": null
+    },
+    {
+      "index": 2,
+      "title": "Cross-check the evidence",
+      "agent": "research_agent",
+      "tool": "research.verify",
+      "status": "COMPLETED",
+      "risk": "LOW",
+      "approvalId": null
+    },
+    {
+      "index": 3,
+      "title": "Write the report",
+      "agent": "master_supervisor",
+      "tool": "report.write",
+      "status": "WAITING_APPROVAL",
+      "risk": "MEDIUM",
+      "approvalId": "apr_mueuiolxd305888224"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "art_mueuin4u027258bf37",
+      "kind": "research",
+      "name": "developments_local_AI_generation_best_fr.json",
+      "path": "runs/run_mueuimdh68691e91c4/research/developments_local_AI_generation_best_fr.json",
+      "size": 3743,
+      "validated": true,
+      "sha256": "497b6da8c218f8276c1d28592042c3b2b7bc8df63ba00211f66f0b2662c00aa9"
+    },
+    {
+      "id": "art_mueuinu8be30fe500e",
+      "kind": "research",
+      "name": "developments_local_AI_generation_best_fr.json",
+      "path": "runs/run_mueuimdh68691e91c4/research/developments_local_AI_generation_best_fr.json",
+      "size": 4240,
+      "validated": true,
+      "sha256": "497b6da8c218f8276c1d28592042c3b2b7bc8df63ba00211f66f0b2662c00aa9"
+    }
+  ],
+  "artifacts_count": 2
+}

@@ -1,0 +1,110 @@
+{
+  "steps": [
+    {
+      "id": "tsk_mueuhsi0af12743fcf_s01",
+      "taskId": "tsk_mueuhsi0af12743fcf",
+      "stepIndex": 0,
+      "title": "Verify the browser engine is really working",
+      "detail": "Launch the automation engine and read a page back. If it is not installed, say so instead of pretending.",
+      "agentId": "browser_agent",
+      "toolId": "browser.probe",
+      "toolInput": {},
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "FAILED",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 1,
+      "output": {
+        "summary": "The browser automation engine is not installed in this environment. Interactive pages and JavaScript-rendered content cannot be driven; the HTTP research path remains available and is labelled per task. Nothing was simulated."
+      },
+      "error": "BROWSER_ENGINE_NOT_CONFIGURED",
+      "startedAt": "2026-09-24T01:24:57.965Z",
+      "finishedAt": "2026-09-24T01:24:57.993Z"
+    },
+    {
+      "id": "tsk_mueuhsi0af12743fcf_s02",
+      "taskId": "tsk_mueuhsi0af12743fcf",
+      "stepIndex": 1,
+      "title": "Navigate to the page",
+      "detail": "Open https://en.wikipedia.org/wiki/Black_hole in the automation engine and capture the rendered document.",
+      "agentId": "browser_agent",
+      "toolId": "browser.navigate",
+      "toolInput": {
+        "url": "https://en.wikipedia.org/wiki/Black_hole"
+      },
+      "risk": "MEDIUM",
+      "requiresApproval": true,
+      "status": "PENDING",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        0
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuhsi0af12743fcf_s03",
+      "taskId": "tsk_mueuhsi0af12743fcf",
+      "stepIndex": 2,
+      "title": "Extract the page structure",
+      "detail": "Visible text, headings, links, buttons and inputs from the rendered DOM.",
+      "agentId": "browser_agent",
+      "toolId": "browser.extract",
+      "toolInput": {
+        "url": "https://en.wikipedia.org/wiki/Black_hole"
+      },
+      "risk": "LOW",
+      "requiresApproval": false,
+      "status": "PENDING",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        1
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    },
+    {
+      "id": "tsk_mueuhsi0af12743fcf_s04",
+      "taskId": "tsk_mueuhsi0af12743fcf",
+      "stepIndex": 3,
+      "title": "Capture evidence",
+      "detail": "PNG screenshot of the rendered page stored as a task artifact.",
+      "agentId": "vision_agent",
+      "toolId": "browser.screenshot",
+      "toolInput": {
+        "url": "https://en.wikipedia.org/wiki/Black_hole"
+      },
+      "risk": "MEDIUM",
+      "requiresApproval": true,
+      "status": "PENDING",
+      "approvalId": null,
+      "walkMs": 1200,
+      "dependsOn": [
+        1
+      ],
+      "parallel": false,
+      "resourceClass": "LIGHT",
+      "attempts": 0,
+      "output": null,
+      "error": null,
+      "startedAt": null,
+      "finishedAt": null
+    }
+  ]
+}

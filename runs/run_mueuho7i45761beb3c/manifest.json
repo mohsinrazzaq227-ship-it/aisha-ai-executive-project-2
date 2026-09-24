@@ -1,0 +1,32 @@
+{
+  "taskId": "tsk_mueuho7i01ae01b372",
+  "runId": "run_mueuho7i45761beb3c",
+  "title": "Run command: rm -rf / --no-preserve-root",
+  "status": "QUEUED",
+  "createdAt": "2026-09-24T01:20:19.664Z",
+  "updatedAt": "2026-09-24T01:20:27.327Z",
+  "plannerEngine": "deterministic_local",
+  "findings": [],
+  "steps": [
+    {
+      "index": 0,
+      "title": "Validate the command",
+      "agent": "computer_agent",
+      "tool": "shell.preview",
+      "status": "FAILED",
+      "risk": "LOW",
+      "approvalId": null
+    },
+    {
+      "index": 1,
+      "title": "Execute with approval",
+      "agent": "computer_agent",
+      "tool": "shell.execute",
+      "status": "PENDING",
+      "risk": "HIGH",
+      "approvalId": null
+    }
+  ],
+  "artifacts": [],
+  "artifacts_count": 0
+}
